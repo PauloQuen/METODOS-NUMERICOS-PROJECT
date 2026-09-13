@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Módulo 1: Ecuaciones No Lineales y Errores — Bisección y Newton-Raphson. Portal Educativo de Métodos Numéricos UNSA." />
+  <title>Módulo 1 · Ecuaciones No Lineales y Errores | UNSA</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===================== BARRA DE RETORNO (FIJA) ===================== -->
+  <nav class="back-bar" aria-label="Navegación principal del portal">
+    <a class="back-link" href="../index.html"><span aria-hidden="true">←</span> Volver al Portal Principal</a>
+  </nav>
+
+  <!-- ===================== ENCABEZADO DEL MÓDULO ===================== -->
+  <header class="mod-hero">
+    <div class="container">
+      <span class="mod-badge">Módulo 1 · Equipo 1</span>
+      <h1 class="mod-title">Ecuaciones No Lineales y Errores</h1>
+      <p class="mod-subtitle">
+        Bisección y Newton–Raphson · Error absoluto, error relativo y tolerancia
+      </p>
+    </div>
+  </header>
+
+  <!-- ===================== MENÚ DE PESTAÑAS ===================== -->
+  <nav class="tabs" id="tabs" aria-label="Secciones del módulo">
+    <button class="tab-btn is-active" type="button" data-tab="teoria">Teoría y Errores</button>
+    <button class="tab-btn" type="button" data-tab="calculadoras">Calculadoras Interactivas</button>
+    <button class="tab-btn" type="button" data-tab="ejemplos">Ejemplos Resueltos</button>
+    <button class="tab-btn" type="button" data-tab="autoevaluacion">Autoevaluación y Ejercicios</button>
+    <button class="tab-btn" type="button" data-tab="integrantes">Integrantes y Referencias</button>
+  </nav>
+
+  <main class="container">
+
+    <!-- ==========================================================
+         SECCIÓN 1 · TEORÍA Y ERRORES
+         ========================================================== -->
+    <section id="teoria" class="tab-panel is-active" aria-label="Teoría y Errores">
+
+      <h2 class="section-title">Errores numéricos y tolerancia</h2>
+      <p class="lead">
+        Ninguna aproximación numérica es exacta. La pregunta clave no es <em>¿el resultado es exacto?</em>,
+        sino <em>¿el error está dentro de la tolerancia aceptable?</em>. A continuación definimos los tres
+        conceptos que usaremos como criterios de parada en los métodos iterativos.
+      </p>
+
+      <div class="card-grid">
+        <article class="theory-card">
+          <h3>Error absoluto</h3>
+          <p class="formula">E<sub>a</sub> = | x̄ − x |</p>
+          <p>
+            Diferencia entre el valor aproximado <strong>x̄</strong> y el valor real <strong>x</strong>,
+            tomada en valor absoluto. Expresa <em>cuánto nos equivocamos</em>, en las mismas unidades de la variable.
+          </p>
+        </article>
+
+        <article class="theory-card">
+          <h3>Error relativo</h3>
+          <p class="formula">E<sub>r</sub> = | x̄ − x | / | x |</p>
+          <p>
+            Normaliza el error absoluto dividiendo entre el valor real (o el aproximado si el real es 0).
+            Se suele expresar en porcentaje y permite comparar la calidad de aproximaciones de distinta magnitud.
+          </p>
+        </article>
+
+        <article class="theory-card">
+          <h3>Tolerancia</h3>
+          <p class="formula">| x<sub>n+1</sub> − x<sub>n</sub> | &lt; tol</p>
+          <p>
+            Umbral de error <strong>aceptable</strong> fijado por el usuario. Los métodos iterativos se detienen
+            cuando la variación entre dos iteraciones consecutivas cae por debajo de la tolerancia.
+          </p>
+        </article>
+      </div>
+
+      <h2 class="section-title">Método de Bisección</h2>
+      <div class="theory-body">
+        <p>La bisección encuentra una raíz de una función continua <strong>f</strong> a partir de un intervalo <strong>[a, b]</strong> donde la función cambia de signo.</p>
+        <ol class="steps">
+          <li><strong>Verificar</strong> el teorema de Bolzano: si f es continua en [a, b] y f(a) · f(b) &lt; 0, entonces existe al menos una raíz en el intervalo.</li>
+          <li><strong>Calcular</strong> el punto medio c = (a + b) / 2 y evaluar f(c).</li>
+          <li><strong>Reducir</strong> el intervalo: si f(a) · f(c) &lt; 0, la raíz está en [a, c]; si no, en [c, b].</li>
+          <li><strong>Repetir</strong> hasta que la amplitud del intervalo o f(c) caiga por debajo de la tolerancia.</li>
+        </ol>
+        <div class="info-box">
+          <strong>Convergencia:</strong> es <em>siempre convergente</em> si se cumple la condición de signo, pero converge lentamente
+          (una forma <strong>lineal</strong>): cada iteración reduce el intervalo a la mitad.
+          Para una tolerancia ε, el número de iteraciones necesarias es n ≥ log₂((b − a) / ε).
+        </div>
+      </div>
+
+      <h2 class="section-title">Método de Newton–Raphson</h2>
+      <div class="theory-body">
+        <p>
+          Newton linealiza la función en cada iteración usando la recta tangente: partiendo de una semilla
+          <strong>x₀</strong> cercana a la raíz, la siguiente aproximación es la intersección de la tangente con el eje X.
+        </p>
+        <p class="formula formula--big">x<sub>n+1</sub> = x<sub>n</sub> − f(x<sub>n</sub>) / f′(x<sub>n</sub>)</p>
+        <ol class="steps">
+          <li><strong>Elegir</strong> un valor inicial x₀ razonablemente cercano a la raíz.</li>
+          <li><strong>Evaluar</strong> f(xₙ) y su derivada f′(xₙ).</li>
+          <li><strong>Actualizar</strong> con la fórmula de iteración.</li>
+          <li><strong>Detenerse</strong> cuando |xₙ₊₁ − xₙ| &lt; tol, |f(xₙ)| &lt; tol o se alcance maxIter.</li>
+        </ol>
+        <div class="info-box">
+          <strong>Convergencia:</strong> es <em>cuadrática</em> cerca de la raíz (duplica cifras correctas por iteración),
+          pero <strong>no siempre converge</strong>: falla si f′(xₙ) = 0 o si x₀ está lejos de la raíz. También equívoca el resultado si la raíz es múltiple.
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==========================================================
+         SECCIÓN 2 · CALCULADORAS INTERACTIVAS
+         ========================================================== -->
+    <section id="calculadoras" class="tab-panel" aria-label="Calculadoras Interactivas">
+
+      <h2 class="section-title">Calculadoras interactivas</h2>
+      <p class="lead">
+        Completa los parámetros y presiona <strong>Calcular</strong>. La interfaz ya captura y valida los datos;
+        el algoritmo de iteración se conecta en esta misma sección en la próxima etapa del proyecto.
+      </p>
+
+      <div class="calc-grid">
+
+        <!-- ---------- Calculadora: Bisección ---------- -->
+        <article class="calc-card">
+          <header class="calc-header">
+            <span class="calc-icon" aria-hidden="true">⊕</span>
+            <div>
+              <h3>Bisección</h3>
+              <p>f(x) = 0 en un intervalo [a, b] con cambio de signo</p>
+            </div>
+          </header>
+
+          <form id="form-biseccion" class="calc-form" novalidate>
+            <div class="field">
+              <label for="bis-a">a (extremo izquierdo)</label>
+              <input id="bis-a" name="a" type="number" step="any" placeholder="Ej: 1" required />
+            </div>
+            <div class="field">
+              <label for="bis-b">b (extremo derecho)</label>
+              <input id="bis-b" name="b" type="number" step="any" placeholder="Ej: 2" required />
+            </div>
+            <div class="field">
+              <label for="bis-tol">Tolerancia (tol)</label>
+              <input id="bis-tol" name="tol" type="number" step="any" min="0" placeholder="Ej: 0.001" required />
+            </div>
+            <div class="field">
+              <label for="bis-maxiter">Iteraciones máximas</label>
+              <input id="bis-maxiter" name="maxIter" type="number" step="1" min="1" placeholder="Ej: 50" required />
+            </div>
+            <button class="btn btn--block" type="submit">Calcular</button>
+          </form>
+
+          <div id="resultado-biseccion" class="result-area" aria-live="polite">
+            <p class="result-placeholder">Esperando datos… la tabla de iteraciones se mostrará aquí.</p>
+          </div>
+        </article>
+
+        <!-- ---------- Calculadora: Newton ---------- -->
+        <article class="calc-card">
+          <header class="calc-header">
+            <span class="calc-icon" aria-hidden="true">≀</span>
+            <div>
+              <h3>Newton–Raphson</h3>
+              <p>Partiendo de una semilla x₀ cercana a la raíz</p>
+            </div>
+          </header>
+
+          <form id="form-newton" class="calc-form" novalidate>
+            <div class="field">
+              <label for="newton-x0">x₀ (valor inicial)</label>
+              <input id="newton-x0" name="x0" type="number" step="any" placeholder="Ej: 2" required />
+            </div>
+            <div class="field">
+              <label for="newton-tol">Tolerancia (tol)</label>
+              <input id="newton-tol" name="tol" type="number" step="any" min="0" placeholder="Ej: 0.0001" required />
+            </div>
+            <div class="field">
+              <label for="newton-maxiter">Iteraciones máximas</label>
+              <input id="newton-maxiter" name="maxIter" type="number" step="1" min="1" placeholder="Ej: 100" required />
+            </div>
+            <button class="btn btn--block" type="submit">Calcular</button>
+          </form>
+
+          <div id="resultado-newton" class="result-area" aria-live="polite">
+            <p class="result-placeholder">Esperando datos… la tabla de iteraciones se mostrará aquí.</p>
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+    <!-- ==========================================================
+         SECCIÓN 3 · EJEMPLOS RESUELTOS
+         ========================================================== -->
+    <section id="ejemplos" class="tab-panel" aria-label="Ejemplos Resueltos">
+
+      <h2 class="section-title">Ejemplo resuelto paso a paso</h2>
+      <div class="example-intro">
+        <p>
+          Resolveremos la ecuación <strong>f(x) = x³ − x − 2 = 0</strong>, cuya raíz real es
+          <strong>x ≈ 1.5213797</strong>. Primero localizamos la raíz:
+        </p>
+        <ul class="steps">
+          <li>f(1) = 1³ − 1 − 2 = <strong>−2</strong> &nbsp;y&nbsp; f(2) = 2³ − 2 − 2 = <strong>4</strong></li>
+          <li>Como f(1) · f(2) = −8 &lt; 0 y f es continua, por Bolzano existe una raíz en <strong>[1, 2]</strong>.</li>
+        </ul>
+      </div>
+
+      <h3 class="sub-title">Con Bisección (8 iteraciones, tol = 10⁻³)</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Iteración</th>
+              <th>a</th>
+              <th>b</th>
+              <th>c = (a+b)/2</th>
+              <th>f(c)</th>
+              <th>|Δc|</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>1.000000</td><td>2.000000</td><td>1.500000</td><td>−0.125000</td><td>—</td></tr>
+            <tr><td>2</td><td>1.500000</td><td>2.000000</td><td>1.750000</td><td>1.609375</td><td>0.250000</td></tr>
+            <tr><td>3</td><td>1.500000</td><td>1.750000</td><td>1.625000</td><td>0.666016</td><td>0.125000</td></tr>
+            <tr><td>4</td><td>1.500000</td><td>1.625000</td><td>1.562500</td><td>0.252197</td><td>0.062500</td></tr>
+            <tr><td>5</td><td>1.500000</td><td>1.562500</td><td>1.531250</td><td>0.059113</td><td>0.031250</td></tr>
+            <tr><td>6</td><td>1.500000</td><td>1.531250</td><td>1.515625</td><td>−0.034054</td><td>0.015625</td></tr>
+            <tr><td>7</td><td>1.515625</td><td>1.531250</td><td>1.523438</td><td>0.012250</td><td>0.007812</td></tr>
+            <tr><td>8</td><td>1.515625</td><td>1.523438</td><td>1.519531</td><td>−0.010971</td><td>0.003906</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="example-note">
+        Después de 10 iteraciones la amplitud del intervalo es menor que la tolerancia de 10⁻³
+        (n ≥ log₂(1 / 0.001) ≈ 9.97). El valor final es <strong>x ≈ 1.521484</strong>.
+      </p>
+
+      <h3 class="sub-title">Con Newton–Raphson (x₀ = 2)</h3>
+      <p class="lead">
+        La derivada es f′(x) = 3x² − 1. Aplicamos xₙ₊₁ = xₙ − f(xₙ)/f′(xₙ):
+      </p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Iteración</th>
+              <th>xₙ</th>
+              <th>f(xₙ)</th>
+              <th>f′(xₙ)</th>
+              <th>xₙ₊₁</th>
+              <th>|Δx|</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>2.000000</td><td>4.000000</td><td>11.000000</td><td>1.636364</td><td>0.363636</td></tr>
+            <tr><td>2</td><td>1.636364</td><td>0.745304</td><td>7.033058</td><td>1.530392</td><td>0.105972</td></tr>
+            <tr><td>3</td><td>1.530392</td><td>0.053939</td><td>6.026299</td><td>1.521441</td><td>0.008951</td></tr>
+            <tr><td>4</td><td>1.521441</td><td>0.000367</td><td>5.944352</td><td>1.521380</td><td>0.000062</td></tr>
+            <tr><td>5</td><td>1.521380</td><td>0.000000</td><td>5.943789</td><td>1.521380</td><td>0.000000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="info-box">
+        <strong>Observación clave:</strong> Newton alcanza 6 cifras correctas en solo 4 iteraciones,
+        mientras que Bisección necesita más de 10. Esa es la diferencia entre convergencia <em>cuadrática</em> y <em>lineal</em>.
+      </div>
+
+    </section>
+
+    <!-- ==========================================================
+         SECCIÓN 4 · AUTOEVALUACIÓN Y EJERCICIOS
+         ========================================================== -->
+    <section id="autoevaluacion" class="tab-panel" aria-label="Autoevaluación y Ejercicios">
+
+      <h2 class="section-title">Autoevaluación y ejercicios</h2>
+      <p class="lead">
+        Resuelve cada ejercicio y luego desplega la solución para verificar. Recomendado: usa lápiz y papel
+        antes de mirar la respuesta.
+      </p>
+
+      <ol class="quiz-list">
+        <li class="quiz-item">
+          <p class="quiz-question">
+            Si el valor real es x = 10.5 y la aproximación es x̄ = 10.4, calcula el <strong>error absoluto</strong>
+            y el <strong>error relativo</strong>.
+          </p>
+          <details class="quiz-solution">
+            <summary>Mostrar solución</summary>
+            <p>E<sub>a</sub> = |10.4 − 10.5| = <strong>0.1</strong>. &nbsp; E<sub>r</sub> = 0.1 / 10.5 ≈ <strong>0.00952</strong> (0.952 %).</p>
+          </details>
+        </li>
+
+        <li class="quiz-item">
+          <p class="quiz-question">
+            ¿Cuántas iteraciones de <strong>bisección</strong> se necesitan como mínimo en el intervalo [1, 2]
+            para garantizar una tolerancia ε = 10⁻³?
+          </p>
+          <details class="quiz-solution">
+            <summary>Mostrar solución</summary>
+            <p>n ≥ log₂((2 − 1) / 0.001) = log₂(1000) ≈ 9.97, por lo tanto <strong>n = 10 iteraciones</strong> (siempre se redondea hacia arriba).</p>
+          </details>
+        </li>
+
+        <li class="quiz-item">
+          <p class="quiz-question">
+            Justifica, usando el <strong>teorema de Bolzano</strong>, que f(x) = x³ − x − 2 tiene al menos una raíz en [1, 2].
+          </p>
+          <details class="quiz-solution">
+            <summary>Mostrar solución</summary>
+            <p>f es polinómica, luego continua. f(1) = −2 y f(2) = 4. Como f(1)·f(2) = −8 &lt; 0, existe c ∈ (1, 2) con f(c) = 0.</p>
+          </details>
+        </li>
+
+        <li class="quiz-item">
+          <p class="quiz-question">
+            Partiendo de <strong>x₀ = 1.5</strong>, aplica <strong>una iteración</strong> del método de Newton a f(x) = x³ − x − 2.
+          </p>
+          <details class="quiz-solution">
+            <summary>Mostrar solución</summary>
+            <p>f(1.5) = −0.125 y f′(1.5) = 3(1.5²) − 1 = 5.75. Entonces x₁ = 1.5 − (−0.125 / 5.75) = 1.5 + 0.021739 ≈ <strong>1.521739</strong>.</p>
+          </details>
+        </li>
+
+        <li class="quiz-item">
+          <p class="quiz-question">
+            ¿Por qué el método de <strong>Newton</strong> falla si f′(x₀) = 0?
+          </p>
+          <details class="quiz-solution">
+            <summary>Mostrar solución</summary>
+            <p>La fórmula x₁ = x₀ − f(x₀)/f′(x₀) requiere dividir entre la derivada. Si f′(x₀) = 0, la tangente es horizontal, no corta el eje X y la división es por cero (indefinida o infinita).</p>
+          </details>
+        </li>
+
+        <li class="quiz-item">
+          <p class="quiz-question">
+            Concepto: si un método se detiene cuando la tolerancia es 10⁻⁶, ¿qué garantiza ese criterio?
+          </p>
+          <details class="quiz-solution">
+            <summary>Mostrar solución</summary>
+            <p>Garantiza que la variación entre dos iteraciones consecutivas |xₙ₊₁ − xₙ| es menor a 0.000001, es decir, la aproximación ya no cambia de forma significativa. No garantiza por sí sola la exactitud contra el valor real; por eso conviene verificar también que |f(xₙ)| sea pequeño.</p>
+          </details>
+        </li>
+      </ol>
+
+    </section>
+
+    <!-- ==========================================================
+         SECCIÓN 5 · INTEGRANTES Y REFERENCIAS
+         ========================================================== -->
+    <section id="integrantes" class="tab-panel" aria-label="Integrantes y Referencias">
+
+      <h2 class="section-title">Integrantes del Equipo 1</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Apellidos y Nombres</th>
+              <th>Rol en el equipo</th>
+              <th>Contribución en el módulo</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-integrantes">
+            <tr><td>1</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>2</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>3</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>4</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>5</td><td>—</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="section-title">Referencias bibliográficas</h2>
+      <ul class="ref-list">
+        <li>
+          Burden, R. L., &amp; Faires, J. D. (2011). <em>Análisis Numérico</em> (9.ª ed.).
+          Cengage Learning.
+        </li>
+        <li>
+          Chapra, S. C., &amp; Canale, R. P. (2015). <em>Métodos Numéricos para Ingenieros</em> (7.ª ed.).
+          McGraw-Hill.
+        </li>
+        <li>
+          Kharab, A., &amp; Guenther, R. B. (2018). <em>An Introduction to Numerical Methods: A MATLAB Approach</em> (4.ª ed.).
+          Chapman &amp; Hall/CRC.
+        </li>
+      </ul>
+
+    </section>
+
+  </main>
+
+  <!-- ===================== PIE DE PÁGINA DEL MÓDULO ===================== -->
+  <footer class="footer">
+    <div class="container">
+      <p>Módulo 1 · Ecuaciones No Lineales y Errores · Equipo 1</p>
+      <p class="footer-note">Portal Educativo de Métodos Numéricos · Escuela Profesional de Ingeniería de Sistemas · UNSA</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
