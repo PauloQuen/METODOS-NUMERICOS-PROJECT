@@ -1,0 +1,38 @@
+.ejemplos {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.ejemplos__encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.ejemplos__titulo {
+  margin: 0;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 1.4rem;
+  color: var(--on-surface);
+}
+
+.ejemplos__intro {
+  margin: 0;
+  max-width: 70ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+}
+
+/* Cada ejemplo es un bloque con aire entre sí, para que se lean como
+   secciones independientes y no como una lista corrida. */
+.ejemplos__bloque {
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.ejemplos__bloque:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}

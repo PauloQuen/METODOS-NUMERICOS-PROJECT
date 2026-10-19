@@ -1,0 +1,141 @@
+<div class="teoria">
+  <!-- 1. Concepto -->
+  <ui-card padding="lg">
+    <h2 class="teoria__seccion">1. Concepto</h2>
+    <p class="teoria__parrafo">{{ teoria.concepto }}</p>
+  </ui-card>
+
+  <!-- Acordeón: Fundamento / Cuándo falla / Orden -->
+  <ui-card padding="lg">
+    <div class="teoria__acordeon">
+      <button
+        class="teoria__acordeon-boton"
+        type="button"
+        (click)="alternar('fundamento')"
+        [attr.aria-expanded]="abierta() === 'fundamento'"
+      >
+        <span>2. Fundamento: ¿Por qué funciona?</span>
+        <span class="material-symbols-outlined">
+          {{ abierta() === 'fundamento' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'fundamento') {
+        <div class="teoria__acordeon-contenido">
+          <p class="teoria__parrafo">{{ teoria.fundamento }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="teoria__acordeon">
+      <button
+        class="teoria__acordeon-boton"
+        type="button"
+        (click)="alternar('falla')"
+        [attr.aria-expanded]="abierta() === 'falla'"
+      >
+        <span>3. ¿Cuándo falla?</span>
+        <span class="material-symbols-outlined">
+          {{ abierta() === 'falla' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'falla') {
+        <div class="teoria__acordeon-contenido">
+          <p class="teoria__parrafo">{{ teoria.cuandoFalla }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="teoria__acordeon teoria__acordeon--ultimo">
+      <button
+        class="teoria__acordeon-boton"
+        type="button"
+        (click)="alternar('orden')"
+        [attr.aria-expanded]="abierta() === 'orden'"
+      >
+        <span>4. Orden de convergencia</span>
+        <span class="material-symbols-outlined">
+          {{ abierta() === 'orden' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'orden') {
+        <div class="teoria__acordeon-contenido">
+          <p class="teoria__parrafo">{{ teoria.ordenConvergencia }}</p>
+        </div>
+      }
+    </div>
+  </ui-card>
+
+  <!-- 5. Algoritmo -->
+  <ui-card padding="lg">
+    <h2 class="teoria__seccion">5. Algoritmo</h2>
+    <div class="teoria__formula">
+      <code>{{ teoria.algoritmo.formula }}</code>
+    </div>
+
+    <h3 class="teoria__subtitulo">Criterios de parada</h3>
+    <ul class="teoria__lista">
+      @for (c of teoria.algoritmo.criterios; track c.nombre) {
+        <li class="teoria__lista-item">
+          <strong>{{ c.nombre }}</strong>: {{ c.explicacion }}
+        </li>
+      }
+    </ul>
+
+    <h3 class="teoria__subtitulo">Pasos</h3>
+    <ol class="teoria__pasos">
+      @for (paso of teoria.algoritmo.pasos; track paso) {
+        <li>{{ paso }}</li>
+      }
+    </ol>
+
+    <div class="teoria__dos-columnas">
+      <div>
+        <h3 class="teoria__subtitulo">Ventajas</h3>
+        <ul class="teoria__lista">
+          @for (v of teoria.algoritmo.ventajas; track v) {
+            <li class="teoria__lista-item">{{ v }}</li>
+          }
+        </ul>
+      </div>
+      <div>
+        <h3 class="teoria__subtitulo">Limitaciones</h3>
+        <ul class="teoria__lista">
+          @for (l of teoria.algoritmo.limitaciones; track l) {
+            <li class="teoria__lista-item">{{ l }}</li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="teoria__subtitulo">Recomendaciones</h3>
+    <ul class="teoria__lista">
+      @for (r of teoria.algoritmo.recomendaciones; track r) {
+        <li class="teoria__lista-item">{{ r }}</li>
+      }
+    </ul>
+  </ui-card>
+
+  <!-- 6. Ejemplo numérico -->
+  <app-bloque-ejemplo
+    [ejemplo]="teoria.ejemploNormal"
+    [columnas]="columnas"
+    [filas]="ejemploNumerico().filas"
+    [filaFinal]="ejemploNumerico().filaFinal"
+    [funcion]="funcionNumerico"
+    [rango]="rangoNumerico()"
+    [dibujarMetodo]="dibujar"
+    [raiz]="ejemploNumerico().raiz"
+  />
+
+  <!-- 7. Ejemplo de casuística -->
+  <app-bloque-ejemplo
+    [ejemplo]="teoria.ejemploCasuistica"
+    [columnas]="columnas"
+    [filas]="ejemploCasuistica().filas"
+    [filaFinal]="ejemploCasuistica().filaFinal"
+    [funcion]="funcionCasuistica"
+    [rango]="rangoCasuistica()"
+    [dibujarMetodo]="dibujar"
+    [raiz]="ejemploCasuistica().raiz"
+  />
+</div>

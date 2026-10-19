@@ -1,0 +1,26 @@
+<div class="autoevaluacion">
+  <header class="autoevaluacion__encabezado">
+    <h2 class="autoevaluacion__titulo">Autoevaluación</h2>
+    <p class="autoevaluacion__intro">
+      Tres ejercicios para practicar Bisección. Resolvé en papel o con la
+      calculadora y, cuando tengas tu resultado, apretá <strong>Ver solución</strong>.
+      La tabla y el gráfico de la solución salen directamente del algoritmo:
+      no están escritos a mano, así que podés comparar paso a paso.
+    </p>
+  </header>
+
+  @for (ejercicio of ejercicios; track ejercicio.id) {
+    <section class="autoevaluacion__bloque">
+      <app-bloque-ejercicio
+        [ejercicio]="ejercicio"
+        [funcion]="funcionDe($index)"
+        [filas]="calculoDe($index).filas"
+        [columnas]="columnas"
+        [filaFinal]="calculoDe($index).filaFinal"
+        [rango]="rangoDe($index)"
+        [dibujarMetodo]="dibujar"
+        [raiz]="calculoDe($index).raiz"
+      />
+    </section>
+  }
+</div>

@@ -1,0 +1,208 @@
+<section class="calc">
+  <!--
+    Navegación jerárquica: familia → método. Reemplaza a las tabs planas.
+    El componente deriva la jerarquía del registro, así que acá no hay
+    ninguna lista de métodos escrita a mano.
+  -->
+  <app-registro-nav [activo]="metodo()" (seleccionar)="cambiarMetodo($event)" />
+
+  <!-- Ficha del método activo: por qué se eligió, no solo cuál es. -->
+  <ui-card elevation="md" class="calc__ficha">
+    <div class="calc__ficha-cabecera">
+      <h2 class="calc__heading">{{ ficha().nombre }}</h2>
+      <app-badge [text]="familiaActiva().nombre" variant="navy" />
+      <app-badge [text]="ficha().ordenTexto" variant="teal" />
+    </div>
+
+    <p class="calc__ficha-idea">{{ ficha().idea }}</p>
+
+    <div class="calc__ficha-datos">
+      <div class="calc__ficha-bloque">
+        <h3 class="calc__ficha-titulo">Cuándo usarlo</h3>
+        <p>{{ ficha().cuandoUsarlo }}</p>
+      </div>
+
+      <div class="calc__ficha-bloque">
+        <h3 class="calc__ficha-titulo">Lo que exige</h3>
+        <ul class="calc__ficha-lista">
+          @if (ficha().requiereCambioDeSigno) {
+            <li>f(a) · f(b) &lt; 0 en los extremos (Bolzano).</li>
+          } @else if (ficha().requiereIntervalo) {
+            <li>Un intervalo [a, b] que contenga la raíz.</li>
+          } @else {
+            <li>Ninguna acotación: depende de acertar la semilla.</li>
+          }
+          @if (ficha().usaDerivada) {
+            <li>La derivada f′ (la calcula numéricamente si no la das).</li>
+          }
+          @if (ficha().operaSobreG) {
+            <li>
+              Una reformulación <code>x = g(x)</code> con
+              <code>|g′(x)| &lt; 1</code> en la zona de iteración.
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </ui-card>
+
+  <div class="calc__panels">
+    <!-- Entradas del problema -->
+    <ui-card elevation="md" class="calc__inputs">
+      <h2 class="calc__heading">Parámetros del problema</h2>
+
+      <div class="calc__chips">
+        <app-stat-chip
+          icon="functions"
+          [label]="usaG() ? 'Función g(x)' : 'Función'"
+          [value]="funcion()"
+          iconBg="navy"
+        />
+        @if (usaIntervalo()) {
+          <app-stat-chip
+            icon="swap_horiz"
+            label="Intervalo"
+            [value]="'[' + valorA() + ', ' + valorB() + ']'"
+            iconBg="amber"
+          />
+        }
+        @if (usaSemilla()) {
+          <app-stat-chip
+            icon="trip_origin"
+            [label]="usaSemilla2() ? 'Semilla x₀' : 'Semilla'"
+            [value]="semilla()"
+            iconBg="amber"
+          />
+        }
+        @if (usaSemilla2()) {
+          <app-stat-chip
+            icon="trip_origin"
+            label="Semilla x₁"
+            [value]="semilla2()"
+            iconBg="amber"
+          />
+        }
+        <app-stat-chip
+          icon="speed"
+          label="Tolerancia"
+          [value]="toleranciaExplicada() || tolerancia()"
+          iconBg="neutral"
+        />
+        <app-stat-chip
+          icon="rule"
+          label="Criterio de parada"
+          [value]="criterioActual().formula"
+          iconBg="navy"
+        />
+      </div>
+
+      <p class="calc__formula">
+        <span>Formula: </span>
+        {{ info[metodo()].formula }}
+      </p>
+
+      <div class="calc__fields">
+        <app-form-field
+          [label]="usaG() ? 'Función de iteración g(x)' : 'Función f(x)'"
+          [placeholder]="usaG() ? 'Ej: (x + 2)^(1/3)' : 'Ej: x^3 - x - 2'"
+          [(value)]="funcion"
+        />
+        @if (usaIntervalo()) {
+          <div class="calc__row">
+            <app-form-field label="Extremo a" type="number" placeholder="Ej: 1" [(value)]="valorA" />
+            <app-form-field label="Extremo b" type="number" placeholder="Ej: 2" [(value)]="valorB" />
+          </div>
+        }
+        @if (usaSemilla()) {
+          <app-form-field
+            [label]="usaSemilla2() ? 'Semilla x₀' : 'Semilla x₀'"
+            type="number"
+            placeholder="Ej: 1.5"
+            [(value)]="semilla"
+          />
+        }
+        @if (usaSemilla2()) {
+          <app-form-field label="Semilla x₁" type="number" placeholder="Ej: 2" [(value)]="semilla2" />
+        }
+
+        <div class="calc__row">
+          <app-form-field
+            label="Precisión pedida"
+            [placeholder]="modoTolerancia() === 'decimales' ? 'Ej: 4' : 'Ej: 5'"
+            [hint]="
+              modoTolerancia() === 'decimales'
+                ? 'Cantidad de decimales exactos'
+                : 'Cantidad de cifras significativas'
+            "
+            [(value)]="precision"
+          />
+        </div>
+
+        <app-form-field
+          label="Tolerancia (opcional)"
+          type="number"
+          placeholder="Ej: 0.0001"
+          hint="Si lo dejás vacío se usa la tolerancia derivada de la precisión pedida"
+          [(value)]="tolerancia"
+          (enter)="calcular()"
+        />
+      </div>
+
+      <div class="calc__actions">
+        <app-btn
+          label="Calcular"
+          icon="play_arrow"
+          [disabled]="ejecutando()"
+          (click)="calcular()"
+        />
+        <app-btn
+          variant="secondary"
+          label="Limpiar"
+          icon="restart_alt"
+          (click)="limpiar()"
+        />
+      </div>
+    </ui-card>
+
+    <!-- Resultado paso a paso -->
+    <ui-card elevation="md" class="calc__output">
+      <div class="calc__output-head">
+        <h2 class="calc__heading">Iteraciones</h2>
+        @if (resultado(); as r) {
+          @if (r.converged) {
+            <app-badge [text]="badgeConvergencia()" variant="amber" />
+          } @else {
+            <app-badge text="Sin convergencia" variant="error" />
+          }
+        }
+      </div>
+
+      @if (resultado(); as r) {
+        @if (r.error) {
+          <div class="calc__error" role="alert">
+            <span class="material-symbols-outlined" aria-hidden="true">error_outline</span>
+            {{ r.error }}
+          </div>
+        } @else if (r.rows.length) {
+          @if (razonParada()) {
+            <p class="calc__parada">
+              <span class="material-symbols-outlined" aria-hidden="true">flag</span>
+              <span>{{ razonParada() }}</span>
+            </p>
+          }
+          <app-iteration-table
+            [columns]="columnas()"
+            [rows]="r.rows"
+            [highlightRowIndex]="filaDestacada()"
+            [highlightBadge]="badgeConvergencia()"
+          />
+        }
+      } @else {
+        <p class="calc__placeholder">
+          Definí los parámetros y presioná <strong>Calcular</strong> para ver la
+          iteración completa del método.
+        </p>
+      }
+    </ui-card>
+  </div>
+</section>

@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Miga de pan — navegación jerárquica de una línea.
+   Dos tonos: sobre el hero navy (texto claro) y sobre el cuerpo (oscuro).
+   ========================================================================== */
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  font-size: var(--text-label-sm, 0.8rem);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--on-surface-variant);
+}
+
+.breadcrumb__sep {
+  color: var(--outline);
+}
+
+.breadcrumb__link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+}
+
+.breadcrumb__actual {
+  color: var(--on-surface);
+  font-weight: 600;
+}
+
+/* Sobre el hero navy: todo claro, sin subrayados llamativos. */
+.breadcrumb--navy {
+  color: var(--primary-fixed-dim);
+
+  .breadcrumb__sep {
+    color: var(--on-primary-container);
+  }
+
+  .breadcrumb__link {
+    &:hover {
+      color: var(--surface-bright);
+    }
+
+    &:focus-visible {
+      outline-color: var(--surface-bright);
+    }
+  }
+
+  .breadcrumb__actual {
+    color: var(--surface-bright);
+  }
+}

@@ -1,0 +1,7 @@
+<div
+  class="card"
+  [class.card--md]="elevation() === 'md'"
+  [class]="'card--pad-' + padding()"
+>
+  <ng-content />
+</div>

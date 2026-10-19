@@ -1,0 +1,121 @@
+.biseccion {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem 0 3rem;
+  background: var(--surface);
+  min-height: 100%;
+}
+
+.biseccion__miga {
+  /* La miga va arriba y el encabezado queda debajo, separado por el gap
+     del contenedor. */
+}
+
+/* ── Encabezado ───────────────────────────────────────────────────── */
+
+.biseccion__encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid var(--outline-variant);
+}
+
+.biseccion__familia {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-metodo, var(--primary));
+}
+
+.biseccion__nombre {
+  margin: 0;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--on-surface);
+}
+
+.biseccion__resumen {
+  margin: 0.5rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 65ch;
+  color: var(--on-surface-variant);
+}
+
+/* ── Barra de pestañas ─────────────────────────────────────────────── */
+
+.biseccion__pestanas {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  padding: 0.3rem;
+  background: var(--surface-container);
+  border-radius: 0.75rem;
+}
+
+.biseccion__pestana {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.95rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  border-radius: 0.55rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.biseccion__pestana:hover {
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+}
+
+.biseccion__pestana--activa {
+  background: var(--color-metodo, var(--primary));
+  color: #ffffff;
+}
+
+.biseccion__pestana--activa:hover {
+  background: var(--color-metodo, var(--primary));
+  color: #ffffff;
+}
+
+.biseccion__pestana:focus-visible {
+  outline: 2px solid var(--color-metodo, var(--primary));
+  outline-offset: 2px;
+}
+
+.biseccion__icono {
+  font-size: 1.1rem;
+}
+
+/* ── Contenido ─────────────────────────────────────────────────────── */
+
+.biseccion__contenido {
+  min-height: 20rem;
+}
+
+/* ── Pantallas chicas: las pestañas pasan a scroll horizontal ─────── */
+
+@media (max-width: 640px) {
+  .biseccion {
+    padding: 1rem 0 2rem;
+  }
+
+  .biseccion__pestanas {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .biseccion__pestana {
+    white-space: nowrap;
+  }
+}

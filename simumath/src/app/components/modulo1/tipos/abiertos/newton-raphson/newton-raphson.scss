@@ -1,0 +1,10 @@
+.newton-raphson { display:flex; flex-direction:column; gap:1.5rem; padding:1.5rem 0 3rem; background:var(--surface); min-height:100%; }
+.newton-raphson__encabezado { display:flex; flex-direction:column; gap:1.25rem; padding-bottom:1.25rem; border-bottom:2px solid var(--outline-variant); }
+.newton-raphson__familia { margin:0 0 .25rem; font-size:.8rem; text-transform:uppercase; letter-spacing:.18rem; color:rgba(15,23,42,.56); }
+.newton-raphson__nombre { margin:0; font-size:clamp(1.8rem,4vw,2.8rem); font-weight:700; }
+.newton-raphson__resumen { margin:.25rem 0 0; color:rgba(15,23,42,.72); max-width:72ch; }
+.newton-raphson__pestanas { display:flex; flex-wrap:wrap; gap:.5rem; }
+.newton-raphson__pestana { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem .95rem; border-radius:999px; border:1px solid rgba(15,23,42,.12); text-decoration:none; color:rgba(15,23,42,.78); font-weight:600; transition:all 160ms ease; }
+.newton-raphson__pestana:hover { background:rgba(34,197,94,.1); }
+.newton-raphson__pestana--activa { background:color-mix(in srgb,var(--color-metodo) 18%,white 82%); border-color:color-mix(in srgb,var(--color-metodo) 48%,white 52%); color:color-mix(in srgb,var(--color-metodo) 70%,black 30%); box-shadow:0 1px 2px rgba(15,23,42,.06); }
+.newton-raphson__icono { font-size:1.1rem; }

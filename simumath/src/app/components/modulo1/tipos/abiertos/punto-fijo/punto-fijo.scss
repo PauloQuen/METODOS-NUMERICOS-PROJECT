@@ -1,0 +1,79 @@
+.punto-fijo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem 0 3rem;
+  background: var(--surface);
+  min-height: 100%;
+}
+
+.punto-fijo__encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid var(--outline-variant);
+}
+
+.punto-fijo__familia {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18rem;
+  color: rgba(15, 23, 42, 0.56);
+}
+
+.punto-fijo__nombre {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+}
+
+.punto-fijo__resumen {
+  margin: 0.25rem 0 0;
+  color: rgba(15, 23, 42, 0.72);
+  max-width: 72ch;
+}
+
+.punto-fijo__pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.punto-fijo__pestana {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  text-decoration: none;
+  color: rgba(15, 23, 42, 0.78);
+  font-weight: 600;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.punto-fijo__pestana:hover {
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.punto-fijo__pestana--activa {
+  background: color-mix(in srgb, var(--color-metodo) 18%, white 82%);
+  border-color: color-mix(in srgb, var(--color-metodo) 48%, white 52%);
+  color: color-mix(in srgb, var(--color-metodo) 70%, black 30%);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.punto-fijo__icono {
+  font-size: 1.1rem;
+  color: currentColor;
+}
+
+.punto-fijo__contenido {
+  display: block;
+}

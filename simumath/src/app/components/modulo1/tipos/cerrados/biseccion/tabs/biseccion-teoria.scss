@@ -1,0 +1,245 @@
+.teoria {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ── Secciones ─────────────────────────────────────────────────────── */
+
+.teoria__seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.teoria__titulo {
+  margin: 0;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.teoria__parrafo {
+  margin: 0;
+  max-width: 70ch;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: var(--on-surface);
+}
+
+.teoria__parrafo--intro {
+  color: var(--on-surface-variant);
+  font-style: italic;
+}
+
+/* ── Acordeón de las tres ideas ────────────────────────────────────── */
+
+.teoria__acordeon {
+  border: 1px solid var(--outline-variant);
+  border-radius: 0.7rem;
+  overflow: hidden;
+  background: var(--surface-container-lowest);
+}
+
+.teoria__acordeon-boton {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--on-surface);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.teoria__acordeon-boton:hover {
+  background: var(--surface-container-low);
+}
+
+.teoria__acordeon-boton:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.teoria__acordeon-boton--abierto {
+  background: var(--surface-container);
+}
+
+.teoria__acordeon-titulo {
+  flex: 1;
+}
+
+.teoria__acordeon-flecha {
+  font-size: 1.2rem;
+  color: var(--on-surface-variant);
+}
+
+.teoria__acordeon-cuerpo {
+  padding: 0 1rem 1rem 1rem;
+  border-top: 1px solid var(--outline-variant);
+}
+
+.teoria__acordeon-cuerpo p {
+  margin: 0.85rem 0 0;
+  max-width: 70ch;
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: var(--on-surface);
+}
+
+/* ── La fórmula grande ─────────────────────────────────────────────── */
+
+.formula {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: 0.8rem;
+  font-family: var(--font-serif, Georgia, serif);
+}
+
+.formula__variable {
+  font-size: 2rem;
+  font-style: italic;
+  color: var(--on-surface);
+}
+
+.formula__igual {
+  font-size: 1.75rem;
+  color: var(--on-surface-variant);
+}
+
+.formula__fraccion {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.6rem;
+}
+
+.formula__numerador {
+  padding: 0 0.6rem 0.15rem;
+  border-bottom: 2px solid var(--on-surface);
+}
+
+.formula__denominador {
+  padding: 0.15rem 0.6rem 0;
+}
+
+/* ── Grilla de tarjetas ─────────────────────────────────────────────── */
+
+.teoria__grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.tarjeta__titulo {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 1.1rem;
+  color: var(--on-surface);
+}
+
+.tarjeta__titulo--bueno {
+  color: #15803d;
+}
+
+.tarjeta__titulo--malo {
+  color: #b91c1c;
+}
+
+/* ── Pasos numerados ───────────────────────────────────────────────── */
+
+.pasos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: paso;
+}
+
+.pasos__paso {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--on-surface);
+}
+
+.pasos__numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--on-primary);
+  background: var(--primary);
+  border-radius: 50%;
+}
+
+/* ── Criterios ─────────────────────────────────────────────────────── */
+
+.criterios {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.criterios__item {
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--primary);
+}
+
+.criterios__nombre {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.criterios__texto {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--on-surface-variant);
+}
+
+/* ── Listas de ventajas y limitaciones ─────────────────────────────── */
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--on-surface);
+}
+
+.lista li::marker {
+  color: var(--on-surface-variant);
+}
+
+.lista--bueno li::marker {
+  color: #15803d;
+}
+
+.lista--malo li::marker {
+  color: #b91c1c;
+}

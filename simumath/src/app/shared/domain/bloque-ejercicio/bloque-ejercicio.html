@@ -1,0 +1,51 @@
+<div class="bloque-ejercicio">
+  <ui-card>
+    <!-- Planteamiento -->
+    <div class="bloque-ejercicio__encabezado">
+      <h3 class="bloque-ejercicio__titulo">{{ ejercicio().titulo }}</h3>
+    </div>
+
+    @if (esCasuistica() && ejercicio().enunciado) {
+      <section class="bloque-ejercicio__seccion">
+        <h4 class="bloque-ejercicio__subtitulo">Enunciado</h4>
+        <p class="bloque-ejercicio__parrafo">{{ ejercicio().enunciado }}</p>
+      </section>
+    }
+
+    <section class="bloque-ejercicio__seccion">
+      <h4 class="bloque-ejercicio__subtitulo">Planteamiento</h4>
+      <p class="bloque-ejercicio__parrafo">{{ ejercicio().ecuacion }}</p>
+      @if (ejercicio().parametros.length > 0) {
+        <ul class="bloque-ejercicio__lista">
+          @for (p of ejercicio().parametros; track p.etiqueta) {
+            <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
+          }
+        </ul>
+      }
+      @if (ejercicio().pista) {
+        <p class="bloque-ejercicio__pista">Pista: {{ ejercicio().pista }}</p>
+      }
+    </section>
+
+    <div class="bloque-ejercicio__acciones">
+      <button type="button" class="bloque-ejercicio__boton" (click)="alternar()">
+        {{ mostrarSolucion() ? 'Ocultar solución' : 'Ver solución' }}
+      </button>
+    </div>
+
+    @if (mostrarSolucion()) {
+      <div class="bloque-ejercicio__solucion">
+        <app-bloque-ejemplo
+          [ejemplo]="convertirAEjemplo()"
+          [filas]="filas()"
+          [columnas]="columnas()"
+          [filaFinal]="filaFinal()"
+          [funcion]="funcion()"
+          [rango]="rango()"
+          [dibujarMetodo]="dibujarMetodo()"
+          [raiz]="raiz()"
+        />
+      </div>
+    }
+  </ui-card>
+</div>

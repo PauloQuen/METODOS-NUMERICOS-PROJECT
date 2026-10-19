@@ -1,0 +1,85 @@
+.bloque-ejercicio {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bloque-ejercicio__encabezado {
+  margin-bottom: 0.75rem;
+}
+
+.bloque-ejercicio__titulo {
+  margin: 0;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 1.15rem;
+  color: var(--on-surface);
+}
+
+.bloque-ejercicio__seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--outline-variant);
+  border-radius: 0.75rem;
+  background: var(--surface-container-lowest);
+  margin-bottom: 0.75rem;
+}
+
+.bloque-ejercicio__subtitulo {
+  margin: 0;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 1rem;
+  color: var(--on-surface);
+}
+
+.bloque-ejercicio__parrafo {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--on-surface);
+}
+
+.bloque-ejercicio__pista {
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  background: var(--surface-container);
+  border-left: 3px solid var(--secondary);
+  border-radius: 0.4rem;
+}
+
+.bloque-ejercicio__lista {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bloque-ejercicio__acciones {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0.5rem 0;
+}
+
+.bloque-ejercicio__boton {
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
+  cursor: pointer;
+}
+
+.bloque-ejercicio__boton:hover {
+  background: var(--primary-container);
+  border-color: var(--primary-container);
+}
+
+.bloque-ejercicio__boton:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.bloque-ejercicio__solucion {
+  margin-top: 0.75rem;
+}

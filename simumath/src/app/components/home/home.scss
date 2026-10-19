@@ -1,0 +1,273 @@
+/* ==========================================================================
+   Home — Portal de entrada
+   Jerarquía: hero compacto → acciones de estudio → módulos del curso → footer.
+   Los componentes compartidos (ui-card, app-badge, app-btn, app-tab-nav,
+   app-footer) se estilizan desde acá vía el host element.
+   ========================================================================== */
+
+.home {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* --------------------------------------------------------------------------
+   Hero de entrada: identidad + app-tab-nav (no sticky).
+   -------------------------------------------------------------------------- */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl) var(--gutter-lg);
+  background: var(--primary);
+  color: var(--on-primary);
+  text-align: center;
+
+  &__title {
+    margin: var(--space-xs) auto 0;
+    max-width: 48rem;
+    font-family: var(--font-display);
+    font-size: var(--text-display-hero);
+    font-weight: var(--weight-display-hero);
+    line-height: var(--line-display-hero);
+    color: var(--surface-bright);
+    letter-spacing: -0.01em;
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-headline-sm);
+    font-weight: var(--weight-body-lg);
+    line-height: var(--line-headline-sm);
+    color: var(--primary-fixed-dim);
+  }
+
+  &__nav {
+    margin-top: var(--space-sm);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Contenido principal
+   -------------------------------------------------------------------------- */
+.home__content {
+  width: 100%;
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--gutter-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.section-heading {
+  margin-bottom: var(--space-lg);
+
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-headline-lg);
+    font-weight: var(--weight-headline-lg);
+    line-height: var(--line-headline-lg);
+    color: var(--primary);
+    letter-spacing: -0.01em;
+  }
+
+  &__subtitle {
+    margin: var(--space-xs) 0 0;
+    font-size: var(--text-body-md);
+    line-height: var(--line-body-md);
+    color: var(--on-surface-variant);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Acciones de estudio — 5 ui-cards, una por recurso.
+   -------------------------------------------------------------------------- */
+.actions__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-lg);
+}
+
+/* Estilos del HOST ui-card (el contenido proyectado no se estila desde acá) */
+ui-card.action-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border-top: 4px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  transition:
+    transform var(--transition-smooth),
+    box-shadow var(--transition-smooth);
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Acentos por tipo de recurso */
+  &--navy {
+    border-top-color: var(--primary-container);
+  }
+  &--amber {
+    border-top-color: var(--secondary);
+  }
+  &--teal {
+    border-top-color: var(--tertiary-container);
+  }
+  &--navy-dim {
+    border-top-color: var(--primary-fixed-dim);
+  }
+  &--amber-soft {
+    border-top-color: var(--secondary-container);
+  }
+}
+
+/* Contenido proyectado dentro de la tarjeta */
+.action-card {
+  &__icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    background: var(--surface-container-low);
+    color: var(--primary);
+
+    .material-symbols-outlined {
+      font-size: 22px;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-headline-sm);
+    font-weight: var(--weight-headline-sm);
+    line-height: var(--line-headline-sm);
+    color: var(--primary);
+  }
+
+  &__desc {
+    margin: 0;
+    flex: 1;
+    font-size: var(--text-body-sm);
+    line-height: var(--line-body-sm);
+    color: var(--on-surface-variant);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Módulos del curso — 5 ui-cards de fase. Fase 1 operativa, resto pendiente.
+   -------------------------------------------------------------------------- */
+.modules__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-lg);
+}
+
+ui-card.module-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border-radius: var(--radius-lg);
+  transition:
+    transform var(--transition-smooth),
+    box-shadow var(--transition-smooth);
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+}
+
+.module-card {
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  &__phase {
+    font-size: var(--text-label-sm);
+    font-weight: var(--weight-label-sm);
+    line-height: var(--line-label-sm);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--secondary);
+  }
+
+  &__title {
+    margin: var(--space-xs) 0 0;
+    font-family: var(--font-display);
+    font-size: var(--text-headline-sm);
+    font-weight: var(--weight-headline-sm);
+    line-height: var(--line-headline-sm);
+    color: var(--primary);
+  }
+
+  &__desc {
+    margin: 0;
+    flex: 1;
+    font-size: var(--text-body-sm);
+    line-height: var(--line-body-sm);
+    color: var(--on-surface-variant);
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin: 0.5rem 0 1.25rem 0;
+  }
+
+  /* CTA a ancho completo dentro del host ui-card */
+  &__cta {
+    margin-top: 5rem;
+
+    ::ng-deep .btn {
+      width: 75%;
+    }
+  }
+
+  &__soon {
+    display: block;
+    margin-top: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    background: var(--surface-container);
+    color: var(--on-surface-variant);
+    font-size: var(--text-label-md);
+    font-weight: var(--weight-label-md);
+    line-height: var(--line-label-md);
+    text-align: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive: 5 columnas → 3 → 1.
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .actions__grid,
+  .modules__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: var(--space-xl) var(--gutter-sm);
+  }
+
+  .home__content {
+    padding: var(--space-xl) var(--gutter-sm);
+  }
+
+  .actions__grid,
+  .modules__grid {
+    grid-template-columns: 1fr;
+  }
+}

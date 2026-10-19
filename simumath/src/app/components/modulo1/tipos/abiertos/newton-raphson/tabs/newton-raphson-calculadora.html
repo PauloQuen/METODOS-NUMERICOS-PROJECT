@@ -1,0 +1,74 @@
+<div class="calculadora">
+  <header class="calculadora__encabezado">
+    <h2 class="calculadora__titulo">Calculadora de Newton-Raphson</h2>
+    <p class="calculadora__intro">
+      Cargá la función y la semilla, corré el método y seguí iteración por
+      iteración con el visor de pasos. La función acepta
+      <code>^</code> para potencias y <code>exp()</code>, <code>ln()</code>,
+      <code>sen()</code>, <code>cos()</code>, <code>tan()</code>,
+      <code>log()</code> y <code>sqrt()</code>.
+    </p>
+  </header>
+
+  <!--
+    Arriba: el formulario con su respuesta (los muestra CalculadoraShell,
+    que es genérico y ya los trae) y, al lado, el gráfico.
+
+    Ojo: la respuesta NO se vuelve a mostrar en una tarjeta propia de esta
+    pestaña. Cuando existed, la raíz, las iteraciones y el error
+    aparecían dos veces en pantalla con dos formatos distintos, y el
+    alumno no sabe cuál mirar. El shell los muestra una sola vez.
+  -->
+  <div class="calculadora__grilla">
+    <app-calculadora-shell
+      [campos]="campos"
+      [(valores)]="valores"
+      [respuesta]="estado()?.respuesta ?? null"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (estado(); as e) {
+      @if (e.filas.length > 0) {
+        <div class="calculadora__columna-derecha">
+          <ui-card padding="lg">
+            <h3 class="seccion__titulo">Gráfico</h3>
+            <app-grafico-metodo
+              [funcion]="funcion()"
+              [iteraciones]="e.filas"
+              [pasoActual]="paso()"
+              [rango]="rango()"
+              [dibujarMetodo]="dibujar"
+              [raiz]="e.raiz"
+              leyenda="Newton-Raphson: la tangente en (xₙ, f(xₙ)) cruza el eje en xₙ₊₁"
+            />
+          </ui-card>
+          <ui-card padding="lg">
+            <h3 class="seccion__titulo">Paso a paso</h3>
+            <app-pasos-control
+              [total]="total()"
+              [paso]="paso()"
+              [texto]="textoDelPaso()"
+              (pasoCambiado)="alCambiarPaso($event)"
+            />
+          </ui-card>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- La tabla completa, solo si hay cálculo -->
+  @if (estado(); as e) {
+    @if (e.filas.length > 0) {
+      <ui-card padding="lg">
+        <h3 class="seccion__titulo">Iteraciones</h3>
+        <app-iteration-table
+          [columns]="columnas"
+          [rows]="e.filas"
+          [highlightRowIndex]="e.filaFinal"
+          [highlightBadge]="e.filaFinal !== undefined ? 'criterio cumplido' : ''"
+        />
+      </ui-card>
+    }
+  }
+</div>

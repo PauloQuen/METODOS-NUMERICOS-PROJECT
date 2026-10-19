@@ -1,0 +1,105 @@
+/* ==========================================================================
+   Autoevaluación — ejercicios con solución desplegable.
+   ========================================================================== */
+
+.auto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+}
+
+.section-heading {
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-headline-lg);
+    font-weight: var(--weight-headline-lg);
+    line-height: var(--line-headline-lg);
+    color: var(--primary);
+    letter-spacing: -0.01em;
+  }
+
+  &__subtitle {
+    margin: var(--space-xs) 0 0;
+    font-size: var(--text-body-md);
+    line-height: var(--line-body-md);
+    color: var(--on-surface-variant);
+  }
+}
+
+ui-card.ejercicio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+
+  app-badge {
+    align-self: flex-start;
+  }
+}
+
+.ejercicio {
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  &__texto {
+    margin: 0;
+    font-size: var(--text-body-md);
+    line-height: var(--line-body-md);
+    color: var(--on-surface);
+
+    strong {
+      color: var(--primary);
+    }
+  }
+
+  /* Solución desplegable */
+  &__solucion {
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+
+    summary {
+      cursor: pointer;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-md);
+      background: var(--secondary-container);
+      color: var(--on-secondary-container);
+      font-size: var(--text-label-lg);
+      font-weight: var(--weight-label-lg);
+      line-height: var(--line-label-lg);
+      user-select: none;
+      transition: background-color var(--transition-smooth);
+
+      &:hover {
+        background: var(--secondary-fixed);
+      }
+    }
+
+    &[open] summary {
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      border-bottom: 1px solid color-mix(in srgb, var(--secondary) 15%, transparent);
+    }
+
+    p {
+      margin: 0;
+      padding: var(--space-md);
+      background: var(--surface-container-lowest);
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      font-size: var(--text-body-sm);
+      line-height: var(--line-body-sm);
+      color: var(--on-surface);
+
+      strong {
+        color: var(--primary);
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+<div class="autoevaluacion">
+  @for (ejercicio of ejercicios; track ejercicio.id; let i = $index) {
+    <app-bloque-ejercicio
+      [ejercicio]="ejercicio"
+      [columnas]="columnas"
+      [filas]="estados()[i].filas"
+      [filaFinal]="estados()[i].filaFinal"
+      [funcion]="funciones[i]"
+      [rango]="rangos()[i]"
+      [dibujarMetodo]="dibujar"
+      [raiz]="estados()[i].raiz"
+    />
+  }
+</div>

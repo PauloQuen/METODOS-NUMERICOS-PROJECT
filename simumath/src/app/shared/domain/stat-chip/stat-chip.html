@@ -1,0 +1,12 @@
+<div class="stat-chip">
+  <div class="stat-chip__icon" [class]="iconClass()" aria-hidden="true">
+    <span class="material-symbols-outlined">{{ icon() }}</span>
+  </div>
+  <div class="stat-chip__body">
+    <span class="stat-chip__label">{{ label() }}</span>
+    <span class="stat-chip__value">{{ value() }}</span>
+    @if (caption()) {
+      <span class="stat-chip__caption">{{ caption() }}</span>
+    }
+  </div>
+</div>

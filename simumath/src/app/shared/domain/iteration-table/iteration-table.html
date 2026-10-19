@@ -1,0 +1,32 @@
+<div class="table-wrap">
+  <table class="it-table">
+    <thead>
+      <tr>
+        @for (col of columns(); track col.key) {
+          <th class="{{ cellAlign(col) }}">{{ col.label }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track $index; let rowIndex = $index) {
+        <tr
+          class="it-table-row"
+          [class.it-table-row--highlight]="rowIndex === highlightRowIndex()"
+        >
+          @for (col of columns(); track col.key; let last = $last) {
+            <td class="it-table__cell {{ cellAlign(col) }}">
+              {{ row[col.key] }}
+              @if (last && rowIndex === highlightRowIndex() && highlightBadge()) {
+                <app-badge
+                  class="it-table__badge"
+                  [text]="highlightBadge()"
+                  variant="amber"
+                />
+              }
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

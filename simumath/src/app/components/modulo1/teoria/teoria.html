@@ -1,0 +1,198 @@
+<section class="seccion">
+  <div class="section-heading">
+    <h2 class="section-heading__title">Conceptos de teoría de errores</h2>
+    <p class="section-heading__subtitle">
+      Todo método numérico aproxima; saber cuánto nos alejamos del valor
+      verdadero es la base del análisis.
+    </p>
+  </div>
+
+  <div class="grid grid--4">
+    @for (c of conceptosError; track c.titulo) {
+      <ui-card elevation="sm">
+        <app-badge [text]="c.titulo" [variant]="c.variante" />
+        <p class="formula" [innerHTML]="c.formula"></p>
+        <p class="card-text">{{ c.texto }}</p>
+      </ui-card>
+    }
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="section-heading">
+    <h2 class="section-heading__title">Exactitud, precisión y cifras</h2>
+    <p class="section-heading__subtitle">
+      Nociones que hay que separar sí o sí para no confundir convergencia con calidad.
+    </p>
+  </div>
+
+  <div class="grid grid--4">
+    @for (c of conceptosExtra; track c.titulo) {
+      <ui-card elevation="sm">
+        <app-badge [text]="c.titulo" [variant]="c.variante" />
+        <p class="formula" [innerHTML]="c.formula"></p>
+        <p class="card-text">{{ c.texto }}</p>
+      </ui-card>
+    }
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="section-heading">
+    <h2 class="section-heading__title">Fundamentos para resolver f(x) = 0</h2>
+    <p class="section-heading__subtitle">
+      Antes de elegir método: normalizar la ecuación, localizar la raíz y entender
+      qué datos exige cada familia de algoritmos.
+    </p>
+  </div>
+
+  <div class="grid grid--2">
+    @for (f of fundamentos; track f.titulo) {
+      <ui-card elevation="sm">
+        <app-badge text="Fundamento" variant="outline" />
+        <h3 class="card-title">{{ f.titulo }}</h3>
+        <p class="card-text">{{ f.texto }}</p>
+      </ui-card>
+    }
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="section-heading">
+    <h2 class="section-heading__title">Métodos del módulo</h2>
+    <p class="section-heading__subtitle">
+      Cinco algoritmos para hallar raíces de f(x) = 0, ordenados por los datos
+      que exigen: primero el intervalo, luego la secante y la iteración de punto fijo.
+    </p>
+  </div>
+
+  <div class="metodos">
+    @for (m of metodos; track m.nombre; let idx = $index) {
+      <ui-card elevation="sm" class="metodo">
+        <div class="metodo__head">
+          <div class="metodo__badges">
+            <app-badge [text]="m.nombre" [variant]="m.variante" />
+            <app-badge [text]="m.orden" variant="outline" />
+          </div>
+          <span class="metodo__numero">{{ idx + 1 }}</span>
+        </div>
+
+        <h3 class="card-title">{{ m.titulo }}</h3>
+        <p class="formula formula--block" [innerHTML]="m.formula"></p>
+        <p class="card-text">{{ m.texto }}</p>
+
+        <div class="metodo__col">
+          <h4 class="metodo__sub">Algoritmo</h4>
+          <ol class="metodo__list">
+            @for (paso of m.algoritmo; track paso) {
+              <li>{{ paso }}</li>
+            }
+          </ol>
+        </div>
+
+        <div class="metodo__cols">
+          <div class="metodo__col">
+            <h4 class="metodo__sub metodo__sub--pro">Ventajas</h4>
+            <ul class="metodo__list">
+              @for (v of m.ventajas; track v) {
+                <li>{{ v }}</li>
+              }
+            </ul>
+          </div>
+          <div class="metodo__col">
+            <h4 class="metodo__sub metodo__sub--contra">Limitaciones</h4>
+            <ul class="metodo__list">
+              @for (l of m.limitaciones; track l) {
+                <li>{{ l }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+
+        <app-btn
+          variant="secondary"
+          label="Ir a la calculadora"
+          icon="arrow_forward"
+          routerLink="/modulo1/calculadoras-interactivas"
+          class="card-cta"
+        />
+      </ui-card>
+    }
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="section-heading">
+    <h2 class="section-heading__title">Criterios de parada y tolerancias</h2>
+    <p class="section-heading__subtitle">
+      ¿Cuándo dejamos de iterar? El bucle se detiene con el primer criterio que se cumpla.
+    </p>
+  </div>
+
+  <ui-card elevation="md" class="parada">
+    <ul class="parada__list">
+      @for (c of criterios; track c.titulo; let i = $index) {
+        <li>
+          <app-badge [text]="(i + 1).toString()" variant="navy" />
+          <span>
+            <strong>{{ c.titulo }}:</strong> {{ c.texto }}
+          </span>
+        </li>
+      }
+    </ul>
+  </ui-card>
+
+  <div class="grid grid--3">
+    @for (t of tolerancias; track t.titulo) {
+      <ui-card elevation="sm">
+        <app-badge text="Tolerancia" variant="teal" />
+        <h3 class="card-title">{{ t.titulo }}</h3>
+        <p class="card-text">{{ t.texto }}</p>
+      </ui-card>
+    }
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="section-heading">
+    <h2 class="section-heading__title">Comparación de los métodos</h2>
+    <p class="section-heading__subtitle">
+      Misma ecuación (f(x) = x³ − x − 2, raíz x* ≈ 1.5213797), distintos algoritmos:
+      no hay un método “mejor”, hay un método adecuado a cada problema.
+    </p>
+  </div>
+
+  <ui-card elevation="md" class="comparacion">
+    <div class="comparacion__scroll">
+      <table class="comparacion__tabla">
+        <thead>
+          <tr>
+            <th scope="col">Aspecto</th>
+            @for (h of comparacionHeaders; track h) {
+              <th scope="col">{{ h }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (fila of comparacion; track fila.aspecto) {
+            <tr>
+              <th scope="row">{{ fila.aspecto }}</th>
+              @for (v of fila.valores; track $index) {
+                <td>{{ v }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </ui-card>
+
+  <div class="grid grid--4 caso">
+    @for (c of caso; track c.metodo) {
+      <ui-card elevation="sm">
+        <app-badge [text]="c.metodo" [variant]="c.variante" />
+        <p class="card-text">{{ c.resultado }}</p>
+      </ui-card>
+    }
+  </div>
+</section>

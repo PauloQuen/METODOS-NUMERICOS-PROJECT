@@ -1,0 +1,43 @@
+<div #contenedor class="grafico-metodo__contenedor">
+  <div class="grafico-metodo__controles" aria-label="Controles de zoom y vista del gráfico">
+    <button
+      type="button"
+      class="grafico-metodo__boton"
+      (click)="alejar()"
+      title="Alejar (zoom -)"
+      aria-label="Alejar"
+    >
+      <span class="material-symbols-outlined">zoom_out</span>
+    </button>
+    <button
+      type="button"
+      class="grafico-metodo__boton"
+      (click)="acercar()"
+      title="Acercar (zoom +)"
+      aria-label="Acercar"
+    >
+      <span class="material-symbols-outlined">zoom_in</span>
+    </button>
+    <button
+      type="button"
+      class="grafico-metodo__boton"
+      (click)="ajustarVista()"
+      title="Ajustar al intervalo/rango sugerido"
+      aria-label="Ajustar vista"
+    >
+      <span class="material-symbols-outlined">fit_screen</span>
+    </button>
+    <button
+      type="button"
+      class="grafico-metodo__boton"
+      (click)="reiniciarVista()"
+      title="Restablecer zoom y posición (doble clic también)"
+      aria-label="Restablecer vista"
+    >
+      <span class="material-symbols-outlined">refresh</span>
+    </button>
+  </div>
+
+  <canvas #lienzo class="grafico-metodo__lienzo" role="img" [attr.aria-label]="descripcionGrafico()">
+  </canvas>
+</div>

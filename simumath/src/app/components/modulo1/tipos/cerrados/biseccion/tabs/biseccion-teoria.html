@@ -1,0 +1,178 @@
+<div class="teoria">
+  <!-- 1. Concepto -->
+  <section class="teoria__seccion">
+    <h2 class="teoria__titulo">¿Qué es y para qué sirve?</h2>
+    <p class="teoria__parrafo">{{ teoria.concepto }}</p>
+  </section>
+
+  <!-- 2, 3 y 4: las tres secciones ampliables -->
+  <section class="teoria__seccion">
+    <h2 class="teoria__titulo">Las tres ideas que hay que entender</h2>
+
+    <div class="teoria__acordeon">
+      <button
+        type="button"
+        class="teoria__acordeon-boton"
+        [class.teoria__acordeon-boton--abierto]="abierta() === 'fundamento'"
+        (click)="alternar('fundamento')"
+        [attr.aria-expanded]="abierta() === 'fundamento'"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+        <span class="teoria__acordeon-titulo">¿Por qué funciona?</span>
+        <span class="material-symbols-outlined teoria__acordeon-flecha" aria-hidden="true">
+          {{ abierta() === 'fundamento' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'fundamento') {
+        <div class="teoria__acordeon-cuerpo">
+          <p>{{ teoria.fundamento }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="teoria__acordeon">
+      <button
+        type="button"
+        class="teoria__acordeon-boton"
+        [class.teoria__acordeon-boton--abierto]="abierta() === 'falla'"
+        (click)="alternar('falla')"
+        [attr.aria-expanded]="abierta() === 'falla'"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+        <span class="teoria__acordeon-titulo">¿Cuándo falla?</span>
+        <span class="material-symbols-outlined teoria__acordeon-flecha" aria-hidden="true">
+          {{ abierta() === 'falla' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'falla') {
+        <div class="teoria__acordeon-cuerpo">
+          <p>{{ teoria.cuandoFalla }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="teoria__acordeon">
+      <button
+        type="button"
+        class="teoria__acordeon-boton"
+        [class.teoria__acordeon-boton--abierto]="abierta() === 'orden'"
+        (click)="alternar('orden')"
+        [attr.aria-expanded]="abierta() === 'orden'"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">speed</span>
+        <span class="teoria__acordeon-titulo">¿Qué tan rápido converge?</span>
+        <span class="material-symbols-outlined teoria__acordeon-flecha" aria-hidden="true">
+          {{ abierta() === 'orden' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'orden') {
+        <div class="teoria__acordeon-cuerpo">
+          <p>{{ teoria.ordenConvergencia }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- 5. La tarjeta del algoritmo -->
+  <section class="teoria__seccion">
+    <h2 class="teoria__titulo">El algoritmo</h2>
+
+    <div class="formula">
+      <span class="formula__variable">c</span>
+      <span class="formula__igual">=</span>
+      <span class="formula__fraccion">
+        <span class="formula__numerador">a + b</span>
+        <span class="formula__denominador">2</span>
+      </span>
+    </div>
+
+    <div class="teoria__grilla">
+      <ui-card>
+        <h3 class="tarjeta__titulo">Los pasos</h3>
+        <ol class="pasos">
+          @for (paso of teoria.algoritmo.pasos; track $index) {
+            <li class="pasos__paso">
+              <span class="pasos__numero">{{ $index + 1 }}</span>
+              <span>{{ paso }}</span>
+            </li>
+          }
+        </ol>
+      </ui-card>
+
+      <ui-card>
+        <h3 class="tarjeta__titulo">¿Cuándo se detiene?</h3>
+        <div class="criterios">
+          @for (c of teoria.algoritmo.criterios; track c.nombre) {
+            <div class="criterios__item">
+              <p class="criterios__nombre">{{ c.nombre }}</p>
+              <p class="criterios__texto">{{ c.explicacion }}</p>
+            </div>
+          }
+        </div>
+      </ui-card>
+    </div>
+
+    <div class="teoria__grilla">
+      <ui-card>
+        <h3 class="tarjeta__titulo tarjeta__titulo--bueno">Ventajas</h3>
+        <ul class="lista lista--bueno">
+          @for (v of teoria.algoritmo.ventajas; track v) {
+            <li>{{ v }}</li>
+          }
+        </ul>
+      </ui-card>
+
+      <ui-card>
+        <h3 class="tarjeta__titulo tarjeta__titulo--malo">Limitaciones</h3>
+        <ul class="lista lista--malo">
+          @for (l of teoria.algoritmo.limitaciones; track l) {
+            <li>{{ l }}</li>
+          }
+        </ul>
+      </ui-card>
+    </div>
+
+    <ui-card>
+      <h3 class="tarjeta__titulo">Consejos de uso</h3>
+      <ul class="lista">
+        @for (r of teoria.algoritmo.recomendaciones; track r) {
+          <li>{{ r }}</li>
+        }
+      </ul>
+    </ui-card>
+  </section>
+
+  <!-- 6. Ejemplo numérico -->
+  <section class="teoria__seccion">
+    <h2 class="teoria__titulo">Ejemplo numérico resuelto</h2>
+    <app-bloque-ejemplo
+      [ejemplo]="teoria.ejemploNormal"
+      [funcion]="funcionNumerico"
+      [filas]="ejemploNumerico().filas"
+      [columnas]="columnas"
+      [filaFinal]="ejemploNumerico().filaFinal"
+      [rango]="rangoNumerico()"
+      [dibujarMetodo]="dibujar"
+      [raiz]="ejemploNumerico().raiz"
+    />
+  </section>
+
+  <!-- 7. Ejemplo de casuística -->
+  <section class="teoria__seccion">
+    <h2 class="teoria__titulo">Ejemplo desde una casuística real</h2>
+    <p class="teoria__parrafo teoria__parrafo--intro">
+      Un problema como llega en la práctica: con los datos de donde salen,
+      el planteamiento, y los pasos escritos uno por uno.
+    </p>
+    <app-bloque-ejemplo
+      [ejemplo]="teoria.ejemploCasuistica"
+      [funcion]="funcionCasuistica"
+      [filas]="ejemploCasuistica().filas"
+      [columnas]="columnas"
+      [filaFinal]="ejemploCasuistica().filaFinal"
+      [rango]="rangoCasuistica()"
+      [dibujarMetodo]="dibujar"
+      [raiz]="ejemploCasuistica().raiz"
+    />
+  </section>
+</div>

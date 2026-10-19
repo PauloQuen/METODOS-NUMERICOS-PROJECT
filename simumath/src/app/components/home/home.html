@@ -1,0 +1,225 @@
+<div class="home">
+  <!--
+    Hero de entrada: identidad mínima, sin barra fija.
+    La navegación de secciones vive acá (app-tab-nav), no en un header sticky.
+  -->
+  <section class="hero">
+    <app-badge text="Asignatura · Métodos Numéricos · 2026-B" variant="amber" />
+    <h1 class="hero__title">Portal Educativo de Métodos Numéricos</h1>
+    <p class="hero__subtitle">Escuela Profesional de Ingeniería de Sistemas — UNSA</p>
+  </section>
+
+  <main class="home__content">
+    <!--
+      Acciones de estudio: lo que el estudiante va a usar, un clic de distancia.
+      Organizado por TIPO de recurso (no por fase) para decidir en 3 segundos.
+    -->
+    <section class="actions">
+      <div class="section-heading">
+        <h2 class="section-heading__title">¿Qué quieres estudiar hoy?</h2>
+        <p class="section-heading__subtitle">
+          Teoría, práctica y verificación: entra directo al recurso.
+        </p>
+      </div>
+
+      <div class="actions__grid">
+        <ui-card elevation="sm" class="action-card action-card--navy">
+          <div class="action-card__icon" aria-hidden="true">
+            <span class="material-symbols-outlined">import_contacts</span>
+          </div>
+          <h3 class="action-card__title">Teoría y errores</h3>
+          <p class="action-card__desc">
+            Definiciones, criterios de convergencia y errores numéricos con ejemplos.
+          </p>
+          <app-btn
+            variant="link"
+            label="Entrar"
+            icon="arrow_forward"
+            routerLink="/modulo1/teoria-y-errores"
+          />
+        </ui-card>
+
+        <ui-card elevation="sm" class="action-card action-card--amber">
+          <div class="action-card__icon" aria-hidden="true">
+            <span class="material-symbols-outlined">calculate</span>
+          </div>
+          <h3 class="action-card__title">Calculadoras interactivas</h3>
+          <p class="action-card__desc">
+            Bisección, Newton-Raphson, Secante, Punto Fijo y Regla Falsa con iteración paso a paso y
+            criterio de parada.
+          </p>
+          <app-btn
+            variant="link"
+            label="Entrar"
+            icon="arrow_forward"
+            routerLink="/modulo1/calculadoras-interactivas"
+          />
+        </ui-card>
+
+        <ui-card elevation="sm" class="action-card action-card--teal">
+          <div class="action-card__icon" aria-hidden="true">
+            <span class="material-symbols-outlined">menu_book</span>
+          </div>
+          <h3 class="action-card__title">Ejemplos resueltos</h3>
+          <p class="action-card__desc">
+            Problemas desarrollados con tablas de iteración y análisis de convergencia.
+          </p>
+          <app-btn
+            variant="link"
+            label="Entrar"
+            icon="arrow_forward"
+            routerLink="/modulo1/ejemplos-resueltos"
+          />
+        </ui-card>
+
+        <ui-card elevation="sm" class="action-card action-card--navy-dim">
+          <div class="action-card__icon" aria-hidden="true">
+            <span class="material-symbols-outlined">show_chart</span>
+          </div>
+          <h3 class="action-card__title">Gráficos</h3>
+          <p class="action-card__desc">
+            Visualiza funciones, intervalos y convergencia de cada método.
+          </p>
+          <app-btn
+            variant="link"
+            label="Entrar"
+            icon="arrow_forward"
+            routerLink="/modulo1/graficos"
+          />
+        </ui-card>
+
+        <ui-card elevation="sm" class="action-card action-card--amber-soft">
+          <div class="action-card__icon" aria-hidden="true">
+            <span class="material-symbols-outlined">quiz</span>
+          </div>
+          <h3 class="action-card__title">Autoevaluación</h3>
+          <p class="action-card__desc">
+            Ejercicios con solución desplegable para verificar tu avance.
+          </p>
+          <app-btn
+            variant="link"
+            label="Entrar"
+            icon="arrow_forward"
+            routerLink="/modulo1/autoevaluacion-y-recursos"
+          />
+        </ui-card>
+      </div>
+    </section>
+
+    <!--
+      Módulos del curso: las 5 fases temáticas. La fase 1 es la desarrollada;
+      el resto queda señalado como pendiente sin romper la grilla.
+    -->
+    <section class="modules">
+      <div class="section-heading">
+        <h2 class="section-heading__title">Módulos del curso</h2>
+        <p class="section-heading__subtitle">
+          La materia se desarrolla en 5 fases; cada fase cubre un módulo temático.
+        </p>
+      </div>
+
+      <div class="modules__grid">
+        <ui-card elevation="sm" class="module-card">
+          <div class="module-card__head">
+            <span class="module-card__phase">Fase 1</span>
+            <app-badge text="Disponible" variant="amber" />
+          </div>
+          <h3 class="module-card__title">Ecuaciones no lineales y errores</h3>
+          <p class="module-card__desc">
+            Resolución de ecuaciones algebraicas y trascendentes mediante Bisección, Newton-Raphson,
+            Secante, Punto Fijo y Regla Falsa, con análisis de errores, cifras significativas y
+            criterios de parada.
+          </p>
+          <div class="module-card__tags" aria-label="Métodos del módulo">
+            <app-badge text="Bisección" variant="outline" />
+            <app-badge text="Newton-Raphson" variant="outline" />
+            <app-badge text="Secante" variant="outline" />
+            <app-badge text="Punto Fijo" variant="outline" />
+            <app-badge text="Regla Falsa" variant="outline" />
+          </div>
+          <app-btn
+            class="module-card__cta"
+            label="Ingresar al Módulo"
+            icon="arrow_forward"
+            routerLink="/modulo1"
+          />
+        </ui-card>
+
+        <ui-card elevation="sm" class="module-card">
+          <div class="module-card__head">
+            <span class="module-card__phase">Fase 2</span>
+            <app-badge text="En desarrollo" variant="outline" />
+          </div>
+          <h3 class="module-card__title">Sistemas de ecuaciones lineales</h3>
+          <p class="module-card__desc">
+            Eliminación gaussiana con pivoteo parcial, factorización LU y convergencia de Jacobi y
+            Gauss-Seidel.
+          </p>
+          <div class="module-card__tags" aria-label="Métodos del módulo">
+            <app-badge text="Eliminación Gauss" variant="outline" />
+            <app-badge text="Gauss-Seidel" variant="outline" />
+            <app-badge text="LU Doolittle" variant="outline" />
+          </div>
+          <span class="module-card__soon">Próximamente</span>
+        </ui-card>
+
+        <ui-card elevation="sm" class="module-card">
+          <div class="module-card__head">
+            <span class="module-card__phase">Fase 3</span>
+            <app-badge text="En desarrollo" variant="outline" />
+          </div>
+          <h3 class="module-card__title">Interpolación y ajuste de curvas</h3>
+          <p class="module-card__desc">
+            Lagrange, diferencias divididas de Newton, splines cúbicos y ajuste por mínimos
+            cuadrados.
+          </p>
+          <div class="module-card__tags" aria-label="Métodos del módulo">
+            <app-badge text="Lagrange" variant="outline" />
+            <app-badge text="Splines Cúbicos" variant="outline" />
+            <app-badge text="Mínimos Cuadrados" variant="outline" />
+          </div>
+          <span class="module-card__soon">Próximamente</span>
+        </ui-card>
+
+        <ui-card elevation="sm" class="module-card">
+          <div class="module-card__head">
+            <span class="module-card__phase">Fase 4</span>
+            <app-badge text="En desarrollo" variant="outline" />
+          </div>
+          <h3 class="module-card__title">Diferenciación e Integración Numérica</h3>
+          <p class="module-card__desc">
+            Diferencias finitas, Regla del Trapecio, Simpson 1/3 y 3/8, y Cuadratura de
+            Gauss-Legendre.
+          </p>
+          <div class="module-card__tags" aria-label="Métodos del módulo">
+            <app-badge text="Simpson 1/3 y 3/8" variant="outline" />
+            <app-badge text="Gauss-Legendre" variant="outline" />
+            <app-badge text="Romberg" variant="outline" />
+          </div>
+          <span class="module-card__soon">Próximamente</span>
+        </ui-card>
+
+        <ui-card elevation="sm" class="module-card">
+          <div class="module-card__head">
+            <span class="module-card__phase">Fase 5</span>
+            <app-badge text="En desarrollo" variant="outline" />
+          </div>
+          <h3 class="module-card__title">Ecuaciones Diferenciales Ordinarias</h3>
+          <p class="module-card__desc">
+            Problemas de valor inicial mediante Euler, Euler Mejorado (Heun) y Runge-Kutta de 4to
+            orden (RK4).
+          </p>
+          <div class="module-card__tags" aria-label="Métodos del módulo">
+            <app-badge text="Euler / Heun" variant="outline" />
+            <app-badge text="Runge-Kutta 4" variant="outline" />
+            <app-badge text="Sistemas EDO" variant="outline" />
+          </div>
+          <span class="module-card__soon">Próximamente</span>
+        </ui-card>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer institucional, mismo componente que en las páginas del módulo -->
+  <app-footer [year]="2026" />
+</div>

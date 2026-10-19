@@ -1,0 +1,249 @@
+/* ==========================================================================
+   Calculadoras Interactivas — entrada de datos + resultado en tabla.
+   ========================================================================== */
+
+.calc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+
+  /* Selector de método */
+  app-tab-nav {
+    align-self: stretch;
+  }
+
+  &__panels {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: var(--space-lg);
+    align-items: start;
+
+    /* Los ítems de grid tienen min-width: auto por defecto y NO encogen
+       por debajo del contenido (una tabla de iteración ancha los revienta).
+       Con min-width: 0, el wrapper de la tabla (overflow-x: auto) hace
+       scroll interno y la página no desborda. */
+    > * {
+      min-width: 0;
+    }
+  }
+
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  &__output {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  &__heading {
+    margin: 0 0 1rem 0;
+    font-family: var(--font-display);
+    font-size: var(--text-headline-md);
+    font-weight: var(--weight-headline-md);
+    line-height: var(--line-headline-md);
+    color: var(--primary);
+  }
+
+  &__output-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+
+    app-badge {
+      white-space: nowrap;
+    }
+  }
+
+  /* Chips descriptivos de los parámetros */
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md) var(--space-lg);
+    margin: 0 0 1rem 0;
+  }
+
+  /* Fórmula del método activo */
+  &__formula {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin: 0 0 1rem 0;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    background: var(--surface-container-lowest);
+    border: 1px dashed var(--outline-variant);
+    font-family: var(--font-mono, monospace);
+    font-size: var(--text-body-sm);
+    line-height: var(--line-body-sm);
+    color: var(--on-surface-variant);
+  }
+
+  /* Campos de entrada */
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+  }
+
+  &__actions {
+    display: flex;
+    margin: 1rem 0 0 0;
+    gap: var(--space-md);
+
+    app-btn:first-child {
+      flex: 1;
+    }
+  }
+
+  /* Estado de error del cálculo */
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background: var(--error-container);
+    color: var(--on-error-container);
+    font-size: var(--text-body-md);
+    line-height: var(--line-body-md);
+
+    .material-symbols-outlined {
+      font-size: 18px;
+    }
+  }
+
+  /* Razón de parada: por qué el método terminó, con qué magnitud */
+  &__parada {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    margin: 0 0 var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    border-inline-start: 3px solid var(--color-accent, currentColor);
+    background: var(--surface-container-low, rgb(0 0 0 / 4%));
+    color: var(--on-surface);
+    font-size: var(--text-body-sm);
+    line-height: var(--line-body-md);
+
+    .material-symbols-outlined {
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+  }
+
+  /* Estado vacío */
+  &__placeholder {
+    margin: 0;
+    padding: var(--space-xl) var(--space-md);
+    text-align: center;
+    font-size: var(--text-body-md);
+    line-height: var(--line-body-md);
+    color: var(--on-surface-variant);
+
+    strong {
+      color: var(--primary);
+    }
+  }
+}
+
+@media (max-width: 1100px) {
+  .calc__panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .calc__row {
+    grid-template-columns: 1fr;
+  }
+
+  .calc__output-head {
+    /* El badge de estado (white-space: nowrap) desborda en pantallas
+       muy angostas (320px): permitimos que pase a su propia línea. */
+    flex-wrap: wrap;
+  }
+}
+
+/* ── Ficha del método activo ───────────────────────────────────────────
+   Tarjeta con "cuándo usarlo" y "lo que exige". No es decoración: es la
+   información que el alumno necesita para saber si el método que tiene
+   cargado le va a servir o si tiene que cambiar la semilla.
+   ──────────────────────────────────────────────────────────────────── */
+.calc__ficha {
+  margin-block: var(--space-md);
+
+  &-cabecera {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-xs);
+  }
+
+  &-idea {
+    margin: 0 0 var(--space-sm);
+    font-size: var(--text-body-md);
+    line-height: var(--line-body-md);
+    color: var(--on-surface);
+  }
+
+  &-datos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--space-md);
+  }
+
+  &-bloque {
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    background: var(--surface-container-low);
+
+    p {
+      margin: 0;
+      font-size: var(--text-body-sm);
+      line-height: var(--line-body-sm);
+      color: var(--on-surface-variant);
+    }
+  }
+
+  &-titulo {
+    margin: 0 0 var(--space-xs);
+    font-size: var(--text-label-lg);
+    font-weight: var(--weight-label-lg);
+    line-height: var(--line-label-lg);
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &-lista {
+    margin: 0;
+    padding-inline-start: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    font-size: var(--text-body-sm);
+    line-height: var(--line-body-sm);
+    color: var(--on-surface-variant);
+
+    code {
+      font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, monospace;
+      font-size: 0.95em;
+      background: var(--surface-container-highest);
+      padding: 0 0.15em;
+      border-radius: 3px;
+    }
+  }
+}

@@ -1,0 +1,66 @@
+<div class="pasos">
+  <div class="pasos__cabecera">
+    <span class="pasos__contador">{{ etiqueta() }}</span>
+  </div>
+
+  <div class="pasos__botones" role="group" aria-label="Controles de iteración">
+    <button
+      type="button"
+      class="paso-btn"
+      (click)="irAlInicio()"
+      [disabled]="!hayPasos() || enInicio()"
+      aria-label="Ir a la primera iteración"
+      title="Ir a la primera iteración"
+    >
+      <span aria-hidden="true">⏮</span>
+    </button>
+
+    <button
+      type="button"
+      class="paso-btn"
+      (click)="irAlAnterior()"
+      [disabled]="!hayPasos() || enInicio()"
+      aria-label="Iteración anterior"
+      title="Iteración anterior"
+    >
+      <span aria-hidden="true">◀</span>
+    </button>
+
+    <button
+      type="button"
+      class="paso-btn paso-btn--siguiente"
+      (click)="irAlSiguiente()"
+      [disabled]="!hayPasos() || enFinal()"
+      aria-label="Iteración siguiente"
+      title="Iteración siguiente"
+    >
+      <span aria-hidden="true">▶</span>
+    </button>
+
+    <button
+      type="button"
+      class="paso-btn"
+      (click)="irAlFinal()"
+      [disabled]="!hayPasos() || enFinal()"
+      aria-label="Ir a la última iteración"
+      title="Ir a la última iteración"
+    >
+      <span aria-hidden="true">⏭</span>
+    </button>
+
+    <button
+      type="button"
+      class="paso-btn paso-btn--reproducir"
+      (click)="alternarReproduccion()"
+      [disabled]="!hayPasos()"
+      [attr.aria-pressed]="reproduciendo()"
+    >
+      <span aria-hidden="true">{{ reproduciendo() ? '⏸' : '▶' }}</span>
+      {{ reproduciendo() ? 'Pausar' : 'Reproducir' }}
+    </button>
+  </div>
+
+  @if (texto()) {
+    <p class="pasos__texto">{{ texto() }}</p>
+  }
+</div>

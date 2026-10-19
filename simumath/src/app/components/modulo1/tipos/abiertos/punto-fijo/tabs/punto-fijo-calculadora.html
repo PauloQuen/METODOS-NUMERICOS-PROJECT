@@ -1,0 +1,71 @@
+<div class="calculadora">
+  <header class="calculadora__encabezado">
+    <h2 class="calculadora__titulo">Calculadora de Punto Fijo</h2>
+    <p class="calculadora__intro">
+      Cargá la reescritura g(x) y la semilla, corré el método y seguí
+      iteración por iteración con el visor de pasos. La función acepta
+      <code>^</code> para potencias y <code>exp()</code>, <code>ln()</code>,
+      <code>sen()</code>, <code>cos()</code>, <code>tan()</code>,
+      <code>log()</code> y <code>sqrt()</code>. Ojo: la reescritura tiene
+      que ser x = g(x) y conviene que |g′| sea chico cerca de la raíz.
+    </p>
+  </header>
+
+  <!--
+    Arriba: el formulario con su respuesta (los muestra CalculadoraShell,
+    que es genérico y ya los trae) y, al lado, el gráfico.
+
+    Ojo: la respuesta NO se vuelve a mostrar en una tarjeta propia de esta
+    pestaña. Cuando existed, la raíz, las iteraciones y el error
+    aparecían dos veces en pantalla con dos formatos distintos, y el
+    alumno no sabe cuál mirar. El shell los muestra una sola vez.
+  -->
+  <div class="calculadora__grilla">
+    <app-calculadora-shell
+      [campos]="campos"
+      [(valores)]="valores"
+      [respuesta]="respuesta()"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (hayCalculo()) {
+      <div class="calculadora__columna-derecha">
+        <ui-card padding="lg">
+          <h3 class="seccion__titulo">Gráfico</h3>
+          <app-grafico-metodo
+            [funcion]="funcion()"
+            [iteraciones]="filas()"
+            [pasoActual]="paso()"
+            [rango]="rango()"
+            [dibujarMetodo]="dibujar"
+            [raiz]="raiz()"
+            leyenda="Punto Fijo: la telaraña entre la curva y = g(x) y la diagonal y = x; cada xᵢ₊₁ = g(xᵢ) se proyecta contra la diagonal"
+          />
+        </ui-card>
+        <ui-card padding="lg">
+          <h3 class="seccion__titulo">Paso a paso</h3>
+          <app-pasos-control
+            [total]="total()"
+            [paso]="paso()"
+            [texto]="textoDelPaso()"
+            (pasoCambiado)="alCambiarPaso($event)"
+          />
+        </ui-card>
+      </div>
+    }
+  </div>
+
+  <!-- La tabla completa, solo si hay cálculo -->
+  @if (hayCalculo()) {
+    <ui-card padding="lg">
+      <h3 class="seccion__titulo">Iteraciones</h3>
+      <app-iteration-table
+        [columns]="columnas"
+        [rows]="filas()"
+        [highlightRowIndex]="filaFinal()"
+        [highlightBadge]="filaFinal() !== undefined ? 'criterio cumplido' : ''"
+      />
+    </ui-card>
+  }
+</div>

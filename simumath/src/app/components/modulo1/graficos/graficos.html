@@ -1,0 +1,70 @@
+<section class="graf">
+  <div class="section-heading">
+    <h2 class="section-heading__title">Gráficos</h2>
+    <p class="section-heading__subtitle">
+      Visualizá la dinámica de cada método sobre el canvas: la curva, las
+      iteraciones y, para Punto Fijo, la recta y = x y la telaraña.
+    </p>
+  </div>
+
+  <p class="graf__aviso" role="note">
+    <span class="material-symbols-outlined" aria-hidden="true">info</span>
+    <span>
+      Aclaración: esta sección es <strong>ilustrativa</strong> — cada método
+      muestra un ejemplo fijo (los mismos del PDF del tema). Todavía NO procesa
+      los datos ingresados en las calculadoras; la versión conectada a tus datos
+      está en desarrollo.
+    </span>
+  </p>
+
+  <!-- Navegación jerárquica familia → método, igual que en la calculadora. -->
+  <app-registro-nav [activo]="metodo()" (seleccionar)="cambiarMetodo($event)" />
+
+  <ui-card elevation="md" class="graf__output">
+    <div class="graf__datos">
+      <p class="graf__titulo">
+        <span class="material-symbols-outlined" aria-hidden="true">functions</span>
+        {{ ejemplo()?.titulo ?? 'Sin ejemplo para este método todavía' }}
+      </p>
+      <p class="graf__familia">
+        {{ ficha().nombre }} · {{ familiaActiva().nombre }} · orden
+        {{ ficha().ordenTexto }}
+      </p>
+      <p class="graf__formula">
+        <span class="material-symbols-outlined" aria-hidden="true">calculate</span>
+        {{ info[metodo()].formula }}
+      </p>
+    </div>
+
+    <canvas
+      #lienzo
+      class="graf__lienzo"
+      role="img"
+      [attr.aria-label]="'Gráfico de ejemplo: ' + (ejemplo()?.titulo ?? 'sin ejemplo')"
+    ></canvas>
+
+    @if (resultado(); as r) {
+      <p class="graf__leyenda">
+        @if (r.error) {
+          <span class="graf__leyenda-item graf__leyenda-item--error">{{ r.error }}</span>
+        } @else if (r.converged) {
+          <span class="graf__leyenda-item">
+            <span class="graf__dot graf__dot--iter" aria-hidden="true"></span>
+            Convergencia en {{ r.iterations }} iteraciones
+          </span>
+          <span class="graf__leyenda-item">
+            <span class="graf__dot graf__dot--raiz" aria-hidden="true"></span>
+            Raíz aproximada: {{ ultimaAproximacion(r) }}
+          </span>
+        } @else {
+          <span class="graf__leyenda-item graf__leyenda-item--error">
+            Sin convergencia en {{ r.iterations }} iteraciones
+          </span>
+        }
+        <span class="graf__leyenda-item graf__leyenda-item--nota">
+          {{ ejemplo()?.descripcion }}
+        </span>
+      </p>
+    }
+  </ui-card>
+</section>

@@ -1,0 +1,191 @@
+<section class="ejemplos">
+  <div class="section-heading">
+    <h2 class="section-heading__title">Ejemplos resueltos</h2>
+    <p class="section-heading__subtitle">
+      Los 10 ejercicios del PDF del tema, cada uno con su casuística: de dónde
+      sale el problema, de dónde sale cada dato y por qué ese método. Después,
+      la fórmula aplicada paso a paso, la tabla de iteraciones verificada por el
+      algoritmo real y el código MATLAB/Octave como complemento.
+    </p>
+  </div>
+
+  <div
+    class="ejemplos__filtro"
+    role="group"
+    aria-label="Filtrar ejercicios por método"
+  >
+    @for (f of filtros; track f.valor) {
+      <button
+        type="button"
+        class="ejemplos__filtro-btn"
+        [class.ejemplos__filtro-btn--activo]="filtro() === f.valor"
+        (click)="cambiarFiltro(f.valor)"
+      >
+        {{ f.etiqueta }}
+      </button>
+    }
+  </div>
+
+  <div class="ejemplos__list">
+    @for (item of ejemplosFiltrados(); track item.ejercicio.id) {
+      @let e = item.ejercicio;
+      @let c = item.casuistica;
+      <ui-card elevation="sm" class="ejemplo">
+        <div class="ejemplo__head">
+          <app-badge [text]="e.metodo.replace('-', ' ')" [variant]="variantMetodo(e.metodo)" />
+          <app-badge [text]="'Ejemplo ' + numeroEjercicio(e)" variant="outline" />
+          @if (c) {
+            <app-badge
+              [text]="c.contexto.fisico ? 'Modelo físico' : 'Modelo sintético'"
+              [variant]="c.contexto.fisico ? 'teal' : 'outline'"
+            />
+          }
+        </div>
+
+        <h3 class="ejemplo__title">{{ e.titulo }}</h3>
+        <p class="ejemplo__enunciado">{{ e.datos }}</p>
+
+        <div class="ejemplo__chips">
+          <app-stat-chip icon="functions" label="Ecuación" [value]="e.funcion" iconBg="navy" />
+          <app-stat-chip icon="calculate" label="Fórmula" [value]="e.formula" iconBg="amber" />
+          <app-stat-chip icon="functions" label="Raíz ≈" [value]="raiz(e)" iconBg="neutral" />
+        </div>
+
+        <!-- ══════════════ CASUÍSTICA (Punto 2) ══════════════ -->
+        @if (c) {
+          <section class="casuistica">
+            <div class="casuistica__head">
+              <app-badge text="Casuística" [variant]="'navy'" />
+              <app-badge
+                [text]="c.contexto.fisico ? 'Fenómeno físico derivable' : 'Modelo sintético declarado'"
+                [variant]="c.contexto.fisico ? 'teal' : 'amber'"
+              />
+            </div>
+
+            <dl class="casuistica__meta">
+              <dt>Qué representa <code>x</code></dt>
+              <dd>{{ c.contexto.variable }}</dd>
+              <dt>Situación</dt>
+              <dd>{{ c.contexto.situacion }}</dd>
+            </dl>
+
+            <!-- Cómo se construyó f(x) = 0 -->
+            <div class="casuistica__bloque">
+              <h4 class="casuistica__sub">Cómo se construyó la ecuación</h4>
+              <ul class="casuistica__lista">
+                @for (linea of c.construccion; track linea) {
+                  <li>{{ linea }}</li>
+                }
+              </ul>
+            </div>
+
+            <!-- Procedencia de cada dato: el núcleo del pedido -->
+            <div class="casuistica__bloque">
+              <h4 class="casuistica__sub">De dónde sale cada dato</h4>
+              <ul class="datos">
+                @for (d of c.datos; track d.simbolo) {
+                  <li class="datos__item">
+                    <code class="datos__simbolo">{{ d.simbolo }}</code>
+                    <span class="datos__valor">{{ d.valor }}</span>
+                    <p class="datos__donde"><strong>De dónde:</strong> {{ d.donde }}</p>
+                    <p class="datos__porque"><strong>Por qué ese:</strong> {{ d.porQue }}</p>
+                  </li>
+                }
+              </ul>
+            </div>
+
+            <!-- Elección de método -->
+            <div class="casuistica__bloque casuistica__bloque--metodo">
+              <h4 class="casuistica__sub">Por qué este método y no otro</h4>
+              <p>{{ c.eleccionMetodo }}</p>
+            </div>
+
+            <!-- Procedimiento con justificación -->
+            <div class="casuistica__bloque">
+              <h4 class="casuistica__sub">Procedimiento y su justificación</h4>
+              <details class="casuistica__paso" open>
+                @for (paso of c.procedimiento; track paso.titulo) {
+                  <details class="casuistica__paso-inner">
+                    <summary>{{ paso.titulo }}</summary>
+                    <p>{{ paso.cuerpo }}</p>
+                  </details>
+                }
+              </details>
+            </div>
+
+            <!-- Validación independiente -->
+            <div class="casuistica__bloque">
+              <h4 class="casuistica__sub">Comprobaciones independientes</h4>
+              <ul class="casuistica__lista casuistica__lista--check">
+                @for (v of c.validacion; track v) {
+                  <li>{{ v }}</li>
+                }
+              </ul>
+            </div>
+
+            <!-- Conclusión -->
+            <div class="casuistica__conclusion">
+              <app-badge text="Conclusión" [variant]="'amber-solid'" />
+              <p>{{ c.conclusion }}</p>
+            </div>
+          </section>
+        }
+
+        <!-- Desarrollo manual: la fórmula aplicada, mínimo 2 iteraciones -->
+        <div class="ejemplo__desarrollo">
+          <h4 class="ejemplo__sub">Desarrollo paso a paso</h4>
+          @for (paso of e.desarrollo; track paso.paso) {
+            <details class="ejemplo__paso" open>
+              <summary>{{ paso.paso }}</summary>
+              <ul>
+                @for (detalle of paso.detalle; track detalle) {
+                  <li>{{ detalle }}</li>
+                }
+              </ul>
+            </details>
+          }
+        </div>
+
+        <!-- Tabla de iteraciones -->
+        <div class="ejemplo__tabla">
+          <h4 class="ejemplo__sub">Tabla de iteraciones</h4>
+          @if (noConverge(e)) {
+            <app-badge [text]="badgeConvergencia(e)" variant="error" />
+            <p class="ejemplo__aviso">
+              Mostramos las primeras {{ filasAMostrar(e).length }} iteraciones:
+              la sucesión no cumple el criterio. Ver la casuística de este
+              ejercicio: no es oscilación caótica, es un ciclo límite de dos
+              puntos (cada sub-sucesión sí converge, a límites distintos).
+            </p>
+          } @else {
+            <app-badge
+              [text]="badgeConvergencia(e)"
+              [variant]="e.convergeEn !== null ? 'amber' : 'navy'"
+            />
+          }
+          <app-iteration-table
+            [columns]="columnas(e)"
+            [rows]="filasAMostrar(e)"
+            [highlightRowIndex]="filaDestacada(e)"
+            [highlightBadge]="badgeConvergencia(e)"
+          />
+        </div>
+
+        <!-- Análisis -->
+        <div class="ejemplo__analisis">
+          <app-badge text="Análisis" variant="navy" />
+          <p>{{ e.nota }}</p>
+        </div>
+
+        <!-- MATLAB/Octave como add-on -->
+        <details class="ejemplo__matlab">
+          <summary>
+            <span class="material-symbols-outlined" aria-hidden="true">terminal</span>
+            Código MATLAB / Octave
+          </summary>
+          <pre><code>{{ e.matlab }}</code></pre>
+        </details>
+      </ui-card>
+    }
+  </div>
+</section>

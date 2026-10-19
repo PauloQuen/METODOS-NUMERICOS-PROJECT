@@ -1,0 +1,32 @@
+<div class="regla-falsa" [style]="estilo()">
+  <app-breadcrumb class="regla-falsa__miga" [tramos]="miga()" />
+
+  <header class="regla-falsa__encabezado">
+    <div class="regla-falsa__titulos">
+      <p class="regla-falsa__familia">Métodos cerrados</p>
+      <h1 class="regla-falsa__nombre">{{ metodo.nombre }}</h1>
+      <p class="regla-falsa__resumen">{{ metodo.resumen }}</p>
+    </div>
+
+    <nav class="regla-falsa__pestanas" aria-label="Secciones de Regla Falsa">
+      @for (p of pestanas; track p.ruta) {
+        <a
+          class="regla-falsa__pestana"
+          [routerLink]="['/modulo1/tipos/cerrados/regla-falsa', p.ruta]"
+          routerLinkActive="regla-falsa__pestana--activa"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [attr.aria-current]="rutaActual() === p.ruta ? 'page' : null"
+        >
+          <span class="material-symbols-outlined regla-falsa__icono" aria-hidden="true">
+            {{ p.icono }}
+          </span>
+          <span>{{ p.texto }}</span>
+        </a>
+      }
+    </nav>
+  </header>
+
+  <div class="regla-falsa__contenido">
+    <router-outlet />
+  </div>
+</div>

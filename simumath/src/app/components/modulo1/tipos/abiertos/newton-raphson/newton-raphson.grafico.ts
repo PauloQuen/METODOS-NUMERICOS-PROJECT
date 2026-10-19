@@ -1,0 +1,51 @@
+import type { DibujarMetodo } from '../../../../../shared/models/metodo.model';
+
+export const dibujarNewtonRaphson: DibujarMetodo = (ctx, rect, contexto) => {
+  const { aX, aY, funcion, iteraciones, pasoActual } = contexto;
+  if (!iteraciones.length) return;
+  const paso = Math.max(0, pasoActual);
+  const fila = iteraciones[paso];
+  if (!fila) return;
+  const x = Number((fila as any).x);
+  const fx = Number((fila as any).fx);
+  const fpx = Number((fila as any).fpx);
+  if (!Number.isFinite(x) || !Number.isFinite(fx) || !Number.isFinite(fpx) || Math.abs(fpx) < 1e-12) return;
+  const xNext = x - fx / fpx;
+  ctx.save();
+  ctx.strokeStyle = '#22c55e';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6,4]);
+  ctx.beginPath();
+  const margen = Math.max(0.5, Math.abs(x)*0.4);
+  const tx0 = x - margen;
+  const tx1 = x + margen;
+  const ty0 = fx + fpx*(tx0-x);
+  const ty1 = fx + fpx*(tx1-x);
+  ctx.moveTo(aX(tx0), aY(ty0));
+  ctx.lineTo(aX(tx1), aY(ty1));
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#22c55e';
+  ctx.beginPath();
+  ctx.arc(aX(x), aY(fx), 4, 0, Math.PI*2);
+  ctx.fill();
+  if (Number.isFinite(xNext)) {
+    ctx.strokeStyle = 'rgba(34,197,94,0.45)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4,4]);
+    ctx.beginPath();
+    ctx.moveTo(aX(xNext), rect.y+rect.alto);
+    ctx.lineTo(aX(xNext), aY(0));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#22c55e';
+    ctx.beginPath();
+    ctx.arc(aX(xNext), aY(0), 4, 0, Math.PI*2);
+    ctx.fill();
+    ctx.font = '11px system-ui,sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.fillStyle='rgba(11,36,71,0.85)';
+    ctx.fillText(`xₙ₊₁ ≈ ${xNext.toFixed(4)}`, aX(xNext), aY(0)-8);
+  }
+  ctx.restore();
+};

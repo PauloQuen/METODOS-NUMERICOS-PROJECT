@@ -1,0 +1,133 @@
+<div class="bloque-ejemplo">
+  <ui-card>
+    <div class="bloque-ejemplo__grilla">
+      <!-- Columna 1: texto -->
+      <div class="bloque-ejemplo__texto">
+        <div class="bloque-ejemplo__encabezado">
+          <h3 class="bloque-ejemplo__titulo">{{ ejemplo().titulo }}</h3>
+          @if (videoUrl()) {
+            <a [href]="videoUrl()" target="_blank" rel="noopener noreferrer" class="bloque-ejemplo__video">
+              Ver video
+            </a>
+          }
+        </div>
+
+        <!-- Enunciado (solo casuísticas) -->
+        @if (esCasuistica() && ejemplo().enunciado) {
+          <section class="bloque-ejemplo__seccion">
+            <h4 class="bloque-ejemplo__subtitulo">Enunciado</h4>
+            <p class="bloque-ejemplo__parrafo">{{ ejemplo().enunciado }}</p>
+          </section>
+        }
+
+        <!-- Extracción de datos (solo casuísticas) -->
+        @if (esCasuistica() && ejemplo().extraccion) {
+          <section class="bloque-ejemplo__seccion">
+            <h4 class="bloque-ejemplo__subtitulo">Extracción de datos</h4>
+            <p class="bloque-ejemplo__parrafo">{{ ejemplo().extraccion!.busqueda }}</p>
+            <table class="bloque-ejemplo__tabla-datos">
+              <thead>
+                <tr>
+                  <th>Símbolo</th>
+                  <th>Valor</th>
+                  <th>¿Qué es?</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (d of ejemplo().extraccion!.datos; track d.simbolo) {
+                  <tr>
+                    <td>{{ d.simbolo }}</td>
+                    <td>{{ d.valor }}</td>
+                    <td>{{ d.queEs }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            <p class="bloque-ejemplo__parrafo">{{ ejemplo().extraccion!.formulacion }}</p>
+          </section>
+        }
+
+        <!-- Ecuación y parámetros -->
+        <section class="bloque-ejemplo__seccion">
+          <h4 class="bloque-ejemplo__subtitulo">Planteamiento</h4>
+          <p class="bloque-ejemplo__parrafo">{{ ejemplo().ecuacion }}</p>
+          @if (ejemplo().parametros.length > 0) {
+            <ul class="bloque-ejemplo__lista">
+              @for (p of ejemplo().parametros; track p.etiqueta) {
+                <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
+              }
+            </ul>
+          }
+        </section>
+
+        <!-- Interpretación -->
+        <section class="bloque-ejemplo__seccion">
+          <h4 class="bloque-ejemplo__subtitulo">Interpretación</h4>
+          <p class="bloque-ejemplo__parrafo">{{ ejemplo().interpretacion }}</p>
+        </section>
+
+        <!-- Pasos (1.ª y 2.ª iteración) -->
+        <section class="bloque-ejemplo__seccion">
+          <h4 class="bloque-ejemplo__subtitulo">Pasos (iteraciones a mano)</h4>
+          @for (p of ejemplo().pasos; track $index; let i = $index) {
+            <p class="bloque-ejemplo__paso"><strong>Iteración {{ i + 1 }}</strong></p>
+            <p class="bloque-ejemplo__parrafo">{{ p }}</p>
+          }
+        </section>
+
+        <!-- Algoritmo -->
+        <section class="bloque-ejemplo__seccion">
+          <h4 class="bloque-ejemplo__subtitulo">Algoritmo aplicado</h4>
+          <p class="bloque-ejemplo__parrafo">{{ ejemplo().algoritmo }}</p>
+        </section>
+
+        <!-- Criterio -->
+        <section class="bloque-ejemplo__seccion">
+          <h4 class="bloque-ejemplo__subtitulo">Criterio de convergencia</h4>
+          <p class="bloque-ejemplo__parrafo">{{ ejemplo().criterio }}</p>
+        </section>
+      </div>
+
+      <!-- Columna 2: gráfico + pasos -->
+      <div class="bloque-ejemplo__grafico">
+        <ui-card padding="md">
+          <app-grafico-metodo
+            [funcion]="funcion()"
+            [iteraciones]="filas()"
+            [pasoActual]="pasoActual()"
+            [rango]="rango()"
+            [dibujarMetodo]="dibujarMetodo()"
+            [leyenda]="ejemplo().ecuacion"
+            [raiz]="raiz()"
+          />
+          <div class="bloque-ejemplo__pasos">
+            <app-pasos-control
+              [total]="filas().length"
+              [paso]="pasoActual()"
+              [texto]="textoPaso(pasoActual())"
+              (pasoCambiado)="alCambiarPaso($event)"
+            />
+          </div>
+        </ui-card>
+      </div>
+    </div>
+
+    <!-- Conclusión -->
+    @if (ejemplo().conclusion) {
+      <section class="bloque-ejemplo__seccion">
+        <h4 class="bloque-ejemplo__subtitulo">Conclusión y respuesta</h4>
+        <p class="bloque-ejemplo__parrafo bloque-ejemplo__parrafo--destacado">{{ ejemplo().conclusion }}</p>
+      </section>
+    }
+
+    <!-- Tabla -->
+    <section class="bloque-ejemplo__tabla">
+      <app-iteration-table
+        [columns]="columnas()"
+        [rows]="filas()"
+        [highlightRowIndex]="filaFinal()"
+        [highlightBadge]="'Cumple criterio'"
+      />
+    </section>
+  </ui-card>
+</div>

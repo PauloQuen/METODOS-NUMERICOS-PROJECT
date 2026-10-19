@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {"darkMode":"class","theme":{"extend":{"colors":{"primary-container":"#1b365d","surface-bright":"#f8f9ff","tertiary-fixed-dim":"#89d3d1","secondary-container":"#fdbe50","error":"#ba1a1a","on-secondary":"#ffffff","secondary":"#7e5700","on-primary":"#ffffff","tertiary-container":"#003d3c","primary-fixed-dim":"#aec7f7","on-primary-fixed":"#001b3d","outline":"#74777f","surface-container-lowest":"#ffffff","surface":"#f8f9ff","surface-container":"#e5eeff","on-primary-container":"#87a0cd","on-secondary-fixed":"#281900","on-surface-variant":"#44474e","outline-variant":"#c4c6cf","on-error":"#ffffff","secondary-fixed":"#ffdead","surface-variant":"#d3e4fe","on-secondary-container":"#714d00","surface-container-low":"#eff4ff","on-tertiary-fixed-variant":"#00504e","error-container":"#ffdad6","background":"#f8f9ff","tertiary-fixed":"#a5f0ed","surface-container-highest":"#d3e4fe","primary-fixed":"#d6e3ff","on-secondary-fixed-variant":"#604100","surface-tint":"#465f88","on-surface":"#0b1c30","on-tertiary-fixed":"#00201f","inverse-surface":"#213145","tertiary":"#002625","on-error-container":"#93000a","inverse-primary":"#aec7f7","surface-container-high":"#dce9ff","on-primary-fixed-variant":"#2e476f","surface-dim":"#cbdbf5","inverse-on-surface":"#eaf1ff","on-tertiary-container":"#60aba9","primary":"#002046","on-background":"#0b1c30","secondary-fixed-dim":"#fabc4d","on-tertiary":"#ffffff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-lg":"1.5rem","space-xl":"2.5rem","margin-mobile":"1rem","space-md":"1rem","gutter-sm":"1rem","space-xs":"0.25rem","margin":"2rem","space-sm":"0.5rem","gutter":"1.5rem","gutter-lg":"2rem"},"fontFamily":{"body-lg":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"display-hero":["Noto Serif"],"display-hero-mobile":["Noto Serif"],"body-md":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"code-formula":["Noto Serif"],"headline-md":["Noto Serif"],"headline-lg-mobile":["Noto Serif"],"headline-sm":["Plus Jakarta Sans"],"headline-lg":["Noto Serif"],"label-md":["Plus Jakarta Sans"]},"fontSize":{"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"700"}],"display-hero":["48px",{"lineHeight":"56px","fontWeight":"700"}],"display-hero-mobile":["32px",{"lineHeight":"40px","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"code-formula":["16px",{"lineHeight":"24px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"headline-lg-mobile":["26px",{"lineHeight":"34px","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"26px","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"42px","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 bg-primary shadow-[0_4px_20px_rgba(0,32,70,0.15)]"><div class="h-24 w-full px-gutter-lg flex flex-col justify-between pt-3 pb-0"><div class="flex items-center justify-between"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm group text-on-primary" data-path="portal-principal" href="#"><div class="w-9 h-9 rounded-lg bg-surface-container-lowest flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-primary text-[22px]">school</span></div><div class="flex flex-col"><span class="font-label-lg text-label-lg tracking-tight text-surface-bright leading-none">UNSA</span><span class="font-label-sm text-[10px] text-primary-fixed-dim uppercase tracking-widest mt-1">Ingeniería de Sistemas</span></div></a><div class="h-6 w-[1px] bg-primary-container hidden md:block"></div><a class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-primary-container/60 hover:bg-primary-container text-on-primary font-label-md text-label-md transition-all shadow-[0_1px_8px_rgba(0,0,0,0.04)]" data-path="portal-principal" href="#"><span class="material-symbols-outlined text-[16px]">arrow_back</span><span>Volver al Portal Principal</span></a><div class="hidden xl:inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase tracking-wider"><span class="w-2 h-2 rounded-full bg-secondary"></span><span>Módulo 1 · Equipo 1: Ecuaciones No Lineales y Errores</span></div></div><div class="flex items-center gap-space-md"><button class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-primary-container/40 hover:bg-primary-container text-primary-fixed font-label-md text-label-md transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">help</span><span class="hidden sm:inline">Manual &amp; Ayuda</span></button><div class="flex items-center gap-space-sm pl-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden lg:flex flex-col text-left"><span class="font-label-md text-label-md text-on-primary leading-tight">Estudiante / Docente</span><span class="font-body-sm text-[10px] text-primary-fixed-dim leading-none">Periodo Académico 2025-A</span></div></div></div></div><div class="flex items-center justify-between border-t border-primary-container/40 pt-1"><nav class="flex items-center gap-space-xs overflow-x-auto py-1" data-active-classes="bg-surface text-primary font-label-lg shadow-sm"><a class="px-space-md py-1.5 rounded-lg text-primary-fixed-dim hover:text-on-primary transition-colors font-label-md text-label-md whitespace-nowrap" data-path="portal-principal" href="#">Portal Principal</a><a class="px-space-md py-1.5 rounded-lg text-primary-fixed-dim hover:text-on-primary transition-colors font-label-md text-label-md whitespace-nowrap" data-path="teoria-y-errores" href="#">Teoría y Errores</a><a class="px-space-md py-1.5 rounded-lg text-primary-fixed-dim hover:text-on-primary transition-colors font-label-md text-label-md whitespace-nowrap" data-path="calculadoras-interactivas" href="#">Calculadoras Interactivas</a><a class="px-space-md py-1.5 rounded-lg text-primary-fixed-dim hover:text-on-primary transition-colors font-label-md text-label-md whitespace-nowrap" data-path="ejemplos-resueltos" href="#">Ejemplos Resueltos</a><a class="px-space-md py-1.5 rounded-lg text-primary-fixed-dim hover:text-on-primary transition-colors font-label-md text-label-md whitespace-nowrap" data-path="autoevaluacion-y-recursos" href="#">Autoevaluación y Recursos</a><a class="px-space-md py-1.5 rounded-lg text-primary-fixed-dim hover:text-on-primary transition-colors font-label-md text-label-md whitespace-nowrap" data-path="integrantes-y-referencias" href="#">Integrantes y Referencias</a></nav><div class="hidden 2xl:flex items-center gap-space-sm text-primary-fixed-dim font-label-sm text-label-sm pr-space-xs"><span class="material-symbols-outlined text-[15px] text-secondary-fixed">verified</span><span>Entorno Certificado EPIS-UNSA</span></div></div></div></header><main class="w-full pt-24 bg-surface flex-1"><div class="flex flex-col w-full">
+<!-- Subtle Canopy Breadcrumb & Academic Context Sub-bar -->
+<section class="w-full bg-primary-container text-on-primary py-space-md shadow-sm">
+<div class="max-w-[1280px] mx-auto px-gutter-lg flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">01</span>
+<span class="font-label-md text-label-md text-primary-fixed">Fundamentación Teórica y Análisis de Propagación</span>
+<span class="text-primary-fixed-dim text-body-sm hidden sm:inline">•</span>
+<span class="font-body-sm text-body-sm text-primary-fixed-dim hidden sm:inline">Cálculo de Cotas e Iteración Continua</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary-fixed">Algoritmos de Raíces Reales</span>
+<div class="h-4 w-px bg-primary/40 hidden md:block"></div>
+<div class="inline-flex items-center gap-1 text-on-primary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim">functions</span>
+<span>f(x) = 0</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Instructional Canvas -->
+<div class="w-full max-w-[1280px] mx-auto px-gutter-lg py-space-xl flex flex-col gap-space-xl">
+<!-- Title & Epigraph Section exactly matching design reference -->
+<header class="flex flex-col gap-space-sm max-w-4xl">
+<div class="inline-flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-widest">Sección 1.1 · Base Operacional</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight font-bold">
+        Errores numéricos y tolerancia
+      </h1>
+<!-- Yellow / Orange decorative bar from reference -->
+<div class="w-24 h-1 rounded-full bg-secondary-container mb-space-xs"></div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+        Ninguna aproximación numérica es exacta. La pregunta clave en ingeniería y ciencias de la computación no es 
+        <em class="font-display-hero-mobile italic text-primary">¿el resultado es exacto?</em>, sino 
+        <em class="font-display-hero-mobile italic text-primary">¿el error está dentro de la tolerancia aceptable?</em>. 
+        A continuación formalizamos los tres conceptos analíticos esenciales utilizados de manera estricta como criterios de parada en la convergencia de algoritmos iterativos.
+      </p>
+</header>
+<!-- 3-Column Mathematical Cards Grid (Aligned horizontal desktop layout) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg w-full">
+<!-- Card 1: Error Absoluto -->
+<article class="flex flex-col justify-between bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Error absoluto</h2>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-space-sm py-0.5 rounded text-on-surface-variant font-bold">E_a</span>
+</div>
+<!-- Formula callout block (golden/cream parchment) -->
+<div class="w-full bg-secondary-fixed/25 rounded-lg py-space-md px-space-md text-center shadow-inner">
+<span class="font-code-formula text-headline-sm font-semibold tracking-wider text-primary">
+              E<sub>a</sub> = | x̄ − x |
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Diferencia entre el valor aproximado <span class="font-code-formula text-primary font-semibold">x̄</span> y el valor verdadero o de referencia <span class="font-code-formula text-primary font-semibold">x</span>, computado en valor absoluto. Refleja directamente <em class="text-primary font-medium">cuánto nos equivocamos</em> en la unidad física de la variable.
+          </p>
+</div>
+<!-- Practical Engineering Micro-Example -->
+<div class="mt-space-lg pt-space-md bg-surface-container-low rounded-lg p-space-md flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-secondary">architecture</span>
+            Caso Práctico: Viga estructural
+          </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Longitud de cálculo L = 12.000 m. Medición de obra L̄ = 11.985 m:
+          </p>
+<span class="font-code-formula text-body-sm text-primary font-semibold">
+            E<sub>a</sub> = |11.985 − 12.000| = 0.015 m (15 mm)
+          </span>
+</div>
+</article>
+<!-- Card 2: Error Relativo y Porcentual -->
+<article class="flex flex-col justify-between bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Error relativo</h2>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-space-sm py-0.5 rounded text-on-surface-variant font-bold">E_r · E_%</span>
+</div>
+<!-- Formula callout block (golden/cream parchment) -->
+<div class="w-full bg-secondary-fixed/25 rounded-lg py-space-md px-space-md text-center shadow-inner flex flex-col items-center justify-center gap-1">
+<span class="font-code-formula text-headline-sm font-semibold tracking-wider text-primary">
+              E<sub>r</sub> = | x̄ − x | / | x |
+            </span>
+<span class="font-code-formula text-body-sm text-secondary font-semibold">
+              E<sub>%</sub> = E<sub>r</sub> × 100%
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Normaliza el error absoluto dividiendo por la magnitud verdadera (o la mejor estimación). Es una magnitud estrictamente <strong class="text-primary font-semibold">adimensional</strong> que permite comparar rigurosamente precisiones entre variables astronómicas o microscópicas.
+          </p>
+</div>
+<!-- Scale Comparison Micro-Example -->
+<div class="mt-space-lg pt-space-md bg-surface-container-low rounded-lg p-space-md flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-secondary">scale</span>
+            Sensibilidad a la Escala
+          </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Un desvío de 1 cm es inadmisible en nanotecnología (E<sub>r</sub> ≫ 1), pero insignificante al trazar un puente de 800 m:
+          </p>
+<span class="font-code-formula text-body-sm text-primary font-semibold">
+            E<sub>r</sub> = 0.01 / 800 = 0.0000125 (0.0012%)
+          </span>
+</div>
+</article>
+<!-- Card 3: Tolerancia (Criterio de Parada) -->
+<article class="flex flex-col justify-between bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Tolerancia</h2>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-space-sm py-0.5 rounded text-on-surface-variant font-bold">Tol · ε</span>
+</div>
+<!-- Formula callout block (golden/cream parchment) -->
+<div class="w-full bg-secondary-fixed/25 rounded-lg py-space-md px-space-md text-center shadow-inner">
+<span class="font-code-formula text-headline-sm font-semibold tracking-wider text-primary">
+              | x<sub>n+1</sub> − x<sub>n</sub> | &lt; tol
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Umbral preestablecido de discrepancia <strong class="text-primary font-semibold">aceptable</strong> por el analista. En algoritmos como Bisección o Newton-Raphson, el bucle se detiene cuando la distancia consecutiva entre iteraciones o la evaluación <span class="font-code-formula text-primary">|f(x<sub>n</sub>)|</span> cae por debajo de <span class="font-code-formula text-primary">tol</span>.
+          </p>
+</div>
+<!-- Typical Standard Parameters in HPC -->
+<div class="mt-space-lg pt-space-md bg-surface-container-low rounded-lg p-space-md flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-tertiary-container">tune</span>
+            Estándares en EPIS-UNSA
+          </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Valores típicos de umbral según precisión de punto flotante:
+          </p>
+<div class="flex items-center justify-between font-code-formula text-body-sm font-semibold text-primary pt-0.5">
+<span>Float32: 10<sup>-4</sup></span>
+<span>Float64: 10<sup>-7</sup> a 10<sup>-12</sup></span>
+</div>
+</div>
+</article>
+</div>
+<!-- Interactive Laboratory & Bolzano Theorem Split Row -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg w-full items-start mt-space-sm">
+<!-- Left Column: Realtime Error Calculator (7 cols) -->
+<section class="lg:col-span-7 bg-surface-container-lowest rounded-xl p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[22px]">tune</span>
+<h3 class="font-headline-md text-headline-md text-primary font-bold">Simulador Interactivo de Errores</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Experimente la correlación dinámica entre el valor teórico y aproximado en punto flotante IEEE-754.
+            </p>
+</div>
+<button class="inline-flex items-center gap-1 px-space-md py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors" id="reset-sim-btn" type="button">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span>Restaurar</span>
+</button>
+</div>
+<!-- Numerical Inputs & Sliders -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<!-- Input Valor Real (x) -->
+<div class="flex flex-col gap-space-xs bg-surface-container-low p-space-md rounded-lg">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-primary font-semibold" for="val-real-input">Valor Real (x)</label>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Patrón / Exacto</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<input class="w-full bg-surface-container-lowest text-primary font-code-formula text-body-lg px-space-md py-2 rounded shadow-inner outline-none focus:bg-surface-bright transition-colors" id="val-real-input" step="0.001" type="number" value="3.14159"/>
+</div>
+<input class="w-full accent-primary mt-space-xs cursor-pointer" id="val-real-slider" max="10" min="0.1" step="0.01" type="range" value="3.14"/>
+</div>
+<!-- Input Aproximación (x̄) -->
+<div class="flex flex-col gap-space-xs bg-surface-container-low p-space-md rounded-lg">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-primary font-semibold" for="val-aprox-input">Aproximación (x̄)</label>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Iteración n</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<input class="w-full bg-surface-container-lowest text-primary font-code-formula text-body-lg px-space-md py-2 rounded shadow-inner outline-none focus:bg-surface-bright transition-colors" id="val-aprox-input" step="0.001" type="number" value="3.14000"/>
+</div>
+<input class="w-full accent-secondary mt-space-xs cursor-pointer" id="val-aprox-slider" max="10" min="0.1" step="0.01" type="range" value="3.14"/>
+</div>
+</div>
+<!-- Live Computed Outputs Bento Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md pt-space-xs">
+<!-- Metric 1: Ea -->
+<div class="bg-surface-container-high rounded-xl p-space-md flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span class="uppercase tracking-wider">Error Absoluto</span>
+<span class="font-code-formula font-bold text-primary">|x̄ - x|</span>
+</div>
+<div class="mt-space-md flex flex-col">
+<span class="font-code-formula text-headline-sm font-bold text-primary truncate" id="output-ea">0.001590</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Unidades absolutas</span>
+</div>
+</div>
+<!-- Metric 2: Er -->
+<div class="bg-surface-container-high rounded-xl p-space-md flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span class="uppercase tracking-wider">Error Relativo</span>
+<span class="font-code-formula font-bold text-secondary">E_a / |x|</span>
+</div>
+<div class="mt-space-md flex flex-col">
+<span class="font-code-formula text-headline-sm font-bold text-secondary truncate" id="output-er">0.000506</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Fracción adimensional</span>
+</div>
+</div>
+<!-- Metric 3: E% -->
+<div class="bg-surface-container-high rounded-xl p-space-md flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span class="uppercase tracking-wider">Error Porcentual</span>
+<span class="font-code-formula font-bold text-primary">E_r × 100%</span>
+</div>
+<div class="mt-space-md flex flex-col">
+<span class="font-code-formula text-headline-sm font-bold text-primary truncate" id="output-ep">0.0506 %</span>
+<span class="font-label-sm text-[11px] text-secondary font-bold mt-0.5 flex items-center gap-1" id="output-tolerance-status">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+<span>Convergencia válida (&lt; 1%)</span>
+</span>
+</div>
+</div>
+</div>
+<!-- Comparative Quality Bar -->
+<div class="flex flex-col gap-space-xs bg-surface-container-low p-space-md rounded-lg">
+<div class="flex justify-between text-body-sm">
+<span class="font-label-md text-label-md text-primary font-semibold">Tolerancia Residual vs Umbrales Comunes</span>
+<span class="font-code-formula text-body-sm font-bold text-primary" id="output-tol-bar-label">Tol ~ 10⁻³ alcanzada</span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-primary transition-all duration-300 rounded-full" id="sim-progress-fill" style="width: 82%;"></div>
+</div>
+<div class="flex justify-between text-[10px] text-on-surface-variant font-code-formula pt-1">
+<span>10⁻¹ (Tolerante)</span>
+<span>10⁻³ (Ingeniería Civil/Mecánica)</span>
+<span>10⁻⁶ (Precisión Doble)</span>
+</div>
+</div>
+</section>
+<!-- Right Column: Teorema de Bolzano & Marco de Ecuaciones No Lineales (5 cols) -->
+<section class="lg:col-span-5 bg-surface-container-lowest rounded-xl p-space-xl shadow-sm flex flex-col justify-between gap-space-lg">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[22px]">show_chart</span>
+<h3 class="font-headline-md text-headline-md text-primary font-bold">Criterio de Bolzano</h3>
+</div>
+<span class="font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-space-sm py-0.5 rounded font-bold">Condición Suficiente</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Para garantizar la existencia de al menos una raíz <span class="font-code-formula text-primary font-semibold">r ∈ (a, b)</span> tal que <span class="font-code-formula text-primary font-semibold">f(r) = 0</span>, la función continua debe cambiar de polaridad en los extremos del intervalo:
+          </p>
+<!-- Formal Theorem Box -->
+<div class="bg-secondary-fixed/20 rounded-lg p-space-md flex items-center justify-center">
+<span class="font-code-formula text-body-lg text-primary font-bold tracking-wide">
+              f(a) · f(b) &lt; 0  ⟹  ∃ r ∈ (a, b) : f(r) = 0
+            </span>
+</div>
+<!-- Scientific Vector Diagram (Inline SVG under 2KB) -->
+<div class="w-full bg-surface-container-low rounded-lg p-space-md flex flex-col items-center">
+<div class="w-full flex justify-between items-center mb-1 text-[11px] font-label-md text-on-surface-variant">
+<span>Intervalo inicial [a, b]</span>
+<span class="font-code-formula text-primary">Raíz real r</span>
+</div>
+<svg class="w-full h-40 overflow-visible" fill="none" viewbox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+<!-- Eje X con marcas de intervalo -->
+<line stroke="#74777f" stroke-dasharray="3 3" stroke-width="1.5" x1="20" x2="380" y1="80" y2="80"></line>
+<text class="text-[11px] font-mono font-bold" fill="#0b1c30" x="375" y="74">x</text>
+<!-- Eje Y -->
+<line stroke="#74777f" stroke-width="1.5" x1="60" x2="60" y1="15" y2="145"></line>
+<text class="text-[11px] font-mono font-bold" fill="#0b1c30" x="66" y="24">f(x)</text>
+<!-- Curva no lineal continua f(x) -->
+<path d="M 50 135 C 130 135, 170 30, 360 25" stroke="#002046" stroke-linecap="round" stroke-width="3"></path>
+<text class="text-[11px] font-serif font-bold" fill="#002046" x="330" y="20">f(x)</text>
+<!-- Punto a, f(a) < 0 -->
+<line stroke="#fdbe50" stroke-dasharray="2 2" stroke-width="2" x1="110" x2="110" y1="80" y2="118"></line>
+<circle cx="110" cy="118" fill="#7e5700" r="4.5"></circle>
+<circle cx="110" cy="80" fill="#002046" r="3"></circle>
+<text class="text-[11px] font-mono font-bold" fill="#002046" x="105" y="97">a</text>
+<text class="text-[10px] font-mono font-bold" fill="#7e5700" x="120" y="125">f(a) &lt; 0</text>
+<!-- Punto b, f(b) > 0 -->
+<line stroke="#fdbe50" stroke-dasharray="2 2" stroke-width="2" x1="290" x2="290" y1="80" y2="40"></line>
+<circle cx="290" cy="40" fill="#7e5700" r="4.5"></circle>
+<circle cx="290" cy="80" fill="#002046" r="3"></circle>
+<text class="text-[11px] font-mono font-bold" fill="#002046" x="286" y="97">b</text>
+<text class="text-[10px] font-mono font-bold" fill="#7e5700" x="298" y="44">f(b) &gt; 0</text>
+<!-- Raíz r (intersección exacta) -->
+<circle cx="198" cy="80" fill="#ba1a1a" r="5"></circle>
+<text class="text-[12px] font-serif font-bold" fill="#ba1a1a" x="194" y="70">r</text>
+<line stroke="#ba1a1a" stroke-width="1.5" x1="198" x2="198" y1="80" y2="105"></line>
+<text class="text-[10px] font-mono font-bold" fill="#ba1a1a" x="175" y="120">f(r) = 0</text>
+</svg>
+</div>
+</div>
+<!-- Action Callout to Interactive Solver -->
+<div class="bg-surface-container p-space-md rounded-lg flex items-center justify-between gap-space-md mt-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[24px]">calculate</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">¿Listo para calcular numéricamente?</span>
+<span class="font-body-sm text-[12px] text-on-surface-variant">Pruebe Bisección y Newton-Raphson con funciones reales.</span>
+</div>
+</div>
+<a class="inline-flex items-center gap-1 px-space-md py-2 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md transition-all shadow-sm whitespace-nowrap" data-path="calculadoras-interactivas" href="#">
+<span>Ir a Calculadoras</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</section>
+</div>
+<!-- Supplementary Academic Table: Comparación de Métodos vs Criterios de Parada -->
+<section class="w-full bg-surface-container-lowest rounded-xl p-space-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary font-bold">
+            Matriz Comparativa de Convergencia y Parada
+          </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Comportamiento analítico de los criterios de parada según la naturaleza del método de resolución.
+          </p>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container text-primary font-semibold px-space-md py-1 rounded">
+          EPIS 2025-A · Normativa Numérica
+        </span>
+</div>
+<div class="overflow-x-auto w-full pt-space-xs">
+<table class="w-full text-left font-body-md text-body-md">
+<thead>
+<tr class="bg-surface-container-low text-primary font-label-md text-label-md">
+<th class="py-space-md px-space-md rounded-l-lg">Método Numérico</th>
+<th class="py-space-md px-space-md">Tipo de Algoritmo</th>
+<th class="py-space-md px-space-md">Orden de Convergencia</th>
+<th class="py-space-md px-space-md">Criterio de Parada Preferente</th>
+<th class="py-space-md px-space-md rounded-r-lg">Garantía de Convergencia</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface-variant">
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-space-md px-space-md font-semibold text-primary">Método de Bisección</td>
+<td class="py-space-md px-space-md">Cerrado / Por Intervalo</td>
+<td class="py-space-md px-space-md font-code-formula text-primary">Lineal (r = 1)</td>
+<td class="py-space-md px-space-md font-code-formula text-primary">|b - a| / 2 &lt; tol</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 font-label-sm text-[11px] text-tertiary-container font-bold bg-tertiary-fixed/30 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px]">verified</span> Siempre (si f continua)
+                </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors bg-surface-container-low/30">
+<td class="py-space-md px-space-md font-semibold text-primary">Newton-Raphson</td>
+<td class="py-space-md px-space-md">Abierto / Por Tangentes</td>
+<td class="py-space-md px-space-md font-code-formula text-secondary font-bold">Cuadrática (r = 2)</td>
+<td class="py-space-md px-space-md font-code-formula text-primary">|x<sub>n+1</sub> - x<sub>n</sub>| &lt; tol</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 font-label-sm text-[11px] text-secondary font-bold bg-secondary-fixed/40 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px]">warning</span> Condicionada (f'(x) ≠ 0)
+                </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-space-md px-space-md font-semibold text-primary">Regula Falsi (Posición Falsa)</td>
+<td class="py-space-md px-space-md">Cerrado / Secante Acotada</td>
+<td class="py-space-md px-space-md font-code-formula text-primary">Superlineal (r ≈ 1.618)</td>
+<td class="py-space-md px-space-md font-code-formula text-primary">|f(c)| &lt; tol</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 font-label-sm text-[11px] text-tertiary-container font-bold bg-tertiary-fixed/30 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px]">verified</span> Siempre convergente
+                </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors bg-surface-container-low/30">
+<td class="py-space-md px-space-md font-semibold text-primary">Punto Fijo: g(x) = x</td>
+<td class="py-space-md px-space-md">Abierto / Funcional</td>
+<td class="py-space-md px-space-md font-code-formula text-primary">Lineal (r = 1)</td>
+<td class="py-space-md px-space-md font-code-formula text-primary">|x<sub>n+1</sub> - x<sub>n</sub>| &lt; tol</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 font-label-sm text-[11px] text-secondary font-bold bg-secondary-fixed/40 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px]">info</span> Requiere |g'(x)| &lt; 1
+                </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Client-side Interactive Calculation Logic -->
+<script>
+    (function () {
+      const realInput = document.getElementById('val-real-input');
+      const aproxInput = document.getElementById('val-aprox-input');
+      const realSlider = document.getElementById('val-real-slider');
+      const aproxSlider = document.getElementById('val-aprox-slider');
+      const resetBtn = document.getElementById('reset-sim-btn');
+
+      const outEa = document.getElementById('output-ea');
+      const outEr = document.getElementById('output-er');
+      const outEp = document.getElementById('output-ep');
+      const outTolStatus = document.getElementById('output-tolerance-status');
+      const progressFill = document.getElementById('sim-progress-fill');
+      const outTolBarLabel = document.getElementById('output-tol-bar-label');
+
+      function recalculate() {
+        let x = parseFloat(realInput.value);
+        let xAprox = parseFloat(aproxInput.value);
+
+        if (isNaN(x) || x === 0) x = 0.0001;
+        if (isNaN(xAprox)) xAprox = 0;
+
+        const ea = Math.abs(xAprox - x);
+        const er = ea / Math.abs(x);
+        const ep = er * 100;
+
+        outEa.textContent = ea.toFixed(6);
+        outEr.textContent = er.toFixed(6);
+        outEp.textContent = ep.toFixed(4) + ' %';
+
+        // Adjust tolerance status badge
+        if (er < 0.001) {
+          outTolStatus.className = 'font-label-sm text-[11px] text-tertiary-container font-bold mt-0.5 flex items-center gap-1';
+          outTolStatus.innerHTML = '<span class="material-symbols-outlined text-[13px]">verified</span><span>Excelente precisión (&lt; 0.1%)</span>';
+        } else if (er < 0.01) {
+          outTolStatus.className = 'font-label-sm text-[11px] text-secondary font-bold mt-0.5 flex items-center gap-1';
+          outTolStatus.innerHTML = '<span class="material-symbols-outlined text-[13px]">check_circle</span><span>Convergencia válida (&lt; 1%)</span>';
+        } else {
+          outTolStatus.className = 'font-label-sm text-[11px] text-error font-bold mt-0.5 flex items-center gap-1';
+          outTolStatus.innerHTML = '<span class="material-symbols-outlined text-[13px]">error</span><span>Desvío alto (&gt; 1%)</span>';
+        }
+
+        // Compute bar width inversely mapped to error (lower error = higher bar)
+        let barPercentage = 100 - Math.min(100, Math.max(5, ep * 15));
+        progressFill.style.width = barPercentage + '%';
+
+        if (er < 0.0001) {
+          outTolBarLabel.textContent = 'Tol ~ 10⁻⁴ superada (Alta Calidad)';
+        } else if (er < 0.005) {
+          outTolBarLabel.textContent = 'Tol ~ 10⁻³ alcanzada (Ingeniería)';
+        } else {
+          outTolBarLabel.textContent = 'Fuera de tolerancia óptima';
+        }
+      }
+
+      // Sync slider and input pairs
+      realInput.addEventListener('input', function() {
+        if (!isNaN(parseFloat(this.value))) {
+          realSlider.value = this.value;
+          recalculate();
+        }
+      });
+      realSlider.addEventListener('input', function() {
+        realInput.value = parseFloat(this.value).toFixed(3);
+        recalculate();
+      });
+
+      aproxInput.addEventListener('input', function() {
+        if (!isNaN(parseFloat(this.value))) {
+          aproxSlider.value = this.value;
+          recalculate();
+        }
+      });
+      aproxSlider.addEventListener('input', function() {
+        aproxInput.value = parseFloat(this.value).toFixed(3);
+        recalculate();
+      });
+
+      resetBtn.addEventListener('click', function() {
+        realInput.value = "3.14159";
+        aproxInput.value = "3.14000";
+        realSlider.value = "3.14";
+        aproxSlider.value = "3.14";
+        recalculate();
+      });
+
+      // Initial run
+      recalculate();
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)] mt-space-xl"><div class="w-full px-gutter-lg py-space-xl flex flex-col lg:flex-row items-center justify-between gap-space-lg text-on-surface-variant"><div class="flex items-center gap-space-md"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-surface-bright text-[22px]">calculate</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary font-bold">Métodos Numéricos · EPIS UNSA</span><span class="font-body-sm text-body-sm text-on-surface-variant">Escuela Profesional de Ingeniería de Sistemas — Facultad de Ingeniería de Producción y Servicios</span></div></div><div class="flex flex-wrap items-center justify-center gap-space-lg font-label-md text-label-md"><a class="hover:text-primary transition-colors" data-path="teoria-y-errores" href="#">Ecuaciones No Lineales</a><a class="hover:text-primary transition-colors" data-path="calculadoras-interactivas" href="#">Algoritmos Numéricos</a><a class="hover:text-primary transition-colors" data-path="integrantes-y-referencias" href="#">Equipo de Cátedra</a><span class="text-outline-variant">|</span><span class="font-body-sm text-body-sm text-on-surface-variant">Arequipa, Perú · 2025</span></div><div class="flex items-center gap-space-sm font-label-sm text-label-sm text-on-surface-variant"><span class="px-space-sm py-0.5 rounded bg-surface-container font-label-sm text-on-surface">v2.4 Desktop HPC</span><span>Licencia Académica</span></div></div></footer></body></html>

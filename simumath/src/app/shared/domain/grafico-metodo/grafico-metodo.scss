@@ -1,0 +1,56 @@
+.grafico-metodo__contenedor {
+  position: relative;
+  width: 100%;
+}
+
+.grafico-metodo__controles {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(4px) saturate(1.05);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px -6px rgba(11, 36, 71, 0.45);
+  z-index: 2;
+}
+
+.grafico-metodo__boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease, transform 0.08s ease;
+
+  &:hover {
+    background: var(--surface-container-high);
+    color: var(--on-surface);
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .material-symbols-outlined {
+    font-size: 1.15rem;
+  }
+}
+
+.grafico-metodo__lienzo {
+  display: block;
+  width: 100%;
+  border-radius: 0.75rem;
+  background: var(--surface-container-lowest);
+}

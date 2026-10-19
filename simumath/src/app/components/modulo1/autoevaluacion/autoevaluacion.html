@@ -1,0 +1,25 @@
+<section class="auto">
+  <div class="section-heading">
+    <h2 class="section-heading__title">Autoevaluación</h2>
+    <p class="section-heading__subtitle">
+      Un ejercicio por cada método del módulo: intentá resolverlos antes de
+      abrir la solución.
+    </p>
+  </div>
+
+  <div class="auto__list">
+    @for (e of ejercicios; track e.numero) {
+      <ui-card elevation="sm" class="ejercicio">
+        <div class="ejercicio__head">
+          <app-badge [text]="'Ejercicio ' + e.numero" variant="navy" />
+          <app-badge [text]="e.tema" [variant]="e.variante" />
+        </div>
+        <p class="ejercicio__texto" [innerHTML]="e.texto"></p>
+        <details class="ejercicio__solucion">
+          <summary>Ver solución</summary>
+          <p [innerHTML]="e.solucion"></p>
+        </details>
+      </ui-card>
+    }
+  </div>
+</section>

@@ -1,0 +1,497 @@
+import { reglaFalsa } from './regla-falsa.algoritmo';
+import {
+  TEORIA_REGLA_FALSA,
+  EJEMPLOS_REGLA_FALSA,
+  EJERCICIOS_REGLA_FALSA,
+} from './regla-falsa.contenido';
+import { parsearFuncion } from '../../../../../shared/domain/numerico/evaluador-funciones';
+
+/**
+ * Tests del contenido de Regla Falsa.
+ *
+ * ── Para qué sirve este archivo ───────────────────────────────────────
+ * El contenido (ejemplos, ejercicios, teoría) tiene un contrato con el
+ * algoritmo: cada bloque dice "con estos datos sale tal resultado". Si
+ * alguien cambia un número del enunciado sin recalcular, o escribe una
+ * iteración de más en el texto, estos tests lo detectan.
+ *
+ * La idea es que el contenido NO se escriba a ojo: los números salen de
+ * correr el motor, y el texto se escribe después mirando esos números.
+ *
+ * ── Diferencia con los métodos abiertos ───────────────────────────────
+ * Regla Falsa es un método CERRADO: en vez de una semilla x₀, cada bloque
+ * declara un intervalo [a, b] con cambio de signo. Por eso el bloque trae
+ * `calculo: { funcion, a, b, tol }` y el test de "buen planteamiento" no
+ * mira una derivada en la semilla, sino el cambio de signo de f en [a, b].
+ */
+
+/** Un bloque de contenido con los datos para poder calcularlo. */
+interface Bloque {
+  id: string;
+  titulo: string;
+  tipo: string;
+  criterio: string;
+  conclusion: string;
+  interpretacion: string;
+  algoritmo: string;
+  pasos: string[];
+  parametros: { etiqueta: string; valor: string }[];
+  enunciado?: string;
+  pista?: string;
+  extraccion?: { busqueda: string; datos: unknown[]; formulacion: string };
+  calculo?: { funcion: string; a?: number; b?: number; tol?: number; maxIter?: number };
+}
+
+/** Todos los bloques del método, de las tres secciones. */
+const BLOQUES: Bloque[] = [
+  ...(EJEMPLOS_REGLA_FALSA as Bloque[]),
+  ...(EJERCICIOS_REGLA_FALSA as Bloque[]),
+  { ...TEORIA_REGLA_FALSA.ejemploNormal } as Bloque,
+  { ...TEORIA_REGLA_FALSA.ejemploCasuistica } as Bloque,
+];
+
+const CON_CALCULO = BLOQUES.filter((b) => b.calculo?.funcion);
+
+/* ------------------------------------------------------------------ */
+/* Lectores de los números escritos en el texto                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Convierte superíndices, signos tipográficos y tildes a ASCII normal.
+ *
+ * El contenido escribe las potencias como "10⁻⁶", donde ⁻ es U+207B y ⁶
+ * es U+2076, no un guion y un 6. Sin esta conversión, ninguna regex
+ * encuentra los números y los tests pasan por alto lo que prometen.
+ * Las tildes de "iteración" también rompen los patrones, y el guion
+ * largo/en-dash de los números negativos tipográficos también.
+ */
+function aAscii(texto: string): string {
+  const superindices: Record<string, string> = {
+    '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4',
+    '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9',
+    '⁻': '-', '⁺': '+',
+  };
+  return texto
+    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]/g, (c) => superindices[c] ?? c)
+    .replace(/[–−]/g, '-')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '');
+}
+
+/**
+ * Saca el número de iteraciones que promete el texto.
+ *
+ * El contenido lo escribe de varias formas según el bloque:
+ *   "Se detiene en la iteración 10"    → 10
+ *   "en 18 iteraciones"                → 18
+ *   "1 iteración y error cero"         → 1
+ * Ojo: los textos también comparan con bisección y con Newton
+ * ("la bisección necesitó 17 iteraciones"), por eso el patrón de
+ * "iteración N" viene primero: agarra la promesa del propio bloque.
+ * Devuelve null si el texto no menciona cantidad de iteraciones.
+ */
+function iteracionesAnunciadas(texto: string): number | null {
+  const plano = aAscii(texto);
+  const patrones = [
+    // "Se detiene en la iteración 10"
+    /iteracion\s+(\d+)/i,
+    // "en 18 iteraciones", "hacen falta 18 iteraciones"
+    /(?:en|hacen\s+falta)\s+(\d+)\s+iteracion(?:es)?/i,
+    // "18 iteraciones", "1 iteración"
+    /(\d+)\s+iteracion(?:es)?/i,
+    // "con 18 pasos"
+    /(\d+)\s+pasos?/i,
+  ];
+  for (const p of patrones) {
+    const m = plano.match(p);
+    if (m) return Number(m[1]);
+  }
+  return null;
+}
+
+/**
+ * Saca la respuesta que la conclusión presenta como resultado.
+ *
+ * Acepta "x ≈ 1.5214", "T ≈ 0.6931", "λ ≈ 1.3266", "Δ ≈ −2.8951". El
+ * guion puede ser -, – o el signo unicode −.
+ *
+ * NO agarra los "≈ 10⁻⁶" de los errores, porque esos son cotas y
+ * los revisa otro test.
+ */
+function raizAnunciada(texto: string): number | null {
+  const m = texto.match(/≈\s*(-?[−–-]?\d+\.?\d*)/);
+  if (!m) return null;
+  return Number(m[1].replace(/[−–]/g, '-'));
+}
+
+/**
+ * Busca un número inmediatamente después de una palabra concreta de la
+ * conclusión: "el desplazamiento final fue de X" o "la tolerancia de Y".
+ *
+ * Es frase-concreta a propósito: la conclusión trae varios números
+ * (raíz, desplazamiento, tolerancia, iteraciones de otros métodos) y
+ * asociar el equivocado haría el test mudo.
+ *
+ * La notación científica se arma por string ("6.6516e-6"), no multiplicando:
+ * 6.6516 * 1e-6 da un ulp distinto de Number("6.6516e-6") y el `<=` truena.
+ */
+function numeroDespuesDe(texto: string, palabra: string): number | null {
+  const plano = aAscii(texto);
+  const i = plano.toLowerCase().indexOf(palabra.toLowerCase());
+  if (i < 0) return null;
+
+  const resto = plano.slice(i + palabra.length);
+  const m = resto.match(/(\d+(?:\.\d+)?)(?:\s*[×x·*]\s*10\s*(-?\d+))?/);
+  if (!m) return null;
+
+  return m[2] !== undefined ? Number(`${m[1]}e${m[2]}`) : Number(m[1]);
+}
+
+/**
+ * Saca la DIFERENCIA con la raíz verdadera que promete la conclusión.
+ *
+ * Regla Falsa la escribe de tres formas, y por eso se prueban en orden:
+ *   "la diferencia real (3.508 × 10⁻⁷) es menor que…"
+ *   "la diferencia real es de 2.938 × 10⁻⁶"
+ *   "la diferencia real con la raíz (≈ 1.3267) es de 3.459 × 10⁻⁵"
+ *
+ * Ojo con la tercera: entre "diferencia real" y el número aparece el valor
+ * de la raíz entre paréntesis ("≈ 1.3267"). Un `[^.]*?` ingenuo se detiene
+ * en el punto de 1.3267 y captura ESE número en vez de la diferencia; y un
+ * `.*?` sin anclar capturaría el primer dígito que vea. Por eso cada forma
+ * tiene su patrón explícito y la tercera exige el "es de" que introduce la
+ * diferencia de verdad. Devuelve null si el texto no promete diferencia real.
+ */
+function diferenciaRealAnunciada(conclusion: string): number | null {
+  const plano = aAscii(conclusion);
+  const numero = '([\\d.]+(?:\\s*[×x·*]\\s*10\\s*-?\\d+)?)';
+  const patrones = [
+    // "la diferencia real (3.508 × 10-7)"
+    new RegExp(`diferencia\\s+real\\s*\\(${numero}\\)`, 'i'),
+    // "la diferencia real es de 2.938 × 10-6"
+    new RegExp(`diferencia\\s+real\\s*es\\s+de\\s+${numero}`, 'i'),
+    // "la diferencia real con la raíz (≈ 1.3267) es de 3.459 × 10-5"
+    new RegExp(`diferencia\\s+real[^,]*?es\\s+de\\s+${numero}`, 'i'),
+  ];
+
+  for (const patron of patrones) {
+    const m = plano.match(patron);
+    if (!m) continue;
+
+    const [, captura] = m;
+    const cientifica = captura.match(/^(\d+(?:\.\d+)?)\s*[×x·*]\s*10\s*(-?\d+)$/);
+    if (cientifica) return Number(`${cientifica[1]}e${cientifica[2]}`);
+    return Number(captura);
+  }
+  return null;
+}
+
+/* ------------------------------------------------------------------ */
+/* Tests                                                               */
+/* ------------------------------------------------------------------ */
+
+describe('contenido de Regla Falsa', () => {
+  it('está el contenido completo: 2+ ejemplos, 3+ ejercicios, teoría', () => {
+    expect(EJEMPLOS_REGLA_FALSA.length).toBeGreaterThanOrEqual(2);
+    expect(EJERCICIOS_REGLA_FALSA.length).toBeGreaterThanOrEqual(3);
+
+    const numericos = EJEMPLOS_REGLA_FALSA.filter((e) => e.tipo === 'numerico');
+    const casuisticas = EJEMPLOS_REGLA_FALSA.filter((e) => e.tipo === 'casuistica');
+    expect(numericos.length).toBeGreaterThanOrEqual(2);
+    expect(casuisticas.length).toBeGreaterThanOrEqual(2);
+  });
+
+  CON_CALCULO.forEach((bloque) => {
+    describe(`${bloque.id}: ${bloque.titulo}`, () => {
+      const { funcion, a, b, tol, maxIter } = bloque.calculo!;
+      const f = () => parsearFuncion(funcion)!;
+      const correr = () =>
+        reglaFalsa({ f: f(), a: a!, b: b!, tol: tol!, maxIter });
+
+      it('la función del contenido se parsea', () => {
+        expect(parsearFuncion(funcion)).not.toBeNull();
+        expect(typeof f()).toBe('function');
+      });
+
+      it('la función se evalúa sin lanzar en un punto cualquiera', () => {
+        expect(() => f()(0.5)).not.toThrow();
+      });
+
+      it('el intervalo tiene cambio de signo (Bolzano)', () => {
+        // Regla Falsa es un método cerrado: sin cambio de signo la cuerda
+        // no tiene una raíz garantizada que cruzar. Un ejemplo con f(a) y
+        // f(b) del mismo signo estaría mal planteado desde el arranque.
+        const fa = f()(a!);
+        const fb = f()(b!);
+        expect(fa * fb)
+          .withContext(`f(${a}) = ${fa}, f(${b}) = ${fb}`)
+          .toBeLessThan(0);
+      });
+
+      it('el algoritmo converge con los datos declarados', () => {
+        expect(correr().convergio).toBe(true);
+      });
+
+      it('respeta el máximo de iteraciones declarado', () => {
+        const r = correr();
+        expect(r.iteraciones).toBeLessThanOrEqual(maxIter ?? 100);
+      });
+
+      it('el error final es menor o igual que la tolerancia declarada', () => {
+        const r = correr();
+        expect(r.error!).toBeLessThanOrEqual(tol!);
+      });
+
+      it('la raíz verdadera hace f(raíz) ≈ 0', () => {
+        const r = correr();
+        expect(Math.abs(f()(r.raiz!))).toBeLessThan(1e-2);
+      });
+
+      it('el número de iteraciones del texto coincide con el motor', () => {
+        const r = correr();
+        const n =
+          iteracionesAnunciadas(bloque.criterio) ??
+          iteracionesAnunciadas(bloque.algoritmo) ??
+          iteracionesAnunciadas(bloque.conclusion) ??
+          iteracionesAnunciadas(bloque.interpretacion);
+
+        expect(n)
+          .withContext(`"${bloque.titulo}" no dice cuántas iteraciones`)
+          .not.toBeNull();
+        expect(r.iteraciones).withContext(`el texto dice ${n}`).toBe(n!);
+      });
+
+      it('la raíz de la conclusión coincide con el motor', () => {
+        const r = correr();
+        const anunciada = raizAnunciada(bloque.conclusion);
+
+        expect(anunciada)
+          .withContext(`la conclusión de "${bloque.titulo}" no da una raíz`)
+          .not.toBeNull();
+        // El texto redondea a 8 decimales, así que se compara con margen.
+        expect(Math.abs(r.raiz! - anunciada!))
+          .withContext(`el texto dice ${anunciada}, el motor da ${r.raiz}`)
+          .toBeLessThan(1e-4);
+      });
+
+      it('si la conclusión promete un desplazamiento, el motor lo logra', () => {
+        // "el desplazamiento final fue de X": el error real tiene que
+        // ser menor o igual que X. Es la promesa más fácil de arruinar
+        // sin querer (redondear mal el número del texto).
+        const r = correr();
+        const prometido = numeroDespuesDe(bloque.conclusion, 'desplazamiento');
+
+        if (prometido !== null) {
+          expect(r.error!)
+            .withContext(
+              `la conclusión promete desplazamiento ${prometido}, el motor logró ${r.error}`,
+            )
+            .toBeLessThanOrEqual(prometido);
+        }
+      });
+
+      it('si la conclusión promete una tolerancia, el motor la respeta', () => {
+        const r = correr();
+        const prometida = numeroDespuesDe(bloque.conclusion, 'tolerancia');
+
+        if (prometida !== null) {
+          expect(r.error!)
+            .withContext(
+              `la conclusión promete tolerancia ${prometida}, el motor logró ${r.error}`,
+            )
+            .toBeLessThanOrEqual(prometida);
+        }
+      });
+
+      it('si el texto promete una diferencia real, es menor que el error', () => {
+        // La diferencia real (|c − raíz|) siempre va por debajo del
+        // desplazamiento |Δc| una vez convergido. Si el texto promete
+        // una diferencia mayor que el error del motor, está mintiendo.
+        const r = correr();
+        const diferencia = diferenciaRealAnunciada(bloque.conclusion);
+
+        if (diferencia !== null) {
+          expect(r.error!).withContext('la frase solo aparece con error > 0').toBeGreaterThan(0);
+          expect(diferencia)
+            .withContext(`el texto promete una diferencia de ${diferencia}`)
+            .toBeLessThan(r.error!);
+        }
+      });
+    });
+  });
+
+  /* ---------------------------------------------------------------- */
+  /* Estructura                                                        */
+  /* ---------------------------------------------------------------- */
+
+  describe('teoría', () => {
+    it('tiene las cuatro secciones obligatorias', () => {
+      expect(TEORIA_REGLA_FALSA.concepto.length).toBeGreaterThan(80);
+      expect(TEORIA_REGLA_FALSA.fundamento.length).toBeGreaterThan(80);
+      expect(TEORIA_REGLA_FALSA.cuandoFalla.length).toBeGreaterThan(80);
+      expect(TEORIA_REGLA_FALSA.ordenConvergencia.length).toBeGreaterThan(80);
+    });
+
+    it('la fórmula es la de la cuerda', () => {
+      // c = a − f(a)·(b − a) / (f(b) − f(a)): si no aparece el corte c ni
+      // los valores de f en los extremos, no es la fórmula del método.
+      expect(TEORIA_REGLA_FALSA.algoritmo.formula).toContain('c =');
+      expect(TEORIA_REGLA_FALSA.algoritmo.formula).toContain('f(a)');
+    });
+
+    it('declara los 7 pasos del algoritmo', () => {
+      expect(TEORIA_REGLA_FALSA.algoritmo.pasos.length).toBe(7);
+    });
+
+    it('documenta los cuatro criterios de convergencia', () => {
+      const criterios = TEORIA_REGLA_FALSA.algoritmo.criterios;
+      expect(criterios.length).toBeGreaterThanOrEqual(4);
+      expect(criterios.some((c) => c.nombre.includes('Bolzano'))).toBe(true);
+      criterios.forEach((c) => expect(c.explicacion.length).toBeGreaterThan(40));
+    });
+
+    it('lista ventajas, limitaciones y recomendaciones', () => {
+      const a = TEORIA_REGLA_FALSA.algoritmo;
+      expect(a.ventajas.length).toBeGreaterThanOrEqual(4);
+      expect(a.limitaciones.length).toBeGreaterThanOrEqual(4);
+      expect(a.recomendaciones.length).toBeGreaterThanOrEqual(4);
+    });
+
+    it('explica por qué la cota de Bolzano no aplica por defecto', () => {
+      // A diferencia de bisección, regla falsa no usa (b−a)/2: el texto
+      // tiene que decir que el intervalo no se encoge siempre.
+      const bolzano = TEORIA_REGLA_FALSA.algoritmo.criterios.find((c) =>
+        c.nombre.includes('Bolzano'),
+      );
+      expect(bolzano?.explicacion).toContain('intervalo');
+    });
+
+    it('explica qué hace el criterio de residuo', () => {
+      const residuo = TEORIA_REGLA_FALSA.algoritmo.criterios.find((c) =>
+        c.nombre.includes('Residuo'),
+      );
+      expect(residuo?.explicacion).toContain('1000');
+    });
+  });
+
+  describe('ejemplos y ejercicios', () => {
+    it('todos tienen las secciones completas', () => {
+      BLOQUES.forEach((e) => {
+        expect(e.interpretacion.length).withContext(`${e.id} interpretacion`).toBeGreaterThan(60);
+        expect(e.pasos.length).withContext(`${e.id} pasos`).toBeGreaterThanOrEqual(4);
+        expect(e.algoritmo.length).withContext(`${e.id} algoritmo`).toBeGreaterThan(50);
+        expect(e.criterio.length).withContext(`${e.id} criterio`).toBeGreaterThan(40);
+        expect(e.conclusion.length).withContext(`${e.id} conclusion`).toBeGreaterThan(60);
+        expect(e.parametros.length).withContext(`${e.id} parametros`).toBeGreaterThanOrEqual(2);
+      });
+    });
+
+    it('cada uno muestra la primera iteración con la cuenta escrita', () => {
+      BLOQUES.forEach((e) => {
+        // "Paso 0" es la verificación de Bolzano: f(a) y f(b).
+        expect(e.pasos[0]).withContext(`${e.id} paso 0`).toContain('Paso 0');
+        expect(e.pasos[0]).withContext(`${e.id} paso 0 sin f(`).toMatch(/[a-zA-Zπ]\(/);
+        // "Paso 1" arranca con el corte de la cuerda: c = a − f(a)·(b−a)/…
+        expect(e.pasos[1]).withContext(`${e.id} paso 1`).toMatch(/(?:c|x|T|Δ|λ)\s*=/);
+      });
+    });
+
+    it('los ids son únicos', () => {
+      const ids = BLOQUES.map((b) => b.id);
+      expect(new Set(ids).size).toBe(ids.length);
+    });
+
+    it('los ejercicios son resolubles y traen pista', () => {
+      EJERCICIOS_REGLA_FALSA.forEach((e) => {
+        const r = reglaFalsa({
+          f: parsearFuncion(e.calculo.funcion)!,
+          a: e.calculo.a!,
+          b: e.calculo.b!,
+          tol: e.calculo.tol!,
+        });
+        expect(r.convergio).withContext(e.titulo).toBe(true);
+        expect(e.pista).withContext(`${e.titulo} sin pista`).toBeTruthy();
+        expect(e.pista!.length).toBeGreaterThan(40);
+      });
+    });
+
+    it('hay al menos un ejercicio de casuística', () => {
+      const casuisticas = EJERCICIOS_REGLA_FALSA.filter((e) => e.tipo === 'casuistica');
+      expect(casuisticas.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  describe('casuísticas', () => {
+    const casuisticas: Bloque[] = [
+      ...(EJEMPLOS_REGLA_FALSA.filter((e) => e.tipo === 'casuistica') as Bloque[]),
+      ...(EJERCICIOS_REGLA_FALSA.filter((e) => e.tipo === 'casuistica') as Bloque[]),
+      { ...TEORIA_REGLA_FALSA.ejemploCasuistica } as Bloque,
+    ];
+
+    it('hay al menos dos, y todas explican de dónde salen los datos', () => {
+      expect(casuisticas.length).toBeGreaterThanOrEqual(2);
+      casuisticas.forEach((c) => {
+        expect(c.enunciado).withContext(`${c.id} sin enunciado`).toBeTruthy();
+        expect(c.enunciado!.length).toBeGreaterThan(80);
+        expect(c.extraccion).withContext(`${c.id} sin extracción`).toBeTruthy();
+        expect(c.extraccion!.busqueda.length).toBeGreaterThan(40);
+        expect(c.extraccion!.datos.length).toBeGreaterThanOrEqual(2);
+        expect(c.extraccion!.formulacion.length).toBeGreaterThan(60);
+      });
+    });
+
+    it('la formulación de cada casuística declara el intervalo y Bolzano', () => {
+      // Regla Falsa no pide una semilla: pide un intervalo con cambio de
+      // signo. Cada casuística tiene que decir de dónde salió [a, b] y
+      // verificar la condición de Bolzano antes de calcular.
+      casuisticas.forEach((c) => {
+        expect(c.extraccion!.formulacion)
+          .withContext(`${c.id} no declara Bolzano ni el intervalo`)
+          .toMatch(/Bolzano|intervalo|extremo/i);
+      });
+    });
+
+    it('cada dato de la extracción dice qué es', () => {
+      casuisticas.forEach((c) => {
+        c.extraccion!.datos.forEach((d) => {
+          const dato = d as { simbolo?: string; queEs?: string };
+          expect(dato.simbolo).toBeTruthy();
+          expect(dato.queEs).withContext(`${c.id}: ${dato.simbolo}`).toBeTruthy();
+          expect(dato.queEs!.length).toBeGreaterThan(10);
+        });
+      });
+    });
+  });
+
+  describe('higiene del texto', () => {
+    it('no tiene caracteres de otros alfabetos', () => {
+      // Más de una vez se colaron caracteres chinos o cirílicos en los
+      // textos generados. Este test lo detecta.
+      BLOQUES.forEach((b) => {
+        const todo = [b.titulo, b.interpretacion, b.algoritmo, b.criterio, b.conclusion]
+          .concat(b.pasos)
+          .join(' ');
+        const sospechosos = todo.match(/[\u4e00-\u9fff\u0400-\u04ff]/g);
+        expect(sospechosos).withContext(`${b.id}: ${sospechosos?.join(' ')}`).toBeNull();
+      });
+    });
+
+    it('no deja palabras en inglés que se coló', () => {
+      BLOQUES.forEach((b) => {
+        const todo = [b.titulo, b.interpretacion, b.algoritmo, b.criterio, b.conclusion]
+          .concat(b.pasos)
+          .join(' ');
+        ['Written', 'famous', 'Shoul', 'serie as', 'SOURCE'].forEach((palabra) => {
+          expect(todo).not.toContain(palabra);
+        });
+      });
+    });
+
+    it('todos los bloques tienen título y son presentables', () => {
+      BLOQUES.forEach((b) => {
+        expect(b.titulo.length).withContext(b.id).toBeGreaterThan(10);
+        expect(b.titulo).not.toMatch(/^(Ejemplo|Ejercicio|Test)\s*$/);
+      });
+    });
+  });
+});

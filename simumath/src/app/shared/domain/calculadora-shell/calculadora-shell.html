@@ -1,0 +1,59 @@
+<ui-card>
+  <h3 class="shell__titulo">Parámetros del problema</h3>
+
+  <form class="shell__formulario" (submit)="alCalcular(); $event.preventDefault()">
+    @for (campo of campos(); track campo.key) {
+      <div class="shell__campo">
+        <app-form-field
+          [label]="campo.etiqueta"
+          [placeholder]="campo.placeholder ?? ''"
+          [type]="campo.tipo"
+          [hint]="campo.ayuda"
+          [value]="valorDe(campo.key)"
+          (valueChange)="alCambiar(campo.key, $event)"
+          (enter)="alCalcular()"
+        />
+
+        @if (campo.requisito) {
+          <p class="shell__requisito">{{ campo.requisito }}</p>
+        }
+      </div>
+    }
+
+    <div class="shell__acciones">
+      <button type="submit" class="shell__boton shell__boton--calcular">Calcular</button>
+      <button type="button" class="shell__boton" (click)="alLimpiar()">Limpiar</button>
+    </div>
+  </form>
+</ui-card>
+
+@if (respuesta(); as r) {
+  <ui-card>
+    <h3 class="shell__titulo">Respuesta</h3>
+
+    @if (r.exito) {
+      <div class="shell__resultados">
+        @if (r.raiz) {
+          <div class="shell__dato">
+            <span class="shell__dato-label">Raíz aproximada</span>
+            <span class="shell__dato-valor shell__dato-valor--destacado">{{ r.raiz }}</span>
+          </div>
+        }
+        @if (r.iteraciones !== undefined) {
+          <div class="shell__dato">
+            <span class="shell__dato-label">Iteraciones</span>
+            <span class="shell__dato-valor">{{ r.iteraciones }}</span>
+          </div>
+        }
+        @if (r.error) {
+          <div class="shell__dato">
+            <span class="shell__dato-label">Error final</span>
+            <span class="shell__dato-valor">{{ r.error }}</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="shell__error" role="alert">{{ r.conclusion }}</p>
+    }
+  </ui-card>
+}

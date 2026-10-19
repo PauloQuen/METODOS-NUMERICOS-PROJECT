@@ -1,0 +1,44 @@
+<section class="integrantes">
+  <div class="section-heading">
+    <h2 class="section-heading__title">Equipo de desarrollo</h2>
+    <p class="section-heading__subtitle">
+      Estudiantes de la Escuela Profesional de Ingeniería de Sistemas que
+      construyen este módulo.
+    </p>
+  </div>
+
+  <div class="integrantes__grid">
+    @for (integrante of integrantes; track integrante.lugar) {
+      <ui-card elevation="sm" class="miembro">
+        <div class="miembro__avatar" aria-hidden="true">
+          <span class="material-symbols-outlined">person</span>
+        </div>
+        <span class="miembro__nombre">{{ integrante.lugar }}</span>
+        <span class="miembro__rol">{{ integrante.rol }}</span>
+        <app-badge text="Por completar" variant="outline" />
+      </ui-card>
+    }
+  </div>
+
+  <div class="section-heading section-heading--ref">
+    <h2 class="section-heading__title">Referencias bibliográficas</h2>
+    <p class="section-heading__subtitle">
+      Bibliografía base de la asignatura.
+    </p>
+  </div>
+
+  <div class="integrantes__refs">
+    @for (ref of referencias; track ref.titulo) {
+      <ui-card elevation="sm" class="ref">
+        <div class="ref__icon" aria-hidden="true">
+          <span class="material-symbols-outlined">menu_book</span>
+        </div>
+        <div class="ref__body">
+          <span class="ref__autor">{{ ref.autor }}</span>
+          <span class="ref__titulo">{{ ref.titulo }}</span>
+          <span class="ref__detalle">{{ ref.detalle }}</span>
+        </div>
+      </ui-card>
+    }
+  </div>
+</section>

@@ -1,0 +1,63 @@
+.stat-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-full);
+
+    .material-symbols-outlined {
+      font-size: 18px;
+    }
+
+    /* Tonalidades del círculo */
+    &--navy {
+      background: var(--primary-container);
+      color: var(--surface-bright);
+    }
+    &--amber {
+      background: var(--secondary-container);
+      color: var(--on-secondary-container);
+    }
+    &--neutral {
+      background: var(--surface-container);
+      color: var(--primary);
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__label {
+    font-size: var(--text-label-sm);
+    font-weight: var(--weight-label-sm);
+    line-height: var(--line-label-sm);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--on-surface-variant);
+  }
+
+  &__value {
+    font-family: var(--font-display);
+    font-size: var(--text-headline-sm);
+    font-weight: var(--weight-headline-sm);
+    line-height: var(--line-headline-sm);
+    color: var(--primary);
+    overflow-wrap: anywhere;
+  }
+
+  &__caption {
+    font-size: var(--text-label-sm);
+    line-height: var(--line-label-sm);
+    color: var(--on-surface-variant);
+  }
+}

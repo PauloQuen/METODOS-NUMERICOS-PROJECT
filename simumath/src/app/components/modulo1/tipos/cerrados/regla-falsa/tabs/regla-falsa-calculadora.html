@@ -1,0 +1,66 @@
+<div class="calculadora">
+  <header class="calculadora__encabezado">
+    <h2 class="calculadora__titulo">Calculadora de Regla Falsa</h2>
+    <p class="calculadora__intro">
+      Cargá la función y el intervalo, corré el método y seguí iteración por
+      iteración con el visor de pasos. La función acepta
+      <code>^</code> para potencias y <code>exp()</code>, <code>ln()</code>,
+      <code>sen()</code>, <code>cos()</code>, <code>tan()</code>,
+      <code>log()</code> y <code>sqrt()</code>.
+    </p>
+  </header>
+
+  <div class="calculadora__grilla">
+    <app-calculadora-shell
+      [campos]="campos"
+      [(valores)]="valores"
+      [respuesta]="estado()?.respuesta ?? null"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (estado(); as e) {
+      @if (e.filas.length > 0) {
+        <div class="calculadora__columna-derecha">
+          <ui-card padding="lg">
+            <h3 class="seccion__titulo">Gráfico</h3>
+            <app-grafico-metodo
+              [funcion]="funcion()"
+              [iteraciones]="e.filas"
+              [pasoActual]="paso()"
+              [rango]="rango()"
+              [dibujarMetodo]="dibujar"
+              [raiz]="e.raiz"
+              leyenda="Regla falsa: la cuerda une (a,f(a)) y (b,f(b)) y cruza el eje en c"
+            />
+          </ui-card>
+          <ui-card padding="lg">
+            <h3 class="seccion__titulo">Paso a paso</h3>
+            <app-pasos-control
+              [total]="total()"
+              [paso]="paso()"
+              [texto]="textoDelPaso()"
+              (pasoCambiado)="alCambiarPaso($event)"
+            />
+          </ui-card>
+        </div>
+      }
+    }
+  </div>
+
+  @if (estado(); as e) {
+    @if (e.filas.length > 0) {
+      <ui-card padding="lg">
+        <h3 class="seccion__titulo">Iteraciones</h3>
+        <app-iteration-table
+          [columns]="columnas"
+          [rows]="e.filas"
+          [highlightRowIndex]="e.filaFinal"
+          [highlightBadge]="e.filaFinal !== undefined ? 'criterio cumplido' : ''"
+        />
+      </ui-card>
+
+
+    }
+  }
+</div>

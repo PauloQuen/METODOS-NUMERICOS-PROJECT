@@ -1,0 +1,88 @@
+<div class="inicio">
+  <!-- Cabecera: el hero navy del módulo, a todo el ancho -->
+  <header class="inicio__hero">
+    <div class="inicio__hero-contenido">
+      <app-breadcrumb [tramos]="miga" tono="navy" />
+
+      <app-btn
+        class="inicio__volver"
+        variant="secondary"
+        label="Volver al inicio"
+        icon="arrow_back"
+        routerLink="/home"
+      />
+
+      <app-badge text="Módulo 1 · Ecuaciones No Lineales y Errores" variant="amber" />
+
+      <h1 class="inicio__titulo">¿Qué quieres aprender hoy?</h1>
+      <p class="inicio__bajada">
+        Los métodos numéricos se agrupan por CÓMO atacan el problema. Elegí un tipo y después el
+        método: cada uno tiene su teoría, sus ejemplos, su calculadora y su gráfico.
+      </p>
+    </div>
+  </header>
+
+  <main class="inicio__cuerpo">
+    <!-- ── Las tres familias ─────────────────────────────────────── -->
+    <section aria-labelledby="inicio-familias-t">
+      <h2 id="inicio-familias-t" class="inicio__seccion-titulo">
+        Elegí por tipo de método
+      </h2>
+
+      <div class="inicio__grid">
+        @for (f of familias(); track f.key) {
+          <a class="familia" [routerLink]="rutaFamilia(f.key)">
+            <div class="familia__tope">
+              <span class="familia__conteo">
+                {{ f.disponibles }} de {{ f.metodos.length }} disponibles
+              </span>
+              @if (f.disponibles === 0) {
+                <app-badge text="Próximamente" variant="outline" />
+              }
+            </div>
+
+            <h3 class="familia__nombre">{{ f.nombre }}</h3>
+            <p class="familia__principio">{{ f.principio }}</p>
+            <p class="familia__descripcion">{{ f.descripcion }}</p>
+
+            <ul class="familia__metodos">
+              @for (m of f.metodos; track m.key) {
+                <li class="familia__metodo">
+                  <span class="familia__metodo-nombre">{{ m.nombre }}</span>
+                  @if (m.estado !== 'implementado') {
+                    <app-badge text="Próximamente" variant="outline" />
+                  }
+                </li>
+              }
+            </ul>
+
+            <span class="familia__cta">
+              Ver métodos
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+            </span>
+          </a>
+        }
+      </div>
+    </section>
+
+    <!-- ── Material transversal, en segundo plano ────────────────── -->
+    <section class="inicio__material" aria-labelledby="inicio-material-t">
+      <h2 id="inicio-material-t" class="inicio__seccion-titulo">Material general del módulo</h2>
+      <p class="inicio__material-bajada">
+        Contenido que atraviesa los cinco métodos: fundamentos del error, ejemplos resueltos y
+        recursos de la asignatura.
+      </p>
+
+      <ul class="inicio__links">
+        @for (s of secciones; track s.path) {
+          <li>
+            <a class="inicio__link" [routerLink]="['/modulo1', s.path]">
+              <span class="inicio__link-nombre">{{ s.etiqueta }}</span>
+              <span class="inicio__link-desc">{{ s.subtitulo }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+  </main>
+</div>

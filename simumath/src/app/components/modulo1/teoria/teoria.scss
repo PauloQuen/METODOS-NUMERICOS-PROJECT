@@ -1,0 +1,286 @@
+/* ==========================================================================
+   Teoría y Errores — conceptos, métodos, criterios de parada y comparación.
+   ========================================================================== */
+
+.seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+
+  + .seccion {
+    margin-top: var(--space-xl);
+  }
+}
+
+.section-heading {
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-headline-lg);
+    font-weight: var(--weight-headline-lg);
+    line-height: var(--line-headline-lg);
+    color: var(--primary);
+    letter-spacing: -0.01em;
+  }
+
+  &__subtitle {
+    margin: var(--space-xs) 0 0;
+    font-size: var(--text-body-md);
+    line-height: var(--line-body-md);
+    color: var(--on-surface-variant);
+  }
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-lg);
+
+  &--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  &--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  &--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Contenido proyectado en las ui-card */
+ui-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
+  app-badge {
+    align-self: flex-start;
+  }
+}
+
+.formula {
+  margin: var(--space-xs) 0 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: var(--line-headline-sm);
+  color: var(--primary);
+
+  &--block {
+    margin-top: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    border-left: 4px solid var(--secondary);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--secondary-container);
+    color: var(--on-secondary-container);
+    font-size: 1.05rem;
+  }
+}
+
+.card-title {
+  margin: var(--space-xs) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--text-headline-sm);
+  font-weight: var(--weight-headline-sm);
+  line-height: var(--line-headline-sm);
+  color: var(--primary);
+}
+
+.card-text {
+  margin: 0;
+  flex: 1;
+  font-size: var(--text-body-sm);
+  line-height: var(--line-body-sm);
+  color: var(--on-surface-variant);
+}
+
+.card-cta {
+  margin-top: var(--space-xs);
+}
+
+/* ------------------------------------------------------------------------
+   Card de cada método (5 totales)
+   ------------------------------------------------------------------------ */
+
+.metodos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.metodo {
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  &__numero {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--surface-container-highest);
+    -webkit-text-stroke: 1px var(--outline-variant);
+    user-select: none;
+  }
+
+  &__cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+  }
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  &__sub {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-title-md);
+    font-weight: var(--weight-title-md);
+    color: var(--primary);
+
+    &--pro::before {
+      content: '✓ ';
+      color: var(--tertiary);
+    }
+
+    &--contra::before {
+      content: '✕ ';
+      color: var(--error);
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin: 0;
+    padding-left: 1.1em;
+    font-size: var(--text-body-sm);
+    line-height: var(--line-body-sm);
+    color: var(--on-surface-variant);
+
+    li::marker {
+      color: var(--primary);
+    }
+
+    .metodo__sub--pro + & li::marker {
+      color: var(--tertiary);
+    }
+  }
+}
+
+/* ------------------------------------------------------------------------
+   Tabla comparativa
+   ------------------------------------------------------------------------ */
+
+.comparacion {
+  &:has(table) {
+    overflow: hidden;
+  }
+
+  &__scroll {
+    overflow-x: auto;
+  }
+
+  &__tabla {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 860px;
+    font-size: var(--text-body-sm);
+    line-height: var(--line-body-sm);
+
+    th,
+    td {
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--outline-variant);
+    }
+
+    thead th {
+      font-family: var(--font-display);
+      font-weight: var(--weight-title-md);
+      color: var(--primary);
+      background: var(--surface-container-lowest);
+      white-space: nowrap;
+    }
+
+    tbody th[scope='row'] {
+      font-weight: var(--weight-title-sm);
+      color: var(--on-surface);
+      white-space: nowrap;
+    }
+
+    tbody td {
+      color: var(--on-surface-variant);
+    }
+
+    tbody tr:last-child th,
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+  }
+}
+
+.caso {
+  margin-top: var(--space-lg);
+}
+
+/* ------------------------------------------------------------------------
+   Criterios de parada
+   ------------------------------------------------------------------------ */
+
+.parada {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      font-size: var(--text-body-md);
+      line-height: var(--line-body-md);
+      color: var(--on-surface);
+
+      strong {
+        color: var(--primary);
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .grid--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid--4,
+  .grid--3,
+  .grid--2 {
+    grid-template-columns: 1fr;
+  }
+
+  .metodo {
+    &__cols {
+      grid-template-columns: 1fr;
+    }
+  }
+}

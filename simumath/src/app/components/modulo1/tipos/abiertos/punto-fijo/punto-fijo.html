@@ -1,0 +1,32 @@
+<div class="punto-fijo" [style]="estilo()">
+  <app-breadcrumb class="punto-fijo__miga" [tramos]="miga()" />
+
+  <header class="punto-fijo__encabezado">
+    <div class="punto-fijo__titulos">
+      <p class="punto-fijo__familia">Métodos abiertos</p>
+      <h1 class="punto-fijo__nombre">{{ metodo.nombre }}</h1>
+      <p class="punto-fijo__resumen">{{ metodo.resumen }}</p>
+    </div>
+
+    <nav class="punto-fijo__pestanas" aria-label="Secciones de Punto Fijo">
+      @for (p of pestanas; track p.ruta) {
+        <a
+          class="punto-fijo__pestana"
+          [routerLink]="['/modulo1/tipos/abiertos/punto-fijo', p.ruta]"
+          routerLinkActive="punto-fijo__pestana--activa"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [attr.aria-current]="rutaActual() === p.ruta ? 'page' : null"
+        >
+          <span class="material-symbols-outlined punto-fijo__icono" aria-hidden="true">
+            {{ p.icono }}
+          </span>
+          <span>{{ p.texto }}</span>
+        </a>
+      }
+    </nav>
+  </header>
+
+  <div class="punto-fijo__contenido">
+    <router-outlet />
+  </div>
+</div>

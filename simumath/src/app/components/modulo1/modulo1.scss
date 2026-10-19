@@ -1,0 +1,83 @@
+/* ==========================================================================
+   Módulo 1 — Layout común de las secciones.
+   ========================================================================== */
+
+.modulo1 {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  /* Hero navy con breadcrumb y navegación de secciones */
+  &__hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-xl) var(--gutter-lg) var(--space-lg);
+    background: var(--primary);
+    color: var(--on-primary);
+    text-align: center;
+  }
+
+  &__volver {
+    position: absolute;
+    top: var(--space-lg);
+    right: var(--space-lg);
+  }
+
+  &__breadcrumb {
+    /* En flujo normal, como antes: el hero es una columna centrada y la
+       miga es el primer renglón. En móvil así nunca se superpone al
+       título (si fuera absolute, sí). */
+  }
+
+  &__title {
+    margin: var(--space-xs) auto 0;
+    max-width: 48rem;
+    font-family: var(--font-display);
+    font-size: var(--text-headline-lg);
+    font-weight: var(--weight-headline-lg);
+    line-height: var(--line-headline-lg);
+    color: var(--surface-bright);
+    letter-spacing: -0.01em;
+  }
+
+  &__subtitle {
+    margin: 0;
+    max-width: 40rem;
+    font-size: var(--text-body-md);
+    line-height: var(--line-body-md);
+    color: var(--primary-fixed-dim);
+  }
+
+  &__nav {
+    margin-top: var(--space-sm);
+  }
+
+  /* Contenido de cada sección */
+  &__content {
+    flex: 1;
+    width: 100%;
+    max-width: var(--layout-max);
+    margin: 0 auto;
+    padding: var(--space-xl) var(--gutter-lg) var(--space-xl);
+  }
+
+  /* Solo en la Pantalla A: el contenido es a todo el ancho porque la
+     landing trae su propio hero navy y su propio centrado interno. */
+  &__content--libre {
+    max-width: none;
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .modulo1__hero {
+    padding: var(--space-xl) var(--gutter-sm);
+  }
+
+  .modulo1__content {
+    padding: var(--space-xl) var(--gutter-sm);
+  }
+}

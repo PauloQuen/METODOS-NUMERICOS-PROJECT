@@ -1,0 +1,26 @@
+<div class="ejemplos">
+  <header class="ejemplos__encabezado">
+    <h2 class="ejemplos__titulo">Ejemplos resueltos</h2>
+    <p class="ejemplos__intro">
+      Acá están los cuatro ejemplos de Bisección, dos numéricos y dos de casuística.
+      Cada tabla y cada gráfico se calculan corriendo el algoritmo con los datos del
+      enunciado, así que podés reproducir cada paso con la calculadora de la
+      última pestaña.
+    </p>
+  </header>
+
+  @for (ejemplo of ejemplos; track ejemplo.titulo) {
+    <section class="ejemplos__bloque">
+      <app-bloque-ejemplo
+        [ejemplo]="ejemplo"
+        [funcion]="funcionDe($index)"
+        [filas]="calculoDe($index).filas"
+        [columnas]="columnas"
+        [filaFinal]="calculoDe($index).filaFinal"
+        [rango]="rangoDe($index)"
+        [dibujarMetodo]="dibujar"
+        [raiz]="calculoDe($index).raiz"
+      />
+    </section>
+  }
+</div>

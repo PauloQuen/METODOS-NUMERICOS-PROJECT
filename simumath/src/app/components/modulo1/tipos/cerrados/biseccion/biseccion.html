@@ -1,0 +1,34 @@
+<div class="biseccion" [style]="estilo()">
+  <app-breadcrumb class="biseccion__miga" [tramos]="miga()" />
+
+  <!-- Encabezado del método -->
+  <header class="biseccion__encabezado">
+    <div class="biseccion__titulos">
+      <p class="biseccion__familia">Métodos cerrados</p>
+      <h1 class="biseccion__nombre">{{ metodo.nombre }}</h1>
+      <p class="biseccion__resumen">{{ metodo.resumen }}</p>
+    </div>
+
+    <nav class="biseccion__pestanas" aria-label="Secciones de Bisección">
+      @for (p of pestanas; track p.ruta) {
+        <a
+          class="biseccion__pestana"
+          [routerLink]="['/modulo1/tipos/cerrados/biseccion', p.ruta]"
+          routerLinkActive="biseccion__pestana--activa"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [attr.aria-current]="rutaActual() === p.ruta ? 'page' : null"
+        >
+          <span class="material-symbols-outlined biseccion__icono" aria-hidden="true">
+            {{ p.icono }}
+          </span>
+          <span>{{ p.texto }}</span>
+        </a>
+      }
+    </nav>
+  </header>
+
+  <!-- Acá se ve la pestaña activa -->
+  <div class="biseccion__contenido">
+    <router-outlet />
+  </div>
+</div>

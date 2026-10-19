@@ -1,0 +1,41 @@
+<div class="modulo1">
+  <!-- El hero con las tabs de secciones SOLO se muestra en las secciones
+       generales. La Pantalla A y la página de cada método traen su propia
+       cabecera: acá no se pinta nada de este hero encima. -->
+  @if (modo() === 'material') {
+    <header class="modulo1__hero">
+      <app-breadcrumb class="modulo1__breadcrumb" [tramos]="migaSeccion()" tono="navy" />
+
+      <app-btn
+        class="modulo1__volver"
+        variant="secondary"
+        label="Volver al inicio"
+        icon="arrow_back"
+        routerLink="/home"
+      />
+
+      <app-badge text="Módulo 1 · Ecuaciones No Lineales y Errores" variant="amber" />
+
+      <h1 class="modulo1__title">{{ seccion().titulo }}</h1>
+      <p class="modulo1__subtitle">{{ seccion().subtitulo }}</p>
+
+      <app-tab-nav
+        class="modulo1__nav"
+        [tabs]="tabs"
+        [activeTab]="activeTab()"
+        (select)="navigate($event)"
+      />
+    </header>
+  }
+
+  <!-- Contenido. En 'landing' el contenido es a todo el ancho: la Pantalla A
+       administra su propio héroe navy y su propio centrado. -->
+  <main
+    class="modulo1__content"
+    [class.modulo1__content--libre]="modo() === 'landing'"
+  >
+    <router-outlet />
+  </main>
+
+  <app-footer [year]="2026" />
+</div>

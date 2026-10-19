@@ -1,0 +1,17 @@
+<nav
+  class="tab-nav"
+  [class.tab-nav--flat]="variant() === 'flat'"
+  aria-label="Secciones del módulo"
+>
+  @for (tab of tabs(); track tab.path) {
+    <a
+      class="tab-nav__tab"
+      [class.tab-nav__tab--active]="isActive(tab.path)"
+      [attr.data-path]="tab.path"
+      href="#"
+      (click)="onTabClick($event, tab.path)"
+    >
+      {{ tab.label }}
+    </a>
+  }
+</nav>

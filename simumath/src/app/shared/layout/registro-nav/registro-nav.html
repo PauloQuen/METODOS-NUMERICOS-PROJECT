@@ -1,0 +1,73 @@
+<nav class="registro-nav" aria-label="Métodos numéricos, agrupados por familia">
+  @for (grupo of grupos(); track grupo.familia.key) {
+    <section class="familia">
+      <h3 class="familia__encabezado">
+        <!--
+          El botón collapsible controla la lista de su familia. aria-expanded
+          + aria-controls apuntan al <ul> real, no a un id decorativo.
+        -->
+        <button
+          type="button"
+          class="familia__disparador"
+          [attr.aria-expanded]="esActiva(grupo.familia.key)"
+          [attr.aria-controls]="'lista-' + grupo.familia.key"
+          (click)="alternar(grupo.familia.key)"
+        >
+          <span class="familia__nombre">{{ grupo.familia.nombre }}</span>
+          <span class="familia__conteo">{{ grupo.metodos.length }}</span>
+          <svg
+            class="familia__chevron"
+            [class.familia__chevron--abierta]="esActiva(grupo.familia.key)"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" />
+          </svg>
+        </button>
+      </h3>
+
+      <!-- El principio de la familia: la idea que el alumno necesita. -->
+      <p class="familia__principio">{{ grupo.familia.principio }}</p>
+
+      <!--
+        La lista queda siempre en el DOM y se oculta con [hidden], en vez de
+        desaparecer con @if: aria-controls tiene que apuntar a un elemento
+        que exista, y sacar el <ul> del árbol mientras está colapsado rompe a
+        los lectores de pantalla que lo consultan para saber cuánto contenido
+        hay.
+      -->
+      <ul
+        class="familia__lista"
+        [id]="'lista-' + grupo.familia.key"
+        [hidden]="!esActiva(grupo.familia.key)"
+      >
+        @for (m of grupo.metodos; track m.key) {
+          <li>
+            <button
+              type="button"
+              class="metodo"
+              [class.metodo--activo]="activo() === m.key"
+              [class.metodo--inactivo]="m.estado !== 'implementado'"
+              [disabled]="m.estado !== 'implementado'"
+              [attr.aria-current]="activo() === m.key ? 'true' : null"
+              (click)="elegir(m)"
+            >
+              <span class="metodo__fila">
+                <span class="metodo__nombre">{{ m.nombre }}</span>
+                @if (m.estado !== 'implementado') {
+                  <app-badge text="Próximamente" variant="outline" />
+                }
+              </span>
+
+              <code class="metodo__formula">{{ m.formula }}</code>
+
+              @if (resumen()) {
+                <span class="metodo__resumen">{{ resumenDe(m) }}</span>
+              }
+            </button>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</nav>

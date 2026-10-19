@@ -1,0 +1,36 @@
+.autoevaluacion {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.autoevaluacion__encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.autoevaluacion__titulo {
+  margin: 0;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 1.4rem;
+  color: var(--on-surface);
+}
+
+.autoevaluacion__intro {
+  margin: 0;
+  max-width: 70ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+}
+
+.autoevaluacion__bloque {
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.autoevaluacion__bloque:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}

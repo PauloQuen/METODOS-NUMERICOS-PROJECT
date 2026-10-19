@@ -1,0 +1,87 @@
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  background: var(--surface-container-lowest);
+}
+
+.it-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-display);
+  font-size: var(--text-body-md);
+  line-height: var(--line-body-md);
+
+  /* Header navy como en las maquetas */
+  thead {
+    background: var(--primary);
+    color: var(--surface-bright);
+
+    th {
+      padding: 0.75rem var(--space-md);
+      font-family: var(--font-body);
+      font-size: var(--text-label-lg);
+      font-weight: var(--weight-label-lg);
+      line-height: var(--line-label-lg);
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--surface-container-high);
+      color: var(--on-surface);
+      transition: background-color var(--transition-smooth);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: color-mix(
+          in srgb,
+          var(--surface-container-low) 65%,
+          transparent
+        );
+      }
+
+      /* Fila que alcanza el criterio de convergencia */
+      &--highlight {
+        background: color-mix(
+          in srgb,
+          var(--secondary-container) 22%,
+          transparent
+        );
+        font-weight: 600;
+
+        &:hover {
+          background: color-mix(
+            in srgb,
+            var(--secondary-container) 30%,
+            transparent
+          );
+        }
+      }
+    }
+  }
+
+  &__cell {
+    padding: 0.625rem var(--space-md);
+    white-space: nowrap;
+  }
+
+  &__badge {
+    margin-left: var(--space-sm);
+  }
+}
+
+/* Alineación de columnas */
+.cell--left {
+  text-align: left;
+}
+.cell--right {
+  text-align: right;
+}
+.cell--center {
+  text-align: center;
+}

@@ -1,0 +1,14 @@
+<div class="ejemplos">
+  @for (ejemplo of ejemplos; track ejemplo.id; let i = $index) {
+    <app-bloque-ejemplo
+      [ejemplo]="ejemplo"
+      [columnas]="columnas"
+      [filas]="estados()[i].filas"
+      [filaFinal]="estados()[i].filaFinal"
+      [funcion]="funciones[i]"
+      [rango]="rangos()[i]"
+      [dibujarMetodo]="dibujar"
+      [raiz]="estados()[i].raiz"
+    />
+  }
+</div>

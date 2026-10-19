@@ -1,0 +1,19 @@
+<div class="newton-raphson" [style]="estilo()">
+  <app-breadcrumb class="newton-raphson__miga" [tramos]="miga()" />
+  <header class="newton-raphson__encabezado">
+    <div class="newton-raphson__titulos">
+      <p class="newton-raphson__familia">Métodos abiertos</p>
+      <h1 class="newton-raphson__nombre">{{ metodo.nombre }}</h1>
+      <p class="newton-raphson__resumen">{{ metodo.resumen }}</p>
+    </div>
+    <nav class="newton-raphson__pestanas" aria-label="Secciones de Newton-Raphson">
+      @for(p of pestanas; track p.ruta){
+        <a class="newton-raphson__pestana" [routerLink]="['/modulo1/tipos/abiertos/newton-raphson',p.ruta]" routerLinkActive="newton-raphson__pestana--activa" [routerLinkActiveOptions]="{exact:true}" [attr.aria-current]="rutaActual()===p.ruta?'page':null">
+          <span class="material-symbols-outlined newton-raphson__icono" aria-hidden="true">{{p.icono}}</span>
+          <span>{{p.texto}}</span>
+        </a>
+      }
+    </nav>
+  </header>
+  <div class="newton-raphson__contenido"><router-outlet /></div>
+</div>

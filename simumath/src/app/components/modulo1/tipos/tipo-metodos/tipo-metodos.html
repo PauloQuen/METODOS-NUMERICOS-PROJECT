@@ -1,0 +1,79 @@
+<div class="tipo">
+  <header class="tipo__cabecera">
+    <app-breadcrumb [tramos]="miga()" />
+
+    <div class="tipo__acciones">
+      <app-btn
+        variant="secondary"
+        label="Volver a elegir tipo"
+        icon="arrow_back"
+        routerLink="/modulo1"
+      />
+    </div>
+
+    @if (familia(); as f) {
+      <div class="tipo__fila">
+        <app-badge [text]="'Módulo 1 · ' + f.nombre" variant="navy" />
+        <span class="tipo__situacion">
+          {{ disponibles() }} de {{ metodos().length }} métodos disponibles
+        </span>
+      </div>
+
+      <h1 class="tipo__nombre">{{ f.nombre }}</h1>
+      <p class="tipo__principio">{{ f.principio }}</p>
+      <p class="tipo__descripcion">{{ f.descripcion }}</p>
+    }
+  </header>
+
+  <section class="tipo__lista" aria-labelledby="tipo-lista-t">
+    <h2 id="tipo-lista-t" class="tipo__lista-titulo">Métodos de esta familia</h2>
+
+    <div class="tipo__grid">
+      @for (m of metodos(); track m.key) {
+        <!--
+          Tarjeta de método. Cuando está implementado es un ENLACE: el
+          alumno entra a la pestaña Teoría. Cuando está planificado es un
+          <div> con aria-hidden en el CTA: no puede haber un enlace hacia
+          una página que no existe todavía.
+        -->
+        @if (m.estado === 'implementado' && rutaDe(m); as ruta) {
+          <a class="metodo" [routerLink]="ruta">
+            <div class="metodo__tope">
+              <span class="metodo__orden">{{ m.ordenTexto }}</span>
+            </div>
+
+            <h3 class="metodo__nombre">
+              <span class="material-symbols-outlined metodo__chevron" aria-hidden="true">
+                chevron_right
+              </span>
+              {{ m.nombre }}
+            </h3>
+
+            <p class="metodo__idea">{{ m.idea }}</p>
+            <code class="metodo__formula">{{ m.formula }}</code>
+            <p class="metodo__resumen">{{ resumenDe(m) }}</p>
+
+            <span class="metodo__cta">
+              Entrar
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+            </span>
+          </a>
+        } @else {
+          <div class="metodo metodo--planificado" role="note">
+            <div class="metodo__tope">
+              <span class="metodo__orden">{{ m.ordenTexto }}</span>
+              <app-badge text="Próximamente" variant="outline" />
+            </div>
+
+            <h3 class="metodo__nombre">{{ m.nombre }}</h3>
+            <p class="metodo__idea">{{ m.idea }}</p>
+            <code class="metodo__formula">{{ m.formula }}</code>
+            <p class="metodo__resumen">{{ resumenDe(m) }}</p>
+
+            <span class="metodo__sin-cta">Todavía no está disponible</span>
+          </div>
+        }
+      }
+    </div>
+  </section>
+</div>

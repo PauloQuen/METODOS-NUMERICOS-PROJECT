@@ -1,0 +1,37 @@
+@if (routerLink(); as route) {
+  <a
+    class="btn"
+    [class]="variantClass()"
+    [routerLink]="route"
+    [attr.data-path]="path() ?? null"
+  >
+    @if (icon()) {
+      <span class="material-symbols-outlined btn__icon" aria-hidden="true">{{ icon() }}</span>
+    }
+    <span>{{ label() }}</span>
+  </a>
+} @else if (href(); as url) {
+  <a
+    class="btn"
+    [class]="variantClass()"
+    [href]="url"
+    [attr.data-path]="path() ?? null"
+  >
+    @if (icon()) {
+      <span class="material-symbols-outlined btn__icon" aria-hidden="true">{{ icon() }}</span>
+    }
+    <span>{{ label() }}</span>
+  </a>
+} @else {
+  <button
+    class="btn"
+    [class]="variantClass()"
+    type="button"
+    [disabled]="disabled()"
+  >
+    @if (icon()) {
+      <span class="material-symbols-outlined btn__icon" aria-hidden="true">{{ icon() }}</span>
+    }
+    <span>{{ label() }}</span>
+  </button>
+}

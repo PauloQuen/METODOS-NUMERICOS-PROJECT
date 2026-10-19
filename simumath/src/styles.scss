@@ -1,0 +1,175 @@
+/* ==========================================================================
+   Simumath — Design Tokens globales
+   Fuente única: DESIGN.md ("Academic Computational Modernism").
+   Valores ejecutables tomados del tailwind.config de las maquetas, para que
+   el resultado visual sea idéntico al de los HTML de referencia.
+   ========================================================================== */
+
+:root {
+  /* --- Superficies y texto --- */
+  --surface: #f8f9ff;
+  --surface-dim: #cbdbf5;
+  --surface-bright: #f8f9ff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #eff4ff;
+  --surface-container: #e5eeff;
+  --surface-container-high: #dce9ff;
+  --surface-container-highest: #d3e4fe;
+  --surface-variant: #d3e4fe;
+  --on-surface: #0b1c30;
+  --on-surface-variant: #44474e;
+  --outline: #74777f;
+  --outline-variant: #c4c6cf;
+  --background: #f8f9ff;
+  --on-background: #0b1c30;
+  --inverse-surface: #213145;
+  --inverse-on-surface: #eaf1ff;
+
+  /* --- Primario: navy institucional --- */
+  --primary: #002046;
+  --on-primary: #ffffff;
+  --primary-container: #1b365d;
+  --on-primary-container: #87a0cd;
+  --primary-fixed: #d6e3ff;
+  --primary-fixed-dim: #aec7f7;
+  --on-primary-fixed: #001b3d;
+  --on-primary-fixed-variant: #2e476f;
+  --inverse-primary: #aec7f7;
+  --surface-tint: #465f88;
+
+  /* --- Secundario: ámbar cálido --- */
+  --secondary: #7e5700;
+  --on-secondary: #ffffff;
+  --secondary-container: #fdbe50;
+  --on-secondary-container: #714d00;
+  --secondary-fixed: #ffdead;
+  --secondary-fixed-dim: #fabc4d;
+  --on-secondary-fixed: #281900;
+  --on-secondary-fixed-variant: #604100;
+
+  /* --- Terciario: teal analítico --- */
+  --tertiary: #002625;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #003d3c;
+  --on-tertiary-container: #60aba9;
+  --tertiary-fixed: #a5f0ed;
+  --tertiary-fixed-dim: #89d3d1;
+  --on-tertiary-fixed: #00201f;
+  --on-tertiary-fixed-variant: #00504e;
+
+  /* --- Estado --- */
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+
+  /* --- Tipografía: familias --- */
+  --font-display: "Noto Serif", Georgia, serif;
+  --font-body: "Plus Jakarta Sans", Arial, sans-serif;
+
+  /* --- Tipografía: escalas (display / headline) --- */
+  --text-display-hero: 48px;
+  --line-display-hero: 56px;
+  --weight-display-hero: 700;
+  --text-headline-lg: 32px;
+  --line-headline-lg: 42px;
+  --weight-headline-lg: 700;
+  --text-headline-md: 24px;
+  --line-headline-md: 32px;
+  --weight-headline-md: 600;
+  --text-headline-sm: 18px;
+  --line-headline-sm: 26px;
+  --weight-headline-sm: 700;
+
+  /* --- Tipografía: escalas (body / label / fórmula) --- */
+  --text-body-lg: 16px;
+  --line-body-lg: 26px;
+  --weight-body-lg: 400;
+  --text-body-md: 14px;
+  --line-body-md: 22px;
+  --weight-body-md: 400;
+  --text-body-sm: 12px;
+  --line-body-sm: 18px;
+  --weight-body-sm: 400;
+  --text-label-lg: 14px;
+  --line-label-lg: 20px;
+  --weight-label-lg: 600;
+  --text-label-md: 12px;
+  --line-label-md: 16px;
+  --weight-label-md: 600;
+  --text-label-sm: 11px;
+  --line-label-sm: 14px;
+  --weight-label-sm: 700;
+  --text-code: 16px;
+  --line-code: 24px;
+  --weight-code: 500;
+
+  /* --- Spacing --- */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --gutter-sm: 1rem;
+  --gutter: 1.5rem;
+  --gutter-lg: 2rem;
+  --margin: 2rem;
+  --margin-mobile: 1rem;
+  --layout-max: 1280px;
+
+  /* --- Radios --- */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* --- Elevación --- */
+  --shadow-sm: 0 4px 12px -2px rgba(27, 54, 93, 0.05);
+  --shadow-md: 0 10px 24px -4px rgba(27, 54, 93, 0.08);
+
+  /* --- Movimiento --- */
+  --transition-smooth: 0.2s ease;
+}
+
+/* Baseline global */
+*,
+*::before,
+*::after {
+  /* El modelo de caja estándar: width/height incluyen padding y borde.
+     Sin esto, cualquier width:100% + padding desborda el viewport. */
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  background: var(--background);
+  color: var(--on-background);
+  font-family: var(--font-body);
+  font-size: var(--text-body-md);
+  line-height: var(--line-body-md);
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "opsz" 24;
+}
