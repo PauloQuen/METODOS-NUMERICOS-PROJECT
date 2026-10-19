@@ -1,23 +1,23 @@
 # Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
+simumath/dist/
+simumath/out-tsc/
+simumath/tmp/
+simumath/coverage/
+simumath/e2e/test-output/
+simumath/.angular/
 .angular/
 
 # Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
+simumath/node_modules/
+simumath/package-lock.json
+simumath/yarn.lock
 
 # Environment files
-/.env
+simumath/.env
 
 # Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
+simumath/.angular-cli.json
+simumath/.ng/
 
 # TypeScript cache
 *.tsbuildinfo
