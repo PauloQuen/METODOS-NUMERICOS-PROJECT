@@ -1,0 +1,30 @@
+<div class="lista-m2-tab">
+  <header class="lista-m2-tab__encabezado">
+    <h2 class="lista-m2-tab__titulo">Autoevaluación</h2>
+    <p class="lista-m2-tab__intro">
+      Seis ejercicios: tres numéricos y tres de casuística. Resolvé a mano antes de desplegar
+      la solución. Cada solución muestra las iteraciones, el error, el residuo y el gráfico de
+      convergencia.
+    </p>
+  </header>
+
+  @for (ejercicio of ejercicios; track ejercicio.id) {
+    <section class="lista-m2-tab__bloque">
+      <app-bloque-ejercicio-sistema
+        [ejercicio]="ejercicio"
+        [filas]="calculoDe($index).filas"
+        [columnas]="calculoDe($index).columnas"
+        [solucion]="calculoDe($index).x"
+        [bondad]="errorDe($index)"
+        etiquetaBondad="Error final"
+        [pasos]="calculoDe($index).pasos"
+        [funcion]="funcionCero"
+        [rango]="rangoDe($index)"
+        [rangoY]="rangoYDe($index)"
+        [dibujarMetodo]="dibujo"
+        leyenda="Error de cambio por iteración"
+        tituloTabla="Iteraciones de Gauss-Seidel"
+      />
+    </section>
+  }
+</div>

@@ -1,0 +1,40 @@
+/* ==========================================================================
+   Estilos compartidos de las pestañas Ejemplos y Autoevaluación del Módulo 2.
+   ========================================================================== */
+
+.lista-m2-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.lista-m2-tab__encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.lista-m2-tab__titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--on-surface);
+}
+
+.lista-m2-tab__intro {
+  margin: 0;
+  max-width: 75ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+}
+
+.lista-m2-tab__bloque {
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.lista-m2-tab__bloque:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}

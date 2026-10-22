@@ -148,19 +148,23 @@
         <ui-card elevation="sm" class="module-card">
           <div class="module-card__head">
             <span class="module-card__phase">Fase 2</span>
-            <app-badge text="En desarrollo" variant="outline" />
+            <app-badge text="Disponible" variant="amber" />
           </div>
           <h3 class="module-card__title">Sistemas de ecuaciones lineales</h3>
           <p class="module-card__desc">
-            Eliminación gaussiana con pivoteo parcial, factorización LU y convergencia de Jacobi y
-            Gauss-Seidel.
+            Eliminación de Gauss con pivoteo parcial y Gauss-Seidel para matrices especiales,
+            con teoría, ejemplos, autoevaluación y calculadoras interactivas.
           </p>
           <div class="module-card__tags" aria-label="Métodos del módulo">
             <app-badge text="Eliminación Gauss" variant="outline" />
             <app-badge text="Gauss-Seidel" variant="outline" />
-            <app-badge text="LU Doolittle" variant="outline" />
           </div>
-          <span class="module-card__soon">Próximamente</span>
+          <app-btn
+            class="module-card__cta"
+            label="Ingresar al Módulo"
+            icon="arrow_forward"
+            routerLink="/modulo2"
+          />
         </ui-card>
 
         <ui-card elevation="sm" class="module-card">

@@ -1,0 +1,72 @@
+<div class="bloque-ejercicio-sistema">
+  <ui-card>
+    <h3 class="bloque-ejercicio-sistema__titulo">{{ ejercicio().titulo }}</h3>
+
+    @if (esCasuistica() && ejercicio().enunciado) {
+      <section class="bloque-ejercicio-sistema__seccion">
+        <h4 class="bloque-ejercicio-sistema__subtitulo">Enunciado</h4>
+        <p class="bloque-ejercicio-sistema__parrafo">{{ ejercicio().enunciado }}</p>
+      </section>
+    }
+
+    <section class="bloque-ejercicio-sistema__seccion">
+      <h4 class="bloque-ejercicio-sistema__subtitulo">Planteamiento</h4>
+      <p class="bloque-ejercicio-sistema__parrafo">{{ ejercicio().planteamiento }}</p>
+
+      <div class="bloque-ejercicio-sistema__tabla-scroll">
+        <table class="bloque-ejercicio-sistema__tabla">
+          <thead>
+            <tr>
+              <th>Ec.</th>
+              @for (v of variables(); track v) {
+                <th>{{ v }}</th>
+              }
+              <th>b</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (fila of filasAumentadas(); track $index; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                @for (valor of fila; track $index) {
+                  <td>{{ valor }}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (ejercicio().pista) {
+        <p class="bloque-ejercicio-sistema__pista">Pista: {{ ejercicio().pista }}</p>
+      }
+    </section>
+
+    <div class="bloque-ejercicio-sistema__acciones">
+      <button type="button" class="bloque-ejercicio-sistema__boton" (click)="alternar()">
+        {{ mostrarSolucion() ? 'Ocultar solución' : 'Ver solución' }}
+      </button>
+    </div>
+
+    @if (mostrarSolucion()) {
+      <div class="bloque-ejercicio-sistema__solucion">
+        <app-bloque-ejemplo-sistema
+          [ejemplo]="comoEjemplo()"
+          [filas]="filas()"
+          [columnas]="columnas()"
+          [filaFinal]="filaFinal()"
+          [solucion]="solucion()"
+          [bondad]="bondad()"
+          [etiquetaBondad]="etiquetaBondad()"
+          [pasos]="pasos()"
+          [funcion]="funcion()"
+          [rango]="rango()"
+          [rangoY]="rangoY()"
+          [dibujarMetodo]="dibujarMetodo()"
+          [leyenda]="leyenda()"
+          [tituloTabla]="tituloTabla()"
+        />
+      </div>
+    }
+  </ui-card>
+</div>

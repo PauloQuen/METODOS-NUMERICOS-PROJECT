@@ -1,0 +1,79 @@
+<div class="calc-m2">
+  <header class="calc-m2__encabezado">
+    <h2 class="calc-m2__titulo">Calculadora de Matrices especiales (Gauss-Seidel)</h2>
+    <p class="calc-m2__intro">
+      Escribí la matriz A y el vector b. Para que el método converja conviene que A sea
+      diagonalmente dominante; también podés probar una matriz tridiagonal. Las filas se
+      separan con <code>;</code> y los números con comas o espacios. El resultado muestra la
+      tabla de iteraciones, el error, el residuo y el gráfico de convergencia.
+    </p>
+  </header>
+
+  <div class="calc-m2__grilla">
+    <app-panel-sistema
+      [campos]="campos"
+      [(valores)]="valores"
+      [respuesta]="estado()?.respuesta ?? null"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (estado(); as e) {
+      @if (e.filas.length > 0) {
+        <div class="calc-m2__columna-derecha">
+          <ui-card padding="lg">
+            <h3 class="calc-m2__titulo-seccion">Convergencia del error</h3>
+            <app-grafico-metodo
+              [funcion]="funcionCero"
+              [iteraciones]="e.filas"
+              [pasoActual]="paso()"
+              [rango]="rango()"
+              [rangoY]="rangoY()"
+              [dibujarMetodo]="dibujo"
+              leyenda="Error de cambio por iteración"
+            />
+          </ui-card>
+          <ui-card padding="lg">
+            <h3 class="calc-m2__titulo-seccion">Resumen</h3>
+            <div class="calc-m2__resumen">
+              <div class="calc-m2__dato">
+                <span class="calc-m2__dato-label">Solución aproximada</span>
+                <span class="calc-m2__dato-valor">{{ solucionDe(e) }}</span>
+              </div>
+              <div class="calc-m2__dato">
+                <span class="calc-m2__dato-label">Iteraciones</span>
+                <span class="calc-m2__dato-valor">{{ e.iteraciones }}</span>
+              </div>
+              <div class="calc-m2__dato">
+                <span class="calc-m2__dato-label">Error final</span>
+                <span class="calc-m2__dato-valor">{{ errorDe(e) }}</span>
+              </div>
+              <div class="calc-m2__dato">
+                <span class="calc-m2__dato-label">Residuo máximo</span>
+                <span class="calc-m2__dato-valor">{{ residuoDe(e) }}</span>
+              </div>
+            </div>
+          </ui-card>
+          <ui-card padding="lg">
+            <h3 class="calc-m2__titulo-seccion">Paso a paso</h3>
+            <app-pasos-control
+              [total]="total()"
+              [paso]="paso()"
+              [texto]="textoDelPaso()"
+              (pasoCambiado)="alCambiarPaso($event)"
+            />
+          </ui-card>
+        </div>
+      }
+    }
+  </div>
+
+  @if (estado(); as e) {
+    @if (e.filas.length > 0) {
+      <ui-card padding="lg">
+        <h3 class="calc-m2__titulo-seccion">Iteraciones de Gauss-Seidel</h3>
+        <app-iteration-table [columns]="columnas()" [rows]="e.filas" />
+      </ui-card>
+    }
+  }
+</div>

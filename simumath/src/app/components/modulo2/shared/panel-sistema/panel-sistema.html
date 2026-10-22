@@ -1,0 +1,56 @@
+<ui-card>
+  <h3 class="panel__titulo">{{ titulo() }}</h3>
+
+  <form class="panel__formulario" (submit)="alCalcular(); $event.preventDefault()">
+    @for (campo of campos(); track campo.key) {
+      <div class="panel__campo">
+        <app-form-field
+          [label]="campo.etiqueta"
+          [placeholder]="campo.placeholder ?? ''"
+          [type]="campo.tipo"
+          [hint]="campo.ayuda"
+          [value]="valorDe(campo.key)"
+          (valueChange)="alCambiar(campo.key, $event)"
+          (enter)="alCalcular()"
+        />
+
+        @if (campo.requisito) {
+          <p class="panel__requisito">{{ campo.requisito }}</p>
+        }
+      </div>
+    }
+
+    <div class="panel__acciones">
+      <button type="submit" class="panel__boton panel__boton--calcular">Calcular</button>
+      <button type="button" class="panel__boton panel__boton--limpiar" (click)="alLimpiar()">
+        Limpiar
+      </button>
+    </div>
+  </form>
+</ui-card>
+
+@if (respuesta(); as r) {
+  <ui-card>
+    <h3 class="panel__titulo">Respuesta</h3>
+
+    @if (r.exito) {
+      <div class="panel__resultados">
+        @if (r.resultado) {
+          <div class="panel__dato">
+            <span class="panel__dato-label">{{ r.etiquetaResultado || 'Resultado' }}</span>
+            <span class="panel__dato-valor panel__dato-valor--destacado">{{ r.resultado }}</span>
+          </div>
+        }
+        @if (r.bondad) {
+          <div class="panel__dato">
+            <span class="panel__dato-label">{{ r.etiquetaBondad || 'Calidad' }}</span>
+            <span class="panel__dato-valor">{{ r.bondad }}</span>
+          </div>
+        }
+      </div>
+      <p class="panel__conclusion">{{ r.conclusion }}</p>
+    } @else {
+      <p class="panel__error" role="alert">{{ r.conclusion }}</p>
+    }
+  </ui-card>
+}

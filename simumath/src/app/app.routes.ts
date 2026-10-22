@@ -110,6 +110,49 @@ export const routes: Routes = [
     ],
   },
 
+  // Módulo 2 — Sistemas de Ecuaciones Lineales
+  //
+  // Misma estructura que los otros módulos: Pantalla A (elegir familia),
+  // Pantalla B (lista de métodos) y páginas de método con cuatro
+  // pestañas. Los métodos concretos van antes de `tipos/:familia`.
+  {
+    path: 'modulo2',
+    loadComponent: () =>
+      import('./components/modulo2/modulo2').then((m) => m.Modulo2),
+    children: [
+      { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+
+      {
+        path: 'inicio',
+        loadComponent: () =>
+          import('./components/modulo2/inicio/inicio').then((m) => m.InicioModulo2),
+      },
+
+      {
+        path: 'tipos/directos/eliminacion-gauss',
+        loadChildren: () =>
+          import(
+            './components/modulo2/tipos/directos/eliminacion-gauss/eliminacion-gauss.routes'
+          ).then((m) => m.ELIMINACION_GAUSS_ROUTES),
+      },
+      {
+        path: 'tipos/iterativos/matrices-especiales',
+        loadChildren: () =>
+          import(
+            './components/modulo2/tipos/iterativos/matrices-especiales/matrices-especiales.routes'
+          ).then((m) => m.MATRICES_ESPECIALES_ROUTES),
+      },
+
+      {
+        path: 'tipos/:familia',
+        loadComponent: () =>
+          import('./components/modulo2/tipos/tipo-metodos/tipo-metodos').then(
+            (m) => m.TipoMetodosModulo2,
+          ),
+      },
+    ],
+  },
+
   // Módulo 3 — Interpolación y Ajuste de Curvas
   //
   // Misma estructura que el Módulo 1: Pantalla A (elegir familia),

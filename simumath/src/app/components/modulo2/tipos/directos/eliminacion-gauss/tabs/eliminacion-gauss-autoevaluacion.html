@@ -1,0 +1,24 @@
+<div class="lista-m2-tab">
+  <header class="lista-m2-tab__encabezado">
+    <h2 class="lista-m2-tab__titulo">Autoevaluación</h2>
+    <p class="lista-m2-tab__intro">
+      Seis ejercicios: tres numéricos y tres de casuística. Resolvé con lápiz y papel antes de
+      desplegar la solución. Cada solución muestra el sistema, las operaciones, la tabla y el
+      residuo final.
+    </p>
+  </header>
+
+  @for (ejercicio of ejercicios; track ejercicio.id) {
+    <section class="lista-m2-tab__bloque">
+      <app-bloque-ejercicio-sistema
+        [ejercicio]="ejercicio"
+        [filas]="calculoDe($index).filas"
+        [columnas]="columnas"
+        [solucion]="calculoDe($index).x"
+        [bondad]="residuoDe($index)"
+        etiquetaBondad="Residuo máximo"
+        tituloTabla="Operaciones de eliminación"
+      />
+    </section>
+  }
+</div>

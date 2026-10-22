@@ -1,0 +1,182 @@
+<div class="teoria-m2">
+  <!-- 1. Concepto -->
+  <section class="teoria-m2__seccion">
+    <h2 class="teoria-m2__titulo">¿Qué es y para qué sirve?</h2>
+    <p class="teoria-m2__parrafo">{{ teoria.concepto }}</p>
+    @if (teoria.videoUrl) {
+      <div>
+        <a class="recurso" [href]="teoria.videoUrl" target="_blank" rel="noopener noreferrer">
+          <span class="recurso__tope">
+            <span class="material-symbols-outlined recurso__tipo-icono">play_circle</span>
+            Video · método explicado
+          </span>
+          <span class="recurso__titulo">Ver «Eliminación de Gauss con pivoteo parcial»</span>
+          <span class="recurso__descripcion">
+            Operaciones de fila, pivoteo y sustitución regresiva con un ejemplo completo.
+          </span>
+        </a>
+      </div>
+    }
+  </section>
+
+  <!-- 2, 3 y 4: acordeón -->
+  <section class="teoria-m2__seccion">
+    <h2 class="teoria-m2__titulo">Las tres ideas que hay que entender</h2>
+
+    <div class="teoria__acordeon">
+      <button
+        type="button"
+        class="teoria__acordeon-boton"
+        [class.teoria__acordeon-boton--abierto]="abierta() === 'fundamento'"
+        (click)="alternar('fundamento')"
+        [attr.aria-expanded]="abierta() === 'fundamento'"
+      >
+        <span class="teoria__acordeon-titulo">Por qué funciona</span>
+        <span class="material-symbols-outlined teoria__acordeon-flecha">
+          {{ abierta() === 'fundamento' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'fundamento') {
+        <div class="teoria__acordeon-cuerpo">
+          <p>{{ teoria.fundamento }}</p>
+        </div>
+      }
+
+      <button
+        type="button"
+        class="teoria__acordeon-boton"
+        [class.teoria__acordeon-boton--abierto]="abierta() === 'falla'"
+        (click)="alternar('falla')"
+        [attr.aria-expanded]="abierta() === 'falla'"
+      >
+        <span class="teoria__acordeon-titulo">Cuándo falla</span>
+        <span class="material-symbols-outlined teoria__acordeon-flecha">
+          {{ abierta() === 'falla' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'falla') {
+        <div class="teoria__acordeon-cuerpo">
+          <p>{{ teoria.cuandoFalla }}</p>
+        </div>
+      }
+
+      <button
+        type="button"
+        class="teoria__acordeon-boton"
+        [class.teoria__acordeon-boton--abierto]="abierta() === 'precision'"
+        (click)="alternar('precision')"
+        [attr.aria-expanded]="abierta() === 'precision'"
+      >
+        <span class="teoria__acordeon-titulo">Precisión y control del error</span>
+        <span class="material-symbols-outlined teoria__acordeon-flecha">
+          {{ abierta() === 'precision' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'precision') {
+        <div class="teoria__acordeon-cuerpo">
+          <p>{{ teoria.precision }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- 5. Recursos -->
+  <section class="teoria-m2__seccion">
+    <h2 class="teoria-m2__titulo">Para seguir leyendo</h2>
+    <ul class="recursos">
+      @for (recurso of teoria.recursos; track recurso.url) {
+        <li>
+          <a class="recurso" [href]="recurso.url" target="_blank" rel="noopener noreferrer">
+            <span class="recurso__tope">
+              <span class="material-symbols-outlined recurso__tipo-icono">
+                {{ recurso.tipo === 'video' ? 'play_circle' : recurso.tipo === 'interactivo' ? 'touch_app' : 'menu_book' }}
+              </span>
+              {{ recurso.tipo }}
+            </span>
+            <span class="recurso__titulo">{{ recurso.titulo }}</span>
+            <span class="recurso__descripcion">{{ recurso.descripcion }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <!-- 6. Tarjeta del método -->
+  <section class="teoria-m2__seccion">
+    <h2 class="teoria-m2__titulo">El método</h2>
+    <div class="formula-m2">{{ teoria.algoritmo.formula }}</div>
+
+    <div class="grilla-m2">
+      <div>
+        <h3 class="tarjeta-m2__titulo">Criterios</h3>
+        <div class="criterios-m2">
+          @for (criterio of teoria.algoritmo.criterios; track criterio.nombre) {
+            <div class="criterios-m2__item">
+              <p class="criterios-m2__nombre">{{ criterio.nombre }}</p>
+              <p class="criterios-m2__texto">{{ criterio.explicacion }}</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div>
+        <h3 class="tarjeta-m2__titulo">Pasos</h3>
+        <ol class="pasos-m2">
+          @for (paso of teoria.algoritmo.pasos; track $index; let i = $index) {
+            <li class="pasos-m2__paso">
+              <span class="pasos-m2__numero">{{ i + 1 }}</span>
+              <span>{{ paso }}</span>
+            </li>
+          }
+        </ol>
+      </div>
+    </div>
+
+    <div class="grilla-m2">
+      <div>
+        <h3 class="tarjeta-m2__titulo tarjeta-m2__titulo--bueno">Ventajas</h3>
+        <ul class="lista-m2 lista-m2--bueno">
+          @for (ventaja of teoria.algoritmo.ventajas; track $index) {
+            <li>{{ ventaja }}</li>
+          }
+        </ul>
+      </div>
+      <div>
+        <h3 class="tarjeta-m2__titulo tarjeta-m2__titulo--malo">Limitaciones</h3>
+        <ul class="lista-m2 lista-m2--malo">
+          @for (limite of teoria.algoritmo.limitaciones; track $index) {
+            <li>{{ limite }}</li>
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Ejemplo numérico -->
+  <section class="teoria-m2__seccion">
+    <h2 class="teoria-m2__titulo">Ejemplo numérico</h2>
+    <app-bloque-ejemplo-sistema
+      [ejemplo]="teoria.ejemploNormal"
+      [filas]="normal.filas"
+      [columnas]="columnas"
+      [solucion]="normal.x"
+      [bondad]="residuoDe(normal)"
+      etiquetaBondad="Residuo máximo"
+      tituloTabla="Operaciones de eliminación"
+    />
+  </section>
+
+  <!-- 8. Ejemplo de casuística -->
+  <section class="teoria-m2__seccion">
+    <h2 class="teoria-m2__titulo">Ejemplo de casuística</h2>
+    <app-bloque-ejemplo-sistema
+      [ejemplo]="teoria.ejemploCasuistica"
+      [filas]="casuistica.filas"
+      [columnas]="columnas"
+      [solucion]="casuistica.x"
+      [bondad]="residuoDe(casuistica)"
+      etiquetaBondad="Residuo máximo"
+      tituloTabla="Operaciones de eliminación"
+    />
+  </section>
+</div>

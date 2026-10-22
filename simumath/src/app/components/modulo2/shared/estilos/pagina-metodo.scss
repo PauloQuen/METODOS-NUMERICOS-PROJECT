@@ -1,0 +1,112 @@
+/* ==========================================================================
+   Estilos compartidos de la PÁGINA de un método del Módulo 2
+   (Lagrange y Mínimos Cuadrados). El color del método llega por la
+   variable CSS `--color-metodo`, que cada componente define.
+   ========================================================================== */
+
+.pagina-metodo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem 0 3rem;
+  background: var(--surface);
+  min-height: 100%;
+}
+
+.pagina-metodo__encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid var(--outline-variant);
+}
+
+.pagina-metodo__familia {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-metodo, var(--primary));
+}
+
+.pagina-metodo__nombre {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--on-surface);
+}
+
+.pagina-metodo__resumen {
+  margin: 0.5rem 0 0;
+  max-width: 70ch;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--on-surface-variant);
+}
+
+.pagina-metodo__pestanas {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  padding: 0.3rem;
+  background: var(--surface-container);
+  border-radius: var(--radius-lg);
+}
+
+.pagina-metodo__pestana {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.95rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  border-radius: 0.55rem;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.pagina-metodo__pestana:hover {
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+}
+
+.pagina-metodo__pestana--activa,
+.pagina-metodo__pestana--activa:hover {
+  background: var(--color-metodo, var(--primary));
+  color: #ffffff;
+}
+
+.pagina-metodo__pestana:focus-visible {
+  outline: 2px solid var(--color-metodo, var(--primary));
+  outline-offset: 2px;
+}
+
+.pagina-metodo__icono {
+  font-size: 1.1rem;
+}
+
+.pagina-metodo__contenido {
+  min-height: 20rem;
+}
+
+@media (max-width: 640px) {
+  .pagina-metodo {
+    padding: 1rem 0 2rem;
+  }
+
+  .pagina-metodo__pestanas {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .pagina-metodo__pestana {
+    white-space: nowrap;
+  }
+}

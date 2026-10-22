@@ -1,0 +1,163 @@
+<div class="bloque-sistema">
+  <ui-card>
+    <div class="bloque-sistema__grilla">
+      <!-- Columna 1: texto, sistema y pasos -->
+      <div class="bloque-sistema__texto">
+        <h3 class="bloque-sistema__titulo">{{ ejemplo().titulo }}</h3>
+
+        @if (esCasuistica() && ejemplo().enunciado) {
+          <section class="bloque-sistema__seccion">
+            <h4 class="bloque-sistema__subtitulo">Enunciado</h4>
+            <p class="bloque-sistema__parrafo">{{ ejemplo().enunciado }}</p>
+          </section>
+        }
+
+        @if (esCasuistica() && ejemplo().extraccion) {
+          <section class="bloque-sistema__seccion">
+            <h4 class="bloque-sistema__subtitulo">Extracción de datos</h4>
+            <p class="bloque-sistema__parrafo">{{ ejemplo().extraccion!.busqueda }}</p>
+            <div class="bloque-sistema__tabla-scroll">
+              <table class="bloque-sistema__tabla-datos">
+                <thead>
+                  <tr>
+                    <th>Símbolo</th>
+                    <th>Valor</th>
+                    <th>¿Qué es?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (d of ejemplo().extraccion!.datos; track d.simbolo) {
+                    <tr>
+                      <td>{{ d.simbolo }}</td>
+                      <td>{{ d.valor }}</td>
+                      <td>{{ d.queEs }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            <p class="bloque-sistema__parrafo">{{ ejemplo().extraccion!.formulacion }}</p>
+          </section>
+        }
+
+        <section class="bloque-sistema__seccion">
+          <h4 class="bloque-sistema__subtitulo">Planteamiento</h4>
+          <p class="bloque-sistema__parrafo">{{ ejemplo().planteamiento }}</p>
+          @if (ejemplo().parametros.length > 0) {
+            <ul class="bloque-sistema__lista">
+              @for (p of ejemplo().parametros; track p.etiqueta) {
+                <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
+              }
+            </ul>
+          }
+        </section>
+
+        <section class="bloque-sistema__seccion">
+          <h4 class="bloque-sistema__subtitulo">Sistema aumentado [A | b]</h4>
+          <div class="bloque-sistema__tabla-scroll">
+            <table class="bloque-sistema__tabla-datos">
+              <thead>
+                <tr>
+                  <th>Ec.</th>
+                  @for (v of variables(); track v) {
+                    <th>{{ v }}</th>
+                  }
+                  <th>b</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (fila of filasAumentadas(); track $index; let i = $index) {
+                  <tr>
+                    <td>{{ i + 1 }}</td>
+                    @for (valor of fila; track $index) {
+                      <td>{{ formatear(valor) }}</td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="bloque-sistema__seccion">
+          <h4 class="bloque-sistema__subtitulo">Interpretación</h4>
+          <p class="bloque-sistema__parrafo">{{ ejemplo().interpretacion }}</p>
+        </section>
+
+        <section class="bloque-sistema__seccion">
+          <h4 class="bloque-sistema__subtitulo">Pasos</h4>
+          @for (p of ejemplo().pasos; track $index; let i = $index) {
+            <p class="bloque-sistema__paso"><strong>Paso {{ i + 1 }}</strong></p>
+            <p class="bloque-sistema__parrafo">{{ p }}</p>
+          }
+        </section>
+
+        <section class="bloque-sistema__seccion">
+          <h4 class="bloque-sistema__subtitulo">Algoritmo aplicado</h4>
+          <p class="bloque-sistema__parrafo">{{ ejemplo().algoritmo }}</p>
+        </section>
+
+        <section class="bloque-sistema__seccion">
+          <h4 class="bloque-sistema__subtitulo">Criterio</h4>
+          <p class="bloque-sistema__parrafo">{{ ejemplo().criterio }}</p>
+        </section>
+      </div>
+
+      <!-- Columna 2: gráfico / solución y pasos -->
+      <div class="bloque-sistema__lateral">
+        @if (funcion(); as f) {
+          <ui-card padding="md">
+            <app-grafico-metodo
+              [funcion]="f"
+              [iteraciones]="filas()"
+              [pasoActual]="pasoActual()"
+              [rango]="rango()"
+              [rangoY]="rangoY()"
+              [dibujarMetodo]="dibujarMetodo()"
+              [leyenda]="leyenda()"
+            />
+            <div class="bloque-sistema__pasos">
+              <app-pasos-control
+                [total]="filas().length"
+                [paso]="pasoActual()"
+                [texto]="textoPaso(pasoActual())"
+                (pasoCambiado)="alCambiarPaso($event)"
+              />
+            </div>
+          </ui-card>
+        }
+
+        @if (solucionTexto()) {
+          <ui-card padding="md">
+            <h4 class="bloque-sistema__subtitulo">Solución</h4>
+            <p class="bloque-sistema__solucion">x = {{ solucionTexto() }}</p>
+            @if (bondad()) {
+              <p class="bloque-sistema__parrafo">
+                <strong>{{ etiquetaBondad() }}:</strong> {{ bondad() }}
+              </p>
+            }
+          </ui-card>
+        }
+      </div>
+    </div>
+
+    @if (ejemplo().conclusion) {
+      <section class="bloque-sistema__seccion">
+        <h4 class="bloque-sistema__subtitulo">Conclusión y respuesta</h4>
+        <p class="bloque-sistema__parrafo bloque-sistema__parrafo--destacado">
+          {{ ejemplo().conclusion }}
+        </p>
+      </section>
+    }
+
+    <section class="bloque-sistema__tabla">
+      <h4 class="bloque-sistema__subtitulo">{{ tituloTabla() }}</h4>
+      <app-iteration-table
+        [columns]="columnas()"
+        [rows]="filas()"
+        [highlightRowIndex]="filaFinal()"
+        [highlightBadge]="badgeFila()"
+      />
+    </section>
+  </ui-card>
+</div>

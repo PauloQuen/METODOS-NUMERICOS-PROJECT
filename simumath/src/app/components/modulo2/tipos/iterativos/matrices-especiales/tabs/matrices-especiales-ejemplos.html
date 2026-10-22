@@ -1,0 +1,30 @@
+<div class="lista-m2-tab">
+  <header class="lista-m2-tab__encabezado">
+    <h2 class="lista-m2-tab__titulo">Ejemplos resueltos</h2>
+    <p class="lista-m2-tab__intro">
+      Cuatro sistemas resueltos por Gauss-Seidel: dos numéricos y dos de casuística. En todos,
+      la matriz es diagonalmente dominante o tridiagonal. La tabla y el gráfico de convergencia
+      se calculan con el algoritmo.
+    </p>
+  </header>
+
+  @for (ejemplo of ejemplos; track ejemplo.id) {
+    <section class="lista-m2-tab__bloque">
+      <app-bloque-ejemplo-sistema
+        [ejemplo]="ejemplo"
+        [filas]="calculoDe($index).filas"
+        [columnas]="calculoDe($index).columnas"
+        [solucion]="calculoDe($index).x"
+        [bondad]="errorDe($index)"
+        etiquetaBondad="Error final"
+        [pasos]="calculoDe($index).pasos"
+        [funcion]="funcionCero"
+        [rango]="rangoDe($index)"
+        [rangoY]="rangoYDe($index)"
+        [dibujarMetodo]="dibujo"
+        leyenda="Error de cambio por iteración"
+        tituloTabla="Iteraciones de Gauss-Seidel"
+      />
+    </section>
+  }
+</div>

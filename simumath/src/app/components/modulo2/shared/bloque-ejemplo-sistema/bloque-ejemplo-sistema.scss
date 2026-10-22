@@ -1,0 +1,132 @@
+.bloque-sistema {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bloque-sistema__grilla {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 920px) {
+  .bloque-sistema__grilla {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bloque-sistema__texto,
+.bloque-sistema__grafico {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bloque-sistema__titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--on-surface);
+}
+
+.bloque-sistema__seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  background: var(--surface-container-lowest);
+}
+
+.bloque-sistema__subtitulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--on-surface);
+}
+
+.bloque-sistema__parrafo {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--on-surface);
+  white-space: normal;
+}
+
+.bloque-sistema__parrafo--destacado {
+  font-weight: 500;
+  background: var(--surface-container);
+  padding: 0.5rem 0.6rem;
+  border-left: 3px solid var(--secondary);
+  border-radius: var(--radius-sm);
+}
+
+.bloque-sistema__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--on-surface);
+}
+
+.bloque-sistema__paso {
+  margin: 0.25rem 0 0 0;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+/* Tablas internas del ejemplo (datos y extracción) */
+.bloque-sistema__tabla-scroll {
+  overflow-x: auto;
+}
+
+.bloque-sistema__tabla-datos {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.25rem 0;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  font-size: var(--text-body-sm);
+}
+
+.bloque-sistema__tabla-datos th,
+.bloque-sistema__tabla-datos td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--outline-variant);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.bloque-sistema__tabla-datos th {
+  background: var(--surface-container);
+  color: var(--on-surface);
+}
+
+.bloque-sistema__pasos {
+  margin-top: 0.75rem;
+}
+
+.bloque-sistema__tabla {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.bloque-sistema__lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bloque-sistema__solucion {
+  margin: 0.35rem 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--primary);
+  word-break: break-word;
+}

@@ -1,0 +1,80 @@
+<div class="inicio">
+  <header class="inicio__hero">
+    <div class="inicio__hero-contenido">
+      <app-breadcrumb [tramos]="miga" tono="navy" />
+
+      <app-btn
+        class="inicio__volver"
+        variant="secondary"
+        label="Volver al inicio"
+        icon="arrow_back"
+        routerLink="/home"
+      />
+
+      <app-badge text="Módulo 2 · Sistemas de Ecuaciones Lineales" variant="amber" />
+
+      <h1 class="inicio__titulo">Sistemas de ecuaciones lineales</h1>
+      <p class="inicio__bajada">
+        Resolver A·x = b es encontrar los valores de las incógnitas que satisfacen todas las
+        ecuaciones a la vez. Elegí entre un método directo, que termina en un número finito de
+        pasos, o uno iterativo, que aprovecha matrices especiales para acercarse a la solución.
+      </p>
+    </div>
+  </header>
+
+  <main class="inicio__cuerpo">
+    <section aria-labelledby="inicio-familias-t">
+      <h2 id="inicio-familias-t" class="inicio__seccion-titulo">Elegí por tipo de método</h2>
+
+      <div class="inicio__grid">
+        @for (f of familias; track f.key) {
+          <a class="familia" [routerLink]="rutaFamilia(f.key)">
+            <div class="familia__tope">
+              <span class="familia__conteo">
+                {{ f.metodos.length }} {{ f.metodos.length === 1 ? 'método' : 'métodos' }}
+              </span>
+            </div>
+
+            <h3 class="familia__nombre">{{ f.nombre }}</h3>
+            <p class="familia__principio">{{ f.principio }}</p>
+            <p class="familia__descripcion">{{ f.descripcion }}</p>
+
+            <ul class="familia__metodos">
+              @for (m of f.metodos; track m.key) {
+                <li class="familia__metodo">
+                  <span class="familia__metodo-nombre">{{ m.nombre }}</span>
+                </li>
+              }
+            </ul>
+
+            <span class="familia__cta">
+              Ver métodos
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+            </span>
+          </a>
+        }
+      </div>
+    </section>
+
+    <section class="inicio__material" aria-labelledby="inicio-metodos-t">
+      <h2 id="inicio-metodos-t" class="inicio__seccion-titulo">Los métodos del módulo</h2>
+      <p class="inicio__material-bajada">
+        Cada método trae teoría, ejemplos resueltos, autoevaluación y una calculadora para
+        probar sistemas propios.
+      </p>
+
+      <ul class="inicio__links">
+        @for (m of metodos; track m.key) {
+          <li>
+            <a class="inicio__link" [routerLink]="rutaDe(m)" [style.--color-metodo]="m.color">
+              <span class="inicio__link-nombre">{{ m.nombre }}</span>
+              <span class="inicio__link-desc">{{ m.idea }}</span>
+              <code class="inicio__link-formula">{{ m.formula }}</code>
+              <span class="inicio__link-criterio">{{ m.criterioTexto }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+  </main>
+</div>

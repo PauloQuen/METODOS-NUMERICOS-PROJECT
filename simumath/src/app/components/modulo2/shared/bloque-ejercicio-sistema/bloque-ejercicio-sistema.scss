@@ -1,0 +1,108 @@
+.bloque-ejercicio-sistema {
+  display: flex;
+  flex-direction: column;
+}
+
+.bloque-ejercicio-sistema__titulo {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--on-surface);
+}
+
+.bloque-ejercicio-sistema__seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  background: var(--surface-container-lowest);
+}
+
+.bloque-ejercicio-sistema__subtitulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--on-surface);
+}
+
+.bloque-ejercicio-sistema__parrafo {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--on-surface);
+}
+
+.bloque-ejercicio-sistema__pista {
+  margin: 0;
+  padding: 0.5rem 0.65rem;
+  font-size: var(--text-body-sm);
+  line-height: 1.55;
+  color: var(--on-secondary-container);
+  background: color-mix(in srgb, var(--secondary-container) 25%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.bloque-ejercicio-sistema__tabla-scroll {
+  overflow-x: auto;
+}
+
+.bloque-ejercicio-sistema__tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.25rem 0;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  font-size: var(--text-body-sm);
+}
+
+.bloque-ejercicio-sistema__tabla th,
+.bloque-ejercicio-sistema__tabla td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--outline-variant);
+  text-align: left;
+}
+
+.bloque-ejercicio-sistema__tabla th {
+  background: var(--surface-container);
+}
+
+.bloque-ejercicio-sistema__acciones {
+  margin-top: 1rem;
+}
+
+.bloque-ejercicio-sistema__boton {
+  padding: 0.6rem 1.1rem;
+  font-size: var(--text-label-lg);
+  font-weight: 600;
+  color: var(--on-primary);
+  background: var(--primary);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-smooth);
+}
+
+.bloque-ejercicio-sistema__boton:hover {
+  background: var(--primary-container);
+}
+
+.bloque-ejercicio-sistema__boton:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.bloque-ejercicio-sistema__solucion {
+  margin-top: 1rem;
+  animation: aparecer 0.25s ease;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

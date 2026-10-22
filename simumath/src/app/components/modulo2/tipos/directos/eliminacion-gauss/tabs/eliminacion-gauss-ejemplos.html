@@ -1,0 +1,24 @@
+<div class="lista-m2-tab">
+  <header class="lista-m2-tab__encabezado">
+    <h2 class="lista-m2-tab__titulo">Ejemplos resueltos</h2>
+    <p class="lista-m2-tab__intro">
+      Cuatro sistemas resueltos por eliminación de Gauss: dos numéricos y dos de casuística.
+      La tabla de operaciones y la solución se calculan con el algoritmo, así que podés
+      reproducir cada paso en la calculadora.
+    </p>
+  </header>
+
+  @for (ejemplo of ejemplos; track ejemplo.id) {
+    <section class="lista-m2-tab__bloque">
+      <app-bloque-ejemplo-sistema
+        [ejemplo]="ejemplo"
+        [filas]="calculoDe($index).filas"
+        [columnas]="columnas"
+        [solucion]="calculoDe($index).x"
+        [bondad]="residuoDe($index)"
+        etiquetaBondad="Residuo máximo"
+        tituloTabla="Operaciones de eliminación"
+      />
+    </section>
+  }
+</div>

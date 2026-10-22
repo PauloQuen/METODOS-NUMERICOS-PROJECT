@@ -1,0 +1,58 @@
+<div class="calc-m2">
+  <header class="calc-m2__encabezado">
+    <h2 class="calc-m2__titulo">Calculadora de Eliminación de Gauss</h2>
+    <p class="calc-m2__intro">
+      Escribí la matriz A y el vector b. Las filas de A se separan con <code>;</code> y los
+      números con comas o espacios: por ejemplo
+      <code>2, 1, -1; -3, -1, 2; -2, 1, 2</code>. El resultado muestra la solución, el
+      determinante, el residuo y la tabla de operaciones con pivoteo parcial.
+    </p>
+  </header>
+
+  <div class="calc-m2__grilla">
+    <app-panel-sistema
+      [campos]="campos"
+      [(valores)]="valores"
+      [respuesta]="estado()?.respuesta ?? null"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (estado(); as e) {
+      @if (e.x) {
+        <div class="calc-m2__columna-derecha">
+          <ui-card padding="lg">
+            <h3 class="calc-m2__titulo-seccion">Resumen de la solución</h3>
+            <div class="calc-m2__resumen">
+              <div class="calc-m2__dato">
+                <span class="calc-m2__dato-label">Solución x</span>
+                <span class="calc-m2__dato-valor">{{ solucionDe(e) }}</span>
+              </div>
+              <div class="calc-m2__dato">
+                <span class="calc-m2__dato-label">Residuo máximo</span>
+                <span class="calc-m2__dato-valor">{{ residuoDe(e) }}</span>
+              </div>
+              <div class="calc-m2__dato">
+                <span class="calc-m2__dato-label">Determinante de A</span>
+                <span class="calc-m2__dato-valor">{{ determinanteDe(e) }}</span>
+              </div>
+              <div class="calc-m2__dato">
+                <span class="calc-m2__dato-label">Intercambios de fila</span>
+                <span class="calc-m2__dato-valor">{{ e.pivoteos }}</span>
+              </div>
+            </div>
+          </ui-card>
+        </div>
+      }
+    }
+  </div>
+
+  @if (estado(); as e) {
+    @if (e.filas.length > 0) {
+      <ui-card padding="lg">
+        <h3 class="calc-m2__titulo-seccion">Operaciones de eliminación</h3>
+        <app-iteration-table [columns]="columnas" [rows]="e.filas" />
+      </ui-card>
+    }
+  }
+</div>
