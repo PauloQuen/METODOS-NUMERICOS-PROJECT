@@ -1,0 +1,25 @@
+<div class="lista-m3-tab">
+  <header class="lista-m3-tab__encabezado">
+    <h2 class="lista-m3-tab__titulo">Autoevaluación</h2>
+    <p class="lista-m3-tab__intro">
+      Seis ejercicios: tres numéricos y tres de casuística. Resolvé con lápiz y papel antes de
+      desplegar la solución. Cada solución muestra los pasos, el polinomio, el gráfico con los
+      botones de recorrido y la conclusión.
+    </p>
+  </header>
+
+  @for (ejercicio of ejercicios; track ejercicio.id) {
+    <section class="lista-m3-tab__bloque">
+      <app-bloque-ejercicio-datos
+        [ejercicio]="ejercicio"
+        [filas]="calculoDe($index).filas"
+        [columnas]="columnas"
+        [funcion]="funcionDe($index)"
+        [rango]="rangoDe($index)"
+        [dibujarMetodo]="dibujoDe($index)"
+        leyenda="Polinomio interpolante P(x)"
+        tituloTabla="Aporte de cada dato al polinomio"
+      />
+    </section>
+  }
+</div>

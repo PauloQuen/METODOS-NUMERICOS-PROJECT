@@ -110,6 +110,54 @@ export const routes: Routes = [
     ],
   },
 
+  // Módulo 3 — Interpolación y Ajuste de Curvas
+  //
+  // Misma estructura que el Módulo 1: Pantalla A (elegir familia),
+  // Pantalla B (lista de métodos de una familia) y páginas de método con
+  // sus cuatro pestañas. Los métodos concretos van ANTES de
+  // `tipos/:familia`, o el router leería 'interpolacion/lagrange' como
+  // una familia y nunca llegaría a la página del método.
+  {
+    path: 'modulo3',
+    loadComponent: () =>
+      import('./components/modulo3/modulo3').then((m) => m.Modulo3),
+    children: [
+      { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+
+      // Pantalla A: elige el TIPO de problema (interpolar o ajustar).
+      {
+        path: 'inicio',
+        loadComponent: () =>
+          import('./components/modulo3/inicio/inicio').then((m) => m.InicioModulo3),
+      },
+
+      // Métodos concretos: carga diferida de sus cuatro pestañas.
+      {
+        path: 'tipos/interpolacion/lagrange',
+        loadChildren: () =>
+          import(
+            './components/modulo3/tipos/interpolacion/lagrange/lagrange.routes'
+          ).then((m) => m.LAGRANGE_ROUTES),
+      },
+      {
+        path: 'tipos/ajuste/minimos-cuadrados',
+        loadChildren: () =>
+          import(
+            './components/modulo3/tipos/ajuste/minimos-cuadrados/minimos-cuadrados.routes'
+          ).then((m) => m.MINIMOS_CUADRADOS_ROUTES),
+      },
+
+      // Pantalla B: lista de métodos de una familia (interpolacion | ajuste).
+      {
+        path: 'tipos/:familia',
+        loadComponent: () =>
+          import('./components/modulo3/tipos/tipo-metodos/tipo-metodos').then(
+            (m) => m.TipoMetodosModulo3,
+          ),
+      },
+    ],
+  },
+
   // Atajos por slug histórico (data-path de las maquetas)
   { path: 'teoria-y-errores', redirectTo: 'modulo1/teoria-y-errores' },
   { path: 'calculadoras-interactivas', redirectTo: 'modulo1/calculadoras-interactivas' },

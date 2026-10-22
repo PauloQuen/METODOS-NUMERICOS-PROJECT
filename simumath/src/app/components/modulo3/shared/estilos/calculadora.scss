@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Estilos compartidos de la pestaña Calculadora del Módulo 3.
+   ========================================================================== */
+
+.calc-m3 {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calc-m3__encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.calc-m3__titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--on-surface);
+}
+
+.calc-m3__intro {
+  margin: 0;
+  max-width: 75ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+}
+
+.calc-m3__intro code {
+  padding: 0.1rem 0.3rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+  background: var(--surface-container-high);
+  border-radius: var(--radius-sm);
+}
+
+.calc-m3__grilla {
+  display: grid;
+  grid-template-columns: minmax(280px, 400px) 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.calc-m3__columna-derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calc-m3__titulo-seccion {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--on-surface);
+}
+
+@media (max-width: 900px) {
+  .calc-m3__grilla {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,24 @@
+<div class="lista-m3-tab">
+  <header class="lista-m3-tab__encabezado">
+    <h2 class="lista-m3-tab__titulo">Autoevaluación</h2>
+    <p class="lista-m3-tab__intro">
+      Seis ejercicios: tres numéricos y tres de casuística. El quinto es especial: los datos no son
+      una recta y la solución muestra cómo detectarlo con r² y con la forma de los residuos.
+    </p>
+  </header>
+
+  @for (ejercicio of ejercicios; track ejercicio.id) {
+    <section class="lista-m3-tab__bloque">
+      <app-bloque-ejercicio-datos
+        [ejercicio]="ejercicio"
+        [filas]="calculoDe($index).filas"
+        [columnas]="columnas"
+        [funcion]="funcionDe($index)"
+        [rango]="rangoDe($index)"
+        [dibujarMetodo]="dibujoDe($index)"
+        leyenda="Recta de mínimos cuadrados ŷ = a₀ + a₁x"
+        tituloTabla="Tabla de trabajo y sumatorias"
+      />
+    </section>
+  }
+</div>

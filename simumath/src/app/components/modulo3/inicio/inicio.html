@@ -1,0 +1,84 @@
+<div class="inicio">
+  <!-- Cabecera: el hero navy del módulo, a todo el ancho -->
+  <header class="inicio__hero">
+    <div class="inicio__hero-contenido">
+      <app-breadcrumb [tramos]="miga" tono="navy" />
+
+      <app-btn
+        class="inicio__volver"
+        variant="secondary"
+        label="Volver al inicio"
+        icon="arrow_back"
+        routerLink="/home"
+      />
+
+      <app-badge text="Módulo 3 · Interpolación y Ajuste de Curvas" variant="amber" />
+
+      <h1 class="inicio__titulo">Interpolación y ajuste de curvas</h1>
+      <p class="inicio__bajada">
+        Con una tabla de datos hay dos preguntas posibles: ¿qué curva pasa exactamente por todos
+        los puntos? o ¿qué curva representa mejor la tendencia cuando los datos traen error?
+        Elegí la familia y después el método.
+      </p>
+    </div>
+  </header>
+
+  <main class="inicio__cuerpo">
+    <!-- ── Las dos familias ──────────────────────────────────────── -->
+    <section aria-labelledby="inicio-familias-t">
+      <h2 id="inicio-familias-t" class="inicio__seccion-titulo">
+        Elegí por tipo de problema
+      </h2>
+
+      <div class="inicio__grid">
+        @for (f of familias; track f.key) {
+          <a class="familia" [routerLink]="rutaFamilia(f.key)">
+            <div class="familia__tope">
+              <span class="familia__conteo">
+                {{ f.metodos.length }} {{ f.metodos.length === 1 ? 'método' : 'métodos' }}
+              </span>
+            </div>
+
+            <h3 class="familia__nombre">{{ f.nombre }}</h3>
+            <p class="familia__principio">{{ f.principio }}</p>
+            <p class="familia__descripcion">{{ f.descripcion }}</p>
+
+            <ul class="familia__metodos">
+              @for (m of f.metodos; track m.key) {
+                <li class="familia__metodo">
+                  <span class="familia__metodo-nombre">{{ m.nombre }}</span>
+                </li>
+              }
+            </ul>
+
+            <span class="familia__cta">
+              Ver métodos
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+            </span>
+          </a>
+        }
+      </div>
+    </section>
+
+    <!-- ── Acceso directo a los métodos ──────────────────────────── -->
+    <section class="inicio__material" aria-labelledby="inicio-metodos-t">
+      <h2 id="inicio-metodos-t" class="inicio__seccion-titulo">Los métodos del módulo</h2>
+      <p class="inicio__material-bajada">
+        Cada método trae su teoría, ejemplos resueltos, autoevaluación y calculadora interactiva.
+      </p>
+
+      <ul class="inicio__links">
+        @for (m of metodos; track m.key) {
+          <li>
+            <a class="inicio__link" [routerLink]="rutaDe(m)" [style.--color-metodo]="m.color">
+              <span class="inicio__link-nombre">{{ m.nombre }}</span>
+              <span class="inicio__link-desc">{{ m.idea }}</span>
+              <code class="inicio__link-formula">{{ m.formula }}</code>
+              <span class="inicio__link-criterio">{{ m.criterioTexto }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+  </main>
+</div>

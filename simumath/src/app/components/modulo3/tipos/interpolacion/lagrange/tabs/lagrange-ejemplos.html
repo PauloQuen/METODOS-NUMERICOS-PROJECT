@@ -1,0 +1,25 @@
+<div class="lista-m3-tab">
+  <header class="lista-m3-tab__encabezado">
+    <h2 class="lista-m3-tab__titulo">Ejemplos resueltos</h2>
+    <p class="lista-m3-tab__intro">
+      Cuatro ejemplos de interpolación de Lagrange: dos numéricos y dos de casuística. En los cuatro,
+      la tabla y el gráfico se calculan corriendo el algoritmo con los puntos del enunciado, así que
+      podés reproducir cada paso en la calculadora de la última pestaña.
+    </p>
+  </header>
+
+  @for (ejemplo of ejemplos; track ejemplo.id) {
+    <section class="lista-m3-tab__bloque">
+      <app-bloque-ejemplo-datos
+        [ejemplo]="ejemplo"
+        [filas]="calculoDe($index).filas"
+        [columnas]="columnas"
+        [funcion]="funcionDe($index)"
+        [rango]="rangoDe($index)"
+        [dibujarMetodo]="dibujoDe($index)"
+        leyenda="Polinomio interpolante P(x)"
+        tituloTabla="Aporte de cada dato al polinomio"
+      />
+    </section>
+  }
+</div>

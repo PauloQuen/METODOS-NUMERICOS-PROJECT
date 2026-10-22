@@ -1,0 +1,206 @@
+<div class="teoria-m3">
+  <!-- 1. Concepto -->
+  <section class="teoria-m3__seccion">
+    <h2 class="teoria-m3__titulo">¿Qué es y para qué sirve?</h2>
+    <p class="teoria-m3__parrafo">{{ teoria.concepto }}</p>
+    @if (teoria.videoUrl) {
+      <div>
+        <a class="recurso" [href]="teoria.videoUrl" target="_blank" rel="noopener noreferrer">
+          <span class="recurso__tope">
+            <span class="material-symbols-outlined recurso__tipo-icono">play_circle</span>
+            Video · método explicado
+          </span>
+          <span class="recurso__titulo">Ver «Regresión lineal por mínimos cuadrados»</span>
+          <span class="recurso__descripcion">
+            Armado de la tabla de sumatorias y cálculo de a₀, a₁, r y r² con un caso real.
+          </span>
+        </a>
+      </div>
+    }
+  </section>
+
+  <!-- 2, 3 y 4: acordeón -->
+  <section class="teoria-m3__seccion">
+    <h2 class="teoria-m3__titulo">Las tres ideas que hay que entender</h2>
+
+    <div class="teoria__acordeon">
+      <button
+        type="button"
+        class="teoria__acordeon-boton"
+        [class.teoria__acordeon-boton--abierto]="abierta() === 'fundamento'"
+        (click)="alternar('fundamento')"
+        [attr.aria-expanded]="abierta() === 'fundamento'"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+        <span class="teoria__acordeon-titulo">¿Por qué funciona?</span>
+        <span class="material-symbols-outlined teoria__acordeon-flecha" aria-hidden="true">
+          {{ abierta() === 'fundamento' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'fundamento') {
+        <div class="teoria__acordeon-cuerpo">
+          <p>{{ teoria.fundamento }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="teoria__acordeon">
+      <button
+        type="button"
+        class="teoria__acordeon-boton"
+        [class.teoria__acordeon-boton--abierto]="abierta() === 'falla'"
+        (click)="alternar('falla')"
+        [attr.aria-expanded]="abierta() === 'falla'"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+        <span class="teoria__acordeon-titulo">¿Cuándo falla?</span>
+        <span class="material-symbols-outlined teoria__acordeon-flecha" aria-hidden="true">
+          {{ abierta() === 'falla' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'falla') {
+        <div class="teoria__acordeon-cuerpo">
+          <p>{{ teoria.cuandoFalla }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="teoria__acordeon">
+      <button
+        type="button"
+        class="teoria__acordeon-boton"
+        [class.teoria__acordeon-boton--abierto]="abierta() === 'precision'"
+        (click)="alternar('precision')"
+        [attr.aria-expanded]="abierta() === 'precision'"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">straighten</span>
+        <span class="teoria__acordeon-titulo">¿Qué precisión se puede esperar?</span>
+        <span class="material-symbols-outlined teoria__acordeon-flecha" aria-hidden="true">
+          {{ abierta() === 'precision' ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+      @if (abierta() === 'precision') {
+        <div class="teoria__acordeon-cuerpo">
+          <p>{{ teoria.precision }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- 5. Recursos de internet -->
+  <section class="teoria-m3__seccion">
+    <h2 class="teoria-m3__titulo">Para ampliar (recursos en internet)</h2>
+    <p class="teoria-m3__parrafo">
+      La teoría no se repite acá: está explicada mejor afuera. Estos enlaces son la parte que
+      conviene leer o probar para entender, simular y practicar.
+    </p>
+    <ul class="recursos">
+      @for (r of teoria.recursos; track r.url) {
+        <li>
+          <a class="recurso" [href]="r.url" target="_blank" rel="noopener noreferrer">
+            <span class="recurso__tope">
+              <span class="material-symbols-outlined recurso__tipo-icono">
+                {{ iconoRecurso(r.tipo) }}
+              </span>
+              {{ r.tipo }}
+            </span>
+            <span class="recurso__titulo">{{ r.titulo }}</span>
+            <span class="recurso__descripcion">{{ r.descripcion }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <!-- 6. La tarjeta del método -->
+  <section class="teoria-m3__seccion">
+    <h2 class="teoria-m3__titulo">El método</h2>
+
+    <div class="formula-m3">{{ teoria.algoritmo.formula }}</div>
+
+    <div class="grilla-m3">
+      <ui-card>
+        <h3 class="tarjeta-m3__titulo">Los pasos</h3>
+        <ol class="pasos-m3">
+          @for (paso of teoria.algoritmo.pasos; track $index) {
+            <li class="pasos-m3__paso">
+              <span class="pasos-m3__numero">{{ $index + 1 }}</span>
+              <span>{{ paso }}</span>
+            </li>
+          }
+        </ol>
+      </ui-card>
+
+      <ui-card>
+        <h3 class="tarjeta-m3__titulo">¿Qué se mide?</h3>
+        <div class="criterios-m3">
+          @for (c of teoria.algoritmo.criterios; track c.nombre) {
+            <div class="criterios-m3__item">
+              <p class="criterios-m3__nombre">{{ c.nombre }}</p>
+              <p class="criterios-m3__texto">{{ c.explicacion }}</p>
+            </div>
+          }
+        </div>
+      </ui-card>
+    </div>
+
+    <div class="grilla-m3">
+      <ui-card>
+        <h3 class="tarjeta-m3__titulo tarjeta-m3__titulo--bueno">Ventajas</h3>
+        <ul class="lista-m3 lista-m3--bueno">
+          @for (v of teoria.algoritmo.ventajas; track v) {
+            <li>{{ v }}</li>
+          }
+        </ul>
+      </ui-card>
+
+      <ui-card>
+        <h3 class="tarjeta-m3__titulo tarjeta-m3__titulo--malo">Limitaciones</h3>
+        <ul class="lista-m3 lista-m3--malo">
+          @for (l of teoria.algoritmo.limitaciones; track l) {
+            <li>{{ l }}</li>
+          }
+        </ul>
+      </ui-card>
+    </div>
+
+    <ui-card>
+      <h3 class="tarjeta-m3__titulo">Recomendaciones de uso</h3>
+      <ul class="lista-m3">
+        @for (r of teoria.algoritmo.recomendaciones; track r) {
+          <li>{{ r }}</li>
+        }
+      </ul>
+    </ui-card>
+  </section>
+
+  <!-- 7. Ejemplo numérico -->
+  <section class="teoria-m3__seccion">
+    <h2 class="teoria-m3__titulo">Ejemplo numérico resuelto</h2>
+    <app-bloque-ejemplo-datos
+      [ejemplo]="teoria.ejemploNormal"
+      [filas]="estadoNormal.filas"
+      [columnas]="columnas"
+      [funcion]="funcionNormal"
+      [rango]="rangoNormal"
+      [dibujarMetodo]="dibujoNormal"
+      leyenda="Recta de mínimos cuadrados ŷ = a₀ + a₁x"
+      tituloTabla="Tabla de trabajo y sumatorias"
+    />
+  </section>
+
+  <!-- 8. Ejemplo de casuística -->
+  <section class="teoria-m3__seccion">
+    <h2 class="teoria-m3__titulo">Ejemplo desde una casuística real</h2>
+    <app-bloque-ejemplo-datos
+      [ejemplo]="teoria.ejemploCasuistica"
+      [filas]="estadoCasuistica.filas"
+      [columnas]="columnas"
+      [funcion]="funcionCasuistica"
+      [rango]="rangoCasuistica"
+      [dibujarMetodo]="dibujoCasuistica"
+      leyenda="Recta de calibración Δl = a₀ + a₁·m"
+      tituloTabla="Tabla de trabajo y sumatorias"
+    />
+  </section>
+</div>

@@ -166,19 +166,23 @@
         <ui-card elevation="sm" class="module-card">
           <div class="module-card__head">
             <span class="module-card__phase">Fase 3</span>
-            <app-badge text="En desarrollo" variant="outline" />
+            <app-badge text="Disponible" variant="amber" />
           </div>
           <h3 class="module-card__title">Interpolación y ajuste de curvas</h3>
           <p class="module-card__desc">
-            Lagrange, diferencias divididas de Newton, splines cúbicos y ajuste por mínimos
-            cuadrados.
+            Polinomio interpolante de Lagrange y ajuste de datos experimentales por mínimos
+            cuadrados, con teoría, ejemplos, autoevaluación y calculadoras interactivas.
           </p>
           <div class="module-card__tags" aria-label="Métodos del módulo">
             <app-badge text="Lagrange" variant="outline" />
-            <app-badge text="Splines Cúbicos" variant="outline" />
             <app-badge text="Mínimos Cuadrados" variant="outline" />
           </div>
-          <span class="module-card__soon">Próximamente</span>
+          <app-btn
+            class="module-card__cta"
+            label="Ingresar al Módulo"
+            icon="arrow_forward"
+            routerLink="/modulo3"
+          />
         </ui-card>
 
         <ui-card elevation="sm" class="module-card">
