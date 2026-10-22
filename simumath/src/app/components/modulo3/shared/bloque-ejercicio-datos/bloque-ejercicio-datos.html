@@ -1,0 +1,64 @@
+<div class="bloque-ejercicio-datos">
+  <ui-card>
+    <h3 class="bloque-ejercicio-datos__titulo">{{ ejercicio().titulo }}</h3>
+
+    @if (esCasuistica() && ejercicio().enunciado) {
+      <section class="bloque-ejercicio-datos__seccion">
+        <h4 class="bloque-ejercicio-datos__subtitulo">Enunciado</h4>
+        <p class="bloque-ejercicio-datos__parrafo">{{ ejercicio().enunciado }}</p>
+      </section>
+    }
+
+    <section class="bloque-ejercicio-datos__seccion">
+      <h4 class="bloque-ejercicio-datos__subtitulo">Planteamiento</h4>
+      <p class="bloque-ejercicio-datos__parrafo">{{ ejercicio().planteamiento }}</p>
+
+      <div class="bloque-ejercicio-datos__tabla-scroll">
+        <table class="bloque-ejercicio-datos__tabla">
+          <thead>
+            <tr>
+              <th>i</th>
+              <th>xᵢ</th>
+              <th>yᵢ</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of puntos(); track $index; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ p.x }}</td>
+                <td>{{ p.y }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (ejercicio().pista) {
+        <p class="bloque-ejercicio-datos__pista">Pista: {{ ejercicio().pista }}</p>
+      }
+    </section>
+
+    <div class="bloque-ejercicio-datos__acciones">
+      <button type="button" class="bloque-ejercicio-datos__boton" (click)="alternar()">
+        {{ mostrarSolucion() ? 'Ocultar solución' : 'Ver solución' }}
+      </button>
+    </div>
+
+    @if (mostrarSolucion()) {
+      <div class="bloque-ejercicio-datos__solucion">
+        <app-bloque-ejemplo-datos
+          [ejemplo]="comoEjemplo()"
+          [filas]="filas()"
+          [columnas]="columnas()"
+          [filaFinal]="filaFinal()"
+          [funcion]="funcion()"
+          [rango]="rango()"
+          [dibujarMetodo]="dibujarMetodo()"
+          [leyenda]="leyenda()"
+          [tituloTabla]="tituloTabla()"
+        />
+      </div>
+    }
+  </ui-card>
+</div>

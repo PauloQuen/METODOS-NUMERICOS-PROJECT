@@ -1,0 +1,25 @@
+<div class="lista-m3-tab">
+  <header class="lista-m3-tab__encabezado">
+    <h2 class="lista-m3-tab__titulo">Ejemplos resueltos</h2>
+    <p class="lista-m3-tab__intro">
+      Cuatro ejemplos de ajuste por mínimos cuadrados: dos numéricos y dos de casuística. La tabla de
+      trabajo (con las columnas xᵢ², xᵢ·yᵢ, ŷᵢ y los residuos) y el gráfico se calculan corriendo el
+      algoritmo, así que podés reproducir todo en la pestaña de la calculadora.
+    </p>
+  </header>
+
+  @for (ejemplo of ejemplos; track ejemplo.id) {
+    <section class="lista-m3-tab__bloque">
+      <app-bloque-ejemplo-datos
+        [ejemplo]="ejemplo"
+        [filas]="calculoDe($index).filas"
+        [columnas]="columnas"
+        [funcion]="funcionDe($index)"
+        [rango]="rangoDe($index)"
+        [dibujarMetodo]="dibujoDe($index)"
+        leyenda="Recta de mínimos cuadrados ŷ = a₀ + a₁x"
+        tituloTabla="Tabla de trabajo y sumatorias"
+      />
+    </section>
+  }
+</div>

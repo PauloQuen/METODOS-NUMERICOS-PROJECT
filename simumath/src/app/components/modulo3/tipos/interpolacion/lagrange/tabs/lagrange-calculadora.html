@@ -1,0 +1,57 @@
+<div class="calc-m3">
+  <header class="calc-m3__encabezado">
+    <h2 class="calc-m3__titulo">Calculadora de Interpolación de Lagrange</h2>
+    <p class="calc-m3__intro">
+      Escribí los puntos de la tabla (dos o más) y el valor de x donde querés estimar. El formato de
+      cada punto es <code>x, y</code>, y los pares se separan con <code>;</code> o con saltos de línea:
+      por ejemplo <code>1, 0; 2, 0.6931; 3, 1.0986</code>. El resultado muestra el polinomio, el
+      aporte de cada dato y el gráfico con el recorrido paso a paso.
+    </p>
+  </header>
+
+  <div class="calc-m3__grilla">
+    <app-panel-calculadora-datos
+      [campos]="campos"
+      [(valores)]="valores"
+      [respuesta]="estado()?.respuesta ?? null"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (estado(); as e) {
+      @if (e.filas.length > 0) {
+        <div class="calc-m3__columna-derecha">
+          <ui-card padding="lg">
+            <h3 class="calc-m3__titulo-seccion">Gráfico</h3>
+            <app-grafico-metodo
+              [funcion]="funcion()"
+              [iteraciones]="e.filas"
+              [pasoActual]="paso()"
+              [rango]="rango()"
+              [dibujarMetodo]="dibujo()"
+              leyenda="Polinomio interpolante P(x)"
+            />
+          </ui-card>
+          <ui-card padding="lg">
+            <h3 class="calc-m3__titulo-seccion">Paso a paso</h3>
+            <app-pasos-control
+              [total]="total()"
+              [paso]="paso()"
+              [texto]="textoDelPaso()"
+              (pasoCambiado)="alCambiarPaso($event)"
+            />
+          </ui-card>
+        </div>
+      }
+    }
+  </div>
+
+  @if (estado(); as e) {
+    @if (e.filas.length > 0) {
+      <ui-card padding="lg">
+        <h3 class="calc-m3__titulo-seccion">Aporte de cada dato</h3>
+        <app-iteration-table [columns]="columnas" [rows]="e.filas" />
+      </ui-card>
+    }
+  }
+</div>
