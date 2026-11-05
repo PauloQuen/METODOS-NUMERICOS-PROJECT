@@ -14,7 +14,7 @@
           [class.it-table-row--highlight]="rowIndex === highlightRowIndex()"
         >
           @for (col of columns(); track col.key; let last = $last) {
-            <td class="it-table__cell {{ cellAlign(col) }}">
+            <td class="it-table__cell {{ cellAlign(col) }} {{ cellExtra(col) }}">
               {{ row[col.key] }}
               @if (last && rowIndex === highlightRowIndex() && highlightBadge()) {
                 <app-badge

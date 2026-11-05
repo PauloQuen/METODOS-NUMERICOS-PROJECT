@@ -3,14 +3,14 @@
     <span class="pasos__contador">{{ etiqueta() }}</span>
   </div>
 
-  <div class="pasos__botones" role="group" aria-label="Controles de iteración">
+  <div class="pasos__botones" role="group" [attr.aria-label]="ariaGrupo()">
     <button
       type="button"
       class="paso-btn"
       (click)="irAlInicio()"
       [disabled]="!hayPasos() || enInicio()"
-      aria-label="Ir a la primera iteración"
-      title="Ir a la primera iteración"
+      [attr.aria-label]="ariaInicio()"
+      [title]="ariaInicio()"
     >
       <span aria-hidden="true">⏮</span>
     </button>
@@ -20,8 +20,8 @@
       class="paso-btn"
       (click)="irAlAnterior()"
       [disabled]="!hayPasos() || enInicio()"
-      aria-label="Iteración anterior"
-      title="Iteración anterior"
+      [attr.aria-label]="ariaAnterior()"
+      [title]="ariaAnterior()"
     >
       <span aria-hidden="true">◀</span>
     </button>
@@ -31,8 +31,8 @@
       class="paso-btn paso-btn--siguiente"
       (click)="irAlSiguiente()"
       [disabled]="!hayPasos() || enFinal()"
-      aria-label="Iteración siguiente"
-      title="Iteración siguiente"
+      [attr.aria-label]="ariaSiguiente()"
+      [title]="ariaSiguiente()"
     >
       <span aria-hidden="true">▶</span>
     </button>
@@ -42,8 +42,8 @@
       class="paso-btn"
       (click)="irAlFinal()"
       [disabled]="!hayPasos() || enFinal()"
-      aria-label="Ir a la última iteración"
-      title="Ir a la última iteración"
+      [attr.aria-label]="ariaFinal()"
+      [title]="ariaFinal()"
     >
       <span aria-hidden="true">⏭</span>
     </button>

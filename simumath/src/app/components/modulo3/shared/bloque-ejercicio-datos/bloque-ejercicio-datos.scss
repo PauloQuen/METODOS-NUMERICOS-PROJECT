@@ -68,22 +68,57 @@
   background: var(--surface-container);
 }
 
+/* ── Los tres botones de la tarjeta ───────────────────────────────── */
+
 .bloque-ejercicio-datos__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
   margin-top: 1rem;
 }
 
 .bloque-ejercicio-datos__boton {
+  max-width: 100%;
   padding: 0.6rem 1.1rem;
+  font-family: var(--font-body);
   font-size: var(--text-label-lg);
   font-weight: 600;
-  color: var(--on-primary);
-  background: var(--primary);
+  line-height: 1.2;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
-  transition: background var(--transition-smooth);
+  transition:
+    background-color var(--transition-smooth),
+    border-color var(--transition-smooth),
+    box-shadow var(--transition-smooth);
 }
 
-.bloque-ejercicio-datos__boton:hover {
+.bloque-ejercicio-datos__boton--primario {
+  color: var(--on-primary);
+  background: var(--primary);
+}
+
+.bloque-ejercicio-datos__boton--primario:hover {
   background: var(--primary-container);
+}
+
+.bloque-ejercicio-datos__boton--secundario {
+  color: var(--primary);
+  background: var(--surface-container-lowest);
+  border-color: var(--primary);
+}
+
+.bloque-ejercicio-datos__boton--secundario:hover {
+  background: var(--surface-container-low);
+}
+
+/* Estado presionado: mismo alto, pero se "hunde" un poco. */
+.bloque-ejercicio-datos__boton--activo {
+  box-shadow: inset 0 2px 3px rgba(0, 32, 70, 0.18);
+}
+
+.bloque-ejercicio-datos__boton--secundario.bloque-ejercicio-datos__boton--activo {
+  background: var(--surface-container);
 }
 
 .bloque-ejercicio-datos__boton:focus-visible {
@@ -91,12 +126,15 @@
   outline-offset: 2px;
 }
 
-.bloque-ejercicio-datos__solucion {
+/* ── Paneles desplegados ──────────────────────────────────────────── */
+
+.bloque-ejercicio-datos__solucion,
+.bloque-ejercicio-datos__panel {
   margin-top: 1rem;
-  animation: aparecer 0.25s ease;
+  animation: desplegar 180ms ease-out;
 }
 
-@keyframes aparecer {
+@keyframes desplegar {
   from {
     opacity: 0;
     transform: translateY(-4px);
@@ -104,5 +142,12 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloque-ejercicio-datos__solucion,
+  .bloque-ejercicio-datos__panel {
+    animation: none;
   }
 }

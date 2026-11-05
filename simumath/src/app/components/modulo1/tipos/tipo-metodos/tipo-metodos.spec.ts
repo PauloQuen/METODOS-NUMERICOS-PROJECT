@@ -55,17 +55,17 @@ describe('TipoMetodos (Pantalla B)', () => {
     expect(texto).not.toContain('Bisección');
   });
 
-  it('polinomios muestra a Cardano como "Próximamente", sin enlace de entrada', async () => {
+  it('polinomios muestra a Cardano habilitado con enlace a teoría', async () => {
     const { fixture } = await render('/tipos/polinomios');
     const dom = fixture.nativeElement as HTMLElement;
 
     expect(dom.textContent).toContain('Fórmula de Cardano');
-    expect(dom.textContent).toContain('Próximamente');
+    expect(dom.textContent).not.toContain('Próximamente');
 
-    // El único método está planificado: no puede existir un enlace hacia
-    // una página que todavía no existe.
+    // Cardano está implementado: debe existir un enlace hacia su teoría.
     const enlaces = dom.querySelectorAll('a.metodo');
-    expect(enlaces.length).toBe(0);
+    expect(enlaces.length).toBe(1);
+    expect(enlaces[0].getAttribute('href')).toBe('/modulo1/tipos/polinomios/cardano/teoria');
   });
 
   it('los métodos disponibles enlazan a su pestaña de Teoría', async () => {

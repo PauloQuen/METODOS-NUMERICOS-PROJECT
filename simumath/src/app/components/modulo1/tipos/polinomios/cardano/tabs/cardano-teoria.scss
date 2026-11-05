@@ -1,0 +1,112 @@
+.teoria {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.teoria__seccion {
+  margin: 0 0 1rem;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.teoria__titulo {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.teoria__parrafo {
+  margin: 0;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+}
+
+.teoria__parrafo--intro {
+  font-size: 1.05rem;
+}
+
+.teoria__subtitulo {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.teoria__formula {
+  margin: 0.5rem 0 1rem;
+  padding: 1rem;
+  background: var(--surface-container);
+  border-radius: 0.75rem;
+  text-align: center;
+}
+
+.teoria__formula code {
+  font-size: clamp(1.1rem, 3vw, 1.35rem);
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.teoria__lista {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.teoria__lista-item {
+  line-height: 1.65;
+  color: var(--on-surface-variant);
+}
+
+.teoria__pasos {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  line-height: 1.65;
+  color: var(--on-surface-variant);
+}
+
+.teoria__dos-columnas {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+
+.teoria__acordeon {
+  border-top: 1px solid var(--outline-variant);
+}
+
+.teoria__acordeon--ultimo {
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.teoria__acordeon-boton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.85rem 0.25rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--on-surface);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.teoria__acordeon-boton:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+}
+
+.teoria__acordeon-contenido {
+  padding: 0 0.25rem 1rem;
+}

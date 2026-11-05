@@ -4,6 +4,8 @@ import { COLUMNAS_BISECCION } from '../biseccion.config';
 import { BiseccionService, type BiseccionEstado } from '../biseccion.service';
 import { dibujarBiseccion } from '../biseccion.grafico';
 import { BloqueEjercicio } from '../../../../../../shared/domain/bloque-ejercicio/bloque-ejercicio';
+import { autoevaluacionMejoradaM1, politicaDeMetodoM1 } from '../../../../autoevaluacion.config';
+import { AUTOEVALUACION_BISECCION } from '../biseccion.autoevaluacion';
 
 /**
  * PESTAÑA DE AUTOEVALUACIÓN de Bisección.
@@ -31,7 +33,13 @@ export class BiseccionAutoevaluacion {
   private readonly servicio = inject(BiseccionService);
 
   /** Los tres ejercicios: dos numéricos y uno de casuística. */
-  readonly ejercicios = EJERCICIOS_BISECCION;
+  readonly ejercicios = EJERCICIOS_BISECCION.map((e) => ({
+    ...e,
+    ...(AUTOEVALUACION_BISECCION[e.id] ?? {}),
+  }));
+
+  readonly mejorada = autoevaluacionMejoradaM1('cerrados', 'biseccion');
+  readonly desbloqueoBase = politicaDeMetodoM1('cerrados', 'biseccion');
 
   readonly columnas = COLUMNAS_BISECCION;
   readonly dibujar = dibujarBiseccion;

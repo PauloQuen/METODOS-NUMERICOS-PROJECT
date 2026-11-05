@@ -62,6 +62,28 @@ describe('contenido de Lagrange', () => {
     }
   });
 
+  it('cada resolución coincide con el polinomio calculado', () => {
+    for (const ejercicio of EJERCICIOS_LAGRANGE) {
+      expect(ejercicio.resolucion)
+        .withContext(`${ejercicio.id}: resolución`)
+        .toBeDefined();
+
+      const declarado = ejercicio.resolucion?.valorCorrecto;
+      expect(typeof declarado)
+        .withContext(`${ejercicio.id}: el formato escalar exige un número`)
+        .toBe('number');
+
+      const calculado = lagrange(ejercicio.calculo).valor;
+      expect(Math.abs((declarado as number) - (calculado as number)))
+        .withContext(`${ejercicio.id}: valorCorrecto no coincide con P(x*)`)
+        .toBeLessThan(1e-9);
+
+      expect(ejercicio.cuestionario?.length ?? 0)
+        .withContext(`${ejercicio.id}: preguntas`)
+        .toBe(3);
+    }
+  });
+
   it('la teoría y los recursos están completos', () => {
     expect(TEORIA_LAGRANGE.concepto.length).toBeGreaterThan(80);
     expect(TEORIA_LAGRANGE.fundamento.length).toBeGreaterThan(80);

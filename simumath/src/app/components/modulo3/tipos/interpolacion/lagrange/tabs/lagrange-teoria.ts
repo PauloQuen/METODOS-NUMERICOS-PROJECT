@@ -1,10 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TEORIA_LAGRANGE } from '../lagrange.contenido';
 import { COLUMNAS_LAGRANGE } from '../lagrange.config';
 import { LagrangeService } from '../lagrange.service';
 import { crearDibujoLagrange } from '../lagrange.grafico';
-import { UiCard } from '../../../../../../shared/ui/ui-card/ui-card';
 import { BloqueEjemploDatos } from '../../../../shared/bloque-ejemplo-datos/bloque-ejemplo-datos';
+import { TeoriaContenido } from '../../../../../../shared/domain/teoria-contenido/teoria-contenido';
 
 /**
  * PESTAÑA DE TEORÍA de Lagrange.
@@ -23,9 +23,8 @@ import { BloqueEjemploDatos } from '../../../../shared/bloque-ejemplo-datos/bloq
 @Component({
   selector: 'app-lagrange-teoria',
   standalone: true,
-  imports: [UiCard, BloqueEjemploDatos],
+  imports: [BloqueEjemploDatos, TeoriaContenido],
   templateUrl: './lagrange-teoria.html',
-  styleUrl: '../../../../shared/estilos/teoria.scss',
 })
 export class LagrangeTeoria {
   /** La teoría completa. */
@@ -63,22 +62,4 @@ export class LagrangeTeoria {
     valor: this.estadoCasuistica.valor,
   });
 
-  /** Qué sección de la teoría está expandida (acordeón). */
-  protected readonly abierta = signal<'fundamento' | 'falla' | 'precision' | null>(null);
-
-  protected alternar(que: 'fundamento' | 'falla' | 'precision'): void {
-    this.abierta.update((actual) => (actual === que ? null : que));
-  }
-
-  /** Icono de cada tipo de recurso. */
-  protected iconoRecurso(tipo: string): string {
-    switch (tipo) {
-      case 'video':
-        return 'play_circle';
-      case 'interactivo':
-        return 'touch_app';
-      default:
-        return 'article';
-    }
-  }
 }

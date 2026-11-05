@@ -64,6 +64,27 @@ export const TEORIA_REGLA_FALSA: ContenidoTeoria = {
     'derivada.',
   videoUrl: undefined,
 
+  recursos: [
+    {
+      titulo: 'Regula falsi (Wikipedia, español)',
+      url: 'https://es.wikipedia.org/wiki/Regula_falsi',
+      tipo: 'lectura',
+      descripcion: 'El método de la cuerda, su convergencia y el problema del extremo clavado.',
+    },
+    {
+      titulo: 'Method of False Position (MathWorld)',
+      url: 'https://mathworld.wolfram.com/MethodofFalsePosition.html',
+      tipo: 'lectura',
+      descripcion: 'La fórmula y la comparación con la bisección y la secante.',
+    },
+    {
+      titulo: 'Videos de repaso: regla falsa',
+      url: 'https://www.youtube.com/results?search_query=regla+falsa+metodo+numerico',
+      tipo: 'video',
+      descripcion: 'Casos resueltos con la cuerda y el análisis del extremo que se clava.',
+    },
+  ],
+
   algoritmo: {
     formula: 'c = a − f(a)·(b − a) / (f(b) − f(a))',
 

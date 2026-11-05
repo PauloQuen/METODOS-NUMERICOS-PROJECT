@@ -2,6 +2,8 @@ import type {
   EjemploModulo3,
   EjercicioModulo3,
   TeoriaModulo3,
+  PreguntaCuestionarioM3,
+  ResolucionEjercicioM3,
 } from '../../../modelos/modulo3.model';
 
 /**
@@ -451,7 +453,7 @@ export const EJEMPLOS_LAGRANGE: EjemploModulo3[] = [
 
 export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
   {
-    id: 'lagrange-ej-num-1',
+    id: 'lagrange-legacy-ej-num-1',
     titulo: 'Ejercicio 1 · Raíz cuadrada',
     tipo: 'numerico',
     planteamiento: 'Con los puntos (0; 0), (1; 1) y (4; 2), estimar el valor en x = 2.25 y comparar con √2.25 = 1.5.',
@@ -460,6 +462,53 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
       { etiqueta: 'Estimar en', valor: 'x = 2.25' },
     ],
     pista: 'Los nodos están separados de forma desigual (1 y 3 unidades). Las distancias entran en las bases.',
+    cuestionario: [
+      {
+        id: 'lagrange-legacy-ej-num-1-q1',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Por qué conviene interpolación de Lagrange aquí?',
+        opciones: [
+          { id: 'a', texto: 'Tenemos una tabla de puntos y queremos estimar entre ellos' },
+          { id: 'b', texto: 'Buscamos la raíz de f(x)=0' },
+          { id: 'c', texto: 'Queremos minimizar errores al cuadrado' },
+          { id: 'd', texto: 'Resolvemos un sistema lineal' },
+        ],
+        correcta: 'a',
+        explicacion: 'Interpolación construye un polinomio que pasa por los puntos para estimar valores intermedios.',
+      },
+      {
+        id: 'lagrange-legacy-ej-num-1-q2',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Qué pasa con las distancias al tener nodos desiguales?',
+        opciones: [
+          { id: 'a', texto: 'Entren en los denominadores/numeradores de las bases L_i(x)' },
+          { id: 'b', texto: 'No influyen en el resultado' },
+          { id: 'c', texto: 'Siempre da error cero' },
+          { id: 'd', texto: 'Solo sirve si están equiespaciados' },
+        ],
+        correcta: 'a',
+        explicacion: 'En Lagrange las bases usan (x - x_j)/(x_i - x_j), así que las distancias sí importan.',
+      },
+      {
+        id: 'lagrange-legacy-ej-num-1-q3',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Qué valor se espera aproximar con x=2.25?',
+        opciones: [
+          { id: 'a', texto: '√2.25 = 1.5' },
+          { id: 'b', texto: '2.25' },
+          { id: 'c', texto: '4.5' },
+          { id: 'd', texto: '0' },
+        ],
+        correcta: 'a',
+        explicacion: 'Los puntos corresponden a (x, √x) y se compara con √2.25.',
+      },
+    ],
+    resolucion: {
+      valorCorrecto: 1.78125,
+      tolerancia: 0.01,
+      etiqueta: 'P(2.25)',
+      respuestaFinalTexto: 'P(x) = −x²/6 + 7x/6; P(2.25) = 1.78125 (√2.25 = 1.5).',
+    },
     interpretacion: 'Datos tomados de √x. Al no ser equidistantes, conviene mirar con cuidado el aporte de cada base.',
     pasos: [
       'L₁(2.25) = (2.25−1)(2.25−4) / ((0−1)(0−4)) = (1.25)(−1.75)/4 = −0.546875.',
@@ -484,7 +533,7 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
   },
 
   {
-    id: 'lagrange-ej-num-2',
+    id: 'lagrange-legacy-ej-num-2',
     titulo: 'Ejercicio 2 · Polinomio exacto',
     tipo: 'numerico',
     planteamiento: 'Dados los puntos (1; 2), (2; 5) y (3; 10), estimar el valor en x = 2.5. ¿Qué polinomio se obtiene?',
@@ -493,6 +542,59 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
       { etiqueta: 'Estimar en', valor: 'x = 2.5' },
     ],
     pista: 'Fijate si los datos responden a una fórmula sencilla: 1²+1, 2²+1, 3²+1…',
+    cuestionario: [
+      {
+        id: 'base-tercer-punto',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Cuánto vale la base del punto (3; 10) evaluada en x = 2.5?',
+        opciones: [
+          { id: 'a', texto: '−0.125' },
+          { id: 'b', texto: '0.75' },
+          { id: 'c', texto: '0.375' },
+          { id: 'd', texto: '7.25' },
+        ],
+        correcta: 'c',
+        explicacion:
+          'La base del punto (3; 10) es (x−1)(x−2)/((3−1)(3−2)). En x = 2.5 da 0.375.',
+      },
+      {
+        id: 'grado',
+        tipo: 'verdadero-falso',
+        enunciado: 'El polinomio interpolante de estos tres puntos tiene grado 3.',
+        opciones: [
+          { id: 'v', texto: 'Verdadero' },
+          { id: 'f', texto: 'Falso' },
+        ],
+        correcta: 'f',
+        explicacion:
+          'Tres puntos determinan un polinomio de grado a lo sumo 2. El grado 3 recién aparece con cuatro puntos.',
+      },
+      {
+        id: 'error-cero',
+        tipo: 'opcion-multiple',
+        enunciado:
+          '¿Por qué el error de interpolación es cero también en x = 2.5, que no es un nodo?',
+        opciones: [
+          { id: 'a', texto: 'Porque 2.5 está entre 2 y 3.' },
+          { id: 'b', texto: 'Porque la tabla tiene tres puntos.' },
+          {
+            id: 'c',
+            texto:
+              'Porque los datos provienen de un polinomio de grado 2 y el interpolante lo reproduce exactamente.',
+          },
+          { id: 'd', texto: 'Porque la función x² + 1 es creciente.' },
+        ],
+        correcta: 'c',
+        explicacion:
+          'Si los datos salen de un polinomio de grado ≤ n, el interpolante coincide con él en todo el intervalo, no solo en los nodos.',
+      },
+    ],
+    resolucion: {
+      valorCorrecto: 7.25,
+      tolerancia: 0.01,
+      etiqueta: 'P(2.5)',
+      respuestaFinalTexto: 'P(x) = x² + 1; P(2.5) = 7.25',
+    },
     interpretacion: 'Acá los datos vienen de un polinomio de grado 2, así que la interpolación lo recupera EXACTO.',
     pasos: [
       'L₁(2.5) = (2.5−2)(2.5−3) / ((1−2)(1−3)) = (0.5)(−0.5)/2 = −0.125.',
@@ -517,7 +619,7 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
   },
 
   {
-    id: 'lagrange-ej-num-3',
+    id: 'lagrange-legacy-ej-num-3',
     titulo: 'Ejercicio 3 · Coseno',
     tipo: 'numerico',
     planteamiento: 'Con (0; 1), (1; 0.5403) y (2; −0.4161), estimar cos(1.5), sabiendo que el valor real es 0.07074.',
@@ -526,6 +628,59 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
       { etiqueta: 'Estimar en', valor: 'x = 1.5' },
     ],
     pista: 'La función real pasa de crecer a decrecer: fijate si el polinomio captura ese cambio.',
+    cuestionario: [
+      {
+        id: 'base-central',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Cuánto vale la base del punto (1; 0.5403) evaluada en x = 1.5?',
+        opciones: [
+          { id: 'a', texto: '−0.125' },
+          { id: 'b', texto: '0.75' },
+          { id: 'c', texto: '0.375' },
+          { id: 'd', texto: '0.1242' },
+        ],
+        correcta: 'b',
+        explicacion:
+          'La base del punto (1; 0.5403) es (x−0)(x−2)/((1−0)(1−2)). En x = 1.5 da 0.75.',
+      },
+      {
+        id: 'error-absoluto',
+        tipo: 'verdadero-falso',
+        enunciado: 'Un error absoluto de 0.0535 siempre es pequeño, sin importar el valor real.',
+        opciones: [
+          { id: 'v', texto: 'Verdadero' },
+          { id: 'f', texto: 'Falso' },
+        ],
+        correcta: 'f',
+        explicacion:
+          'La importancia del error depende del valor de referencia. Cerca de cero, un error absoluto chico puede ser un error relativo enorme.',
+      },
+      {
+        id: 'error-relativo',
+        tipo: 'opcion-multiple',
+        enunciado:
+          'El valor real cos(1.5) es 0.0707 y la estimación es 0.1242. ¿Qué lectura es correcta?',
+        opciones: [
+          {
+            id: 'a',
+            texto:
+              'El error absoluto es 0.0535, pero el relativo supera el 75 %: cerca de cero, el error relativo es la medida relevante.',
+          },
+          { id: 'b', texto: 'El error absoluto es 0.0535, así que la estimación es excelente.' },
+          { id: 'c', texto: 'El polinomio no pasa por los datos medidos.' },
+          { id: 'd', texto: 'El error se debe a que cos(1.5) es negativo.' },
+        ],
+        correcta: 'a',
+        explicacion:
+          'El polinomio pasa por los nodos y aun así se aleja del valor real. Al estar el valor verdadero cerca de cero, el error relativo es la señal de alarma.',
+      },
+    ],
+    resolucion: {
+      valorCorrecto: 0.1241875,
+      tolerancia: 0.01,
+      etiqueta: 'P(1.5)',
+      respuestaFinalTexto: 'P(x) = −0.24835x² − 0.21135x + 1; P(1.5) ≈ 0.12419',
+    },
     interpretacion: 'cos(x) tiene curvatura; con tres puntos el polinomio la aproxima pero no la reproduce.',
     pasos: [
       'L₁(1.5) = (1.5−1)(1.5−2) / ((0−1)(0−2)) = (0.5)(−0.5)/2 = −0.125.',
@@ -551,7 +706,7 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
   },
 
   {
-    id: 'lagrange-ej-cas-1',
+    id: 'lagrange-legacy-ej-cas-1',
     titulo: 'Ejercicio 4 · Altura de la marea',
     tipo: 'casuistica',
     enunciado:
@@ -572,6 +727,61 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
       { etiqueta: 'Estimar en', valor: 't = 5 h' },
     ],
     pista: 'La marea sube y baja: esperá una parábola con el máximo cerca de las 4 h.',
+    cuestionario: [
+      {
+        id: 'base-primer-punto',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Cuánto vale la base del punto (2; 1.2) evaluada en t = 5 h?',
+        opciones: [
+          { id: 'a', texto: '−0.125' },
+          { id: 'b', texto: '0.75' },
+          { id: 'c', texto: '0.375' },
+          { id: 'd', texto: '2.325' },
+        ],
+        correcta: 'a',
+        explicacion:
+          'La base del punto (2; 1.2) es (t−4)(t−6)/((2−4)(2−6)). En t = 5 da −0.125.',
+      },
+      {
+        id: 'tipo-estimacion',
+        tipo: 'verdadero-falso',
+        enunciado:
+          'Como t = 5 h está entre 4 h y 6 h, la estimación es una interpolación y no una extrapolación.',
+        opciones: [
+          { id: 'v', texto: 'Verdadero' },
+          { id: 'f', texto: 'Falso' },
+        ],
+        correcta: 'v',
+        explicacion:
+          'Interpolar es estimar dentro del rango medido; extrapolar es hacerlo fuera. Las 5 h están dentro de [2, 6].',
+      },
+      {
+        id: 'descenso',
+        tipo: 'opcion-multiple',
+        enunciado:
+          'La altura estimada a las 5 h es 2.325 m, menor que la pleamar de 2.6 m a las 4 h. ¿Qué explica mejor ese descenso?',
+        opciones: [
+          { id: 'a', texto: 'El polinomio es incorrecto: debería seguir subiendo.' },
+          {
+            id: 'b',
+            texto:
+              'La parábola que pasa por las tres mediciones baja después del máximo cercano a las 4 h; el descenso refleja la bajante de la marea.',
+          },
+          { id: 'c', texto: 'La interpolación siempre da valores menores que los datos.' },
+          { id: 'd', texto: 'Falta un dato a las 5 h: sin él no se puede interpolar.' },
+        ],
+        correcta: 'b',
+        explicacion:
+          'El polinomio reproduce la forma de los datos: sube hasta cerca de las 4 h y después baja. Interpolar no obliga a que el resultado sea mayor que el máximo medido.',
+      },
+    ],
+    resolucion: {
+      valorCorrecto: 2.325,
+      tolerancia: 0.01,
+      unidad: 'm',
+      etiqueta: 'h(5)',
+      respuestaFinalTexto: 'h(t) = −0.325t² + 2.65t − 2.8; h(5) = 2.325 m',
+    },
     interpretacion:
       'La marea no es lineal: hay una creciente y una bajante. El vértice del polinomio cae cerca de la ' +
       'pleamar medida a las 4 h.',
@@ -598,7 +808,7 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
   },
 
   {
-    id: 'lagrange-ej-cas-2',
+    id: 'lagrange-legacy-ej-cas-2',
     titulo: 'Ejercicio 5 · Consumo de combustible',
     tipo: 'casuistica',
     enunciado:
@@ -619,6 +829,61 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
       { etiqueta: 'Estimar en', valor: 'v = 70 km/h' },
     ],
     pista: 'El consumo baja más rápido a baja velocidad: la parábola tiene la curvatura justa.',
+    cuestionario: [
+      {
+        id: 'base-central',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Cuánto vale la base del punto (60; 10.2) evaluada en v = 70 km/h?',
+        opciones: [
+          { id: 'a', texto: '−0.125' },
+          { id: 'b', texto: '0.75' },
+          { id: 'c', texto: '0.375' },
+          { id: 'd', texto: '9.6125' },
+        ],
+        correcta: 'b',
+        explicacion:
+          'La base del punto (60; 10.2) es (v−40)(v−80)/((60−40)(60−80)). En v = 70 da 0.75.',
+      },
+      {
+        id: 'extrapolacion',
+        tipo: 'verdadero-falso',
+        enunciado:
+          'Con estos tres datos se puede estimar el consumo a 120 km/h con la misma confianza que a 70 km/h.',
+        opciones: [
+          { id: 'v', texto: 'Verdadero' },
+          { id: 'f', texto: 'Falso' },
+        ],
+        correcta: 'f',
+        explicacion:
+          '70 km/h está dentro del rango medido; 120 km/h queda fuera. La extrapolación no tiene la misma garantía y el modelo puede dejar de representar la realidad.',
+      },
+      {
+        id: 'validez-modelo',
+        tipo: 'opcion-multiple',
+        enunciado:
+          'El polinomio que pasa por los tres ensayos baja indefinidamente después de cierto punto. ¿Qué conclusión práctica es correcta?',
+        opciones: [
+          { id: 'a', texto: 'El polinomio sirve para cualquier velocidad; solo hay que evaluarlo.' },
+          {
+            id: 'b',
+            texto:
+              'El modelo representa bien el rango medido; fuera de él, la extrapolación puede dar resultados sin sentido.',
+          },
+          { id: 'c', texto: 'Como baja, el consumo a 120 km/h será negativo.' },
+          { id: 'd', texto: 'Hay que usar una recta porque una parábola nunca sirve.' },
+        ],
+        correcta: 'b',
+        explicacion:
+          'Un polinomio interpolante es un modelo local: pasa por los datos, pero no conoce la física fuera del rango medido.',
+      },
+    ],
+    resolucion: {
+      valorCorrecto: 9.6125,
+      tolerancia: 0.01,
+      unidad: 'L/100 km',
+      etiqueta: 'c(70)',
+      respuestaFinalTexto: 'c(v) = 0.001875v² − 0.3025v + 21.6; c(70) = 9.6125 L/100 km',
+    },
     interpretacion:
       'El consumo mejora al aumentar la velocidad en este rango, pero cada vez menos. La interpolación ' +
       'permite estimar el valor exacto a 70 km/h sin volver al banco de pruebas.',
@@ -645,7 +910,7 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
   },
 
   {
-    id: 'lagrange-ej-cas-3',
+    id: 'lagrange-legacy-ej-cas-3',
     titulo: 'Ejercicio 6 · Caudal de un río',
     tipo: 'casuistica',
     enunciado:
@@ -666,6 +931,56 @@ export const EJERCICIOS_LAGRANGE: EjercicioModulo3[] = [
       { etiqueta: 'Estimar en', valor: 'h = 1.75 m' },
     ],
     pista: 'El espaciado es 0.5 m. Cuidado con las distancias en las bases: 0.75 y 0.25.',
+    cuestionario: [
+      {
+        id: 'base-tercer-punto',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Cuánto vale la base del punto (2.0; 8.4) evaluada en h = 1.75 m?',
+        opciones: [
+          { id: 'a', texto: '−0.125' },
+          { id: 'b', texto: '0.75' },
+          { id: 'c', texto: '0.375' },
+          { id: 'd', texto: '6.625' },
+        ],
+        correcta: 'c',
+        explicacion:
+          'La base del punto (2.0; 8.4) es (h−1)(h−1.5)/((2−1)(2−1.5)). En h = 1.75 da 0.375.',
+      },
+      {
+        id: 'proporcionalidad',
+        tipo: 'verdadero-falso',
+        enunciado:
+          'Si la altura de la regla se duplica de 1.0 m a 2.0 m, el caudal también se duplica.',
+        opciones: [
+          { id: 'v', texto: 'Verdadero' },
+          { id: 'f', texto: 'Falso' },
+        ],
+        correcta: 'f',
+        explicacion:
+          'El caudal pasa de 2.8 a 8.4 m³/s: se triplica. La relación entre altura y caudal no es lineal en esta tabla.',
+      },
+      {
+        id: 'validez-interpolacion',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Por qué es válido estimar Q(1.75) por interpolación?',
+        opciones: [
+          { id: 'a', texto: 'Porque 1.75 está entre 1.0 y 2.0, dentro del rango medido.' },
+          { id: 'b', texto: 'Porque el caudal siempre sigue una parábola exacta.' },
+          { id: 'c', texto: 'Porque con tres puntos se puede extrapolar sin riesgo.' },
+          { id: 'd', texto: 'Porque 1.75 es el promedio de 1.5 y 2.0.' },
+        ],
+        correcta: 'a',
+        explicacion:
+          'La interpolación es defendible dentro del intervalo donde se midió. Fuera de [1.0, 2.0] el polinomio ya no tiene esa garantía.',
+      },
+    ],
+    resolucion: {
+      valorCorrecto: 6.625,
+      tolerancia: 0.01,
+      unidad: 'm³/s',
+      etiqueta: 'Q(1.75)',
+      respuestaFinalTexto: 'Q(h) = 2h² − 0.4h + 1.2; Q(1.75) = 6.625 m³/s',
+    },
     interpretacion:
       'El caudal crece más que proporcionalmente con la altura. Un polinomio de grado 2 captura esa ' +
       'tendencia, y la interpolación es segura porque 1.75 m está entre los datos.',

@@ -1,0 +1,17 @@
+<app-panel-ejercicio
+  [panelId]="panelId()"
+  [labelledby]="labelledby()"
+  titulo="Resolución"
+  subtitulo="Verificá tu resultado numérico."
+  tamano="compacto"
+>
+  <app-resolucion-ejercicio
+    [ejercicioId]="ejercicioId()"
+    [resolucion]="resolucion()"
+    [estado]="estado()"
+    [formato]="formato()"
+    (entradaChange)="entradaChange.emit($event)"
+    (verificar)="verificar.emit()"
+    (alternarRespuesta)="alternarRespuesta.emit()"
+  />
+</app-panel-ejercicio>

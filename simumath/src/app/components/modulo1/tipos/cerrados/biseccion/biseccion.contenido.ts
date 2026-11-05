@@ -58,6 +58,27 @@ export const TEORIA_BISECCION: ContenidoTeoria = {
 
   videoUrl: undefined,
 
+  recursos: [
+    {
+      titulo: 'Método de bisección (Wikipedia, español)',
+      url: 'https://es.wikipedia.org/wiki/M%C3%A9todo_de_bisecci%C3%B3n',
+      tipo: 'lectura',
+      descripcion: 'La definición, el teorema de Bolzano y el análisis del error de la cota.',
+    },
+    {
+      titulo: 'Bisection (MathWorld)',
+      url: 'https://mathworld.wolfram.com/Bisection.html',
+      tipo: 'lectura',
+      descripcion: 'Resumen técnico del algoritmo y de su velocidad de convergencia.',
+    },
+    {
+      titulo: 'Videos de repaso: método de bisección',
+      url: 'https://www.youtube.com/results?search_query=metodo+de+biseccion',
+      tipo: 'video',
+      descripcion: 'Ejemplos resueltos en pizarra, con la tabla de iteraciones paso a paso.',
+    },
+  ],
+
   algoritmo: {
     formula: 'c = (a + b) / 2',
 
@@ -520,6 +541,54 @@ export const EJERCICIOS_BISECCION: Ejercicio[] = [
     pista:
       'f(0) y f(5) tienen que tener signos distintos para que el método funcione. ' +
       'Verificá eso antes de empezar: f(0) = −15 (negativo) y f(5) = 20 (positivo).',
+
+    cuestionario: [
+      {
+        id: 'biseccion-ej1-q1',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Qué condición garantiza la convergencia de Bisección?',
+        opciones: [
+          { id: 'a', texto: 'f continua en [a,b] y f(a)·f(b) < 0' },
+          { id: 'b', texto: 'f derivable en todo R' },
+          { id: 'c', texto: 'Que f(a)=f(b)' },
+          { id: 'd', texto: 'Que el intervalo sea [0,1]' },
+        ],
+        correcta: 'a',
+        explicacion: 'Teorema de Bolzano: cambio de signo + continuidad garantizan al menos una raíz.',
+      },
+      {
+        id: 'biseccion-ej1-q2',
+        tipo: 'opcion-multiple',
+        enunciado: '¿Cómo evoluciona el ancho del intervalo?',
+        opciones: [
+          { id: 'a', texto: 'Se divide a la mitad en cada iteración' },
+          { id: 'b', texto: 'Se duplica' },
+          { id: 'c', texto: 'Permanece constante' },
+          { id: 'd', texto: 'Crece linealmente' },
+        ],
+        correcta: 'a',
+        explicacion: 'b_{n}-a_{n} = (b0-a0)/2^n',
+      },
+      {
+        id: 'biseccion-ej1-q3',
+        tipo: 'opcion-multiple',
+        enunciado: 'Para f(x)=x²+2x-15 en [0,5], ¿cuál es la raíz buscada?',
+        opciones: [
+          { id: 'a', texto: 'x=3' },
+          { id: 'b', texto: 'x=-5' },
+          { id: 'c', texto: 'x=0' },
+          { id: 'd', texto: 'x=1.5' },
+        ],
+        correcta: 'a',
+        explicacion: 'Las raíces son 3 y -5; la positiva en [0,5] es 3.',
+      },
+    ],
+    resolucion: {
+      valorCorrecto: 3,
+      tolerancia: 0.001,
+      etiqueta: 'x',
+      respuestaFinalTexto: 'La raíz aproximada converge a x=3.',
+    },
   },
 
   {

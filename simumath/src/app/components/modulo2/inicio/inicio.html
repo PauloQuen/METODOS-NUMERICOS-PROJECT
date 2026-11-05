@@ -1,80 +1,107 @@
 <div class="inicio">
+  <!--
+    La landing del módulo. Trae su propio encabezado porque el layout del
+    módulo 2 NO lo pinta en este modo: la pantalla se administra sola.
+  -->
   <header class="inicio__hero">
-    <div class="inicio__hero-contenido">
-      <app-breadcrumb [tramos]="miga" tono="navy" />
-
-      <app-btn
-        class="inicio__volver"
-        variant="secondary"
-        label="Volver al inicio"
-        icon="arrow_back"
-        routerLink="/home"
-      />
-
-      <app-badge text="Módulo 2 · Sistemas de Ecuaciones Lineales" variant="amber" />
-
-      <h1 class="inicio__titulo">Sistemas de ecuaciones lineales</h1>
-      <p class="inicio__bajada">
-        Resolver A·x = b es encontrar los valores de las incógnitas que satisfacen todas las
-        ecuaciones a la vez. Elegí entre un método directo, que termina en un número finito de
-        pasos, o uno iterativo, que aprovecha matrices especiales para acercarse a la solución.
-      </p>
-    </div>
+    <h1 class="inicio__titulo">Sistemas de ecuaciones lineales</h1>
+    <p class="inicio__bajada">
+      Un sistema lineal es un conjunto de ecuaciones donde cada incógnita aparece solo con
+      multiplicación y suma. Se escribe <strong>A·x = b</strong>: la matriz <code>A</code> con
+      los coeficientes, el vector <code>x</code> con las incógnitas y <code>b</code> con los
+      lados derechos.
+    </p>
+    <p class="inicio__bajada inicio__bajada--suave">
+      Resolverlo a mano es fácil con dos o tres ecuaciones y una tortura con veinte. Acá van
+      cuatro métodos numéricos: dos que triangularizan el sistema de una, y dos que llegan a
+      la solución iterando.
+    </p>
   </header>
 
-  <main class="inicio__cuerpo">
-    <section aria-labelledby="inicio-familias-t">
-      <h2 id="inicio-familias-t" class="inicio__seccion-titulo">Elegí por tipo de método</h2>
+  <div class="inicio__contenido">
+    <!-- Las dos familias -->
+    @for (bloque of bloques(); track bloque.familia.key) {
+      <ui-card padding="lg">
+        <div class="familia">
+          <div class="familia__encabezado">
+            <h2 class="familia__nombre">{{ bloque.familia.nombre }}</h2>
+            <p class="familia__principio">{{ bloque.familia.principio }}</p>
+          </div>
 
-      <div class="inicio__grid">
-        @for (f of familias; track f.key) {
-          <a class="familia" [routerLink]="rutaFamilia(f.key)">
-            <div class="familia__tope">
-              <span class="familia__conteo">
-                {{ f.metodos.length }} {{ f.metodos.length === 1 ? 'método' : 'métodos' }}
-              </span>
-            </div>
+          <p class="familia__descripcion">{{ bloque.familia.descripcion }}</p>
 
-            <h3 class="familia__nombre">{{ f.nombre }}</h3>
-            <p class="familia__principio">{{ f.principio }}</p>
-            <p class="familia__descripcion">{{ f.descripcion }}</p>
+          <ul class="familia__metodos">
+            @for (item of bloque.metodos; track item.metodo.key) {
+              <li class="metodo">
+                @if (item.metodo.estado === 'implementado') {
+                  <a class="metodo__enlace" [routerLink]="item.ruta">
+                    <span class="metodo__nombre">{{ item.metodo.nombre }}</span>
+                    <span class="metodo__idea">{{ item.metodo.idea }}</span>
+                    <span class="metodo__resumen">{{ item.resumen }}</span>
+                    <code class="metodo__formula">{{ item.metodo.formula }}</code>
+                  </a>
+                } @else {
+                  <!--
+                    Método declarado pero sin motor todavía. Se muestra para
+                    que la taxonomía quede completa y se vea qué falta, pero
+                    no es un enlace: no hay a dónde ir.
+                  -->
+                  <div class="metodo metodo--pendiente">
+                    <span class="metodo__nombre">
+                      {{ item.metodo.nombre }}
+                      <span class="metodo__estado">En construcción</span>
+                    </span>
+                    <span class="metodo__idea">{{ item.metodo.idea }}</span>
+                    <code class="metodo__formula">{{ item.metodo.formula }}</code>
+                  </div>
+                }
+              </li>
+            }
+          </ul>
 
-            <ul class="familia__metodos">
-              @for (m of f.metodos; track m.key) {
-                <li class="familia__metodo">
-                  <span class="familia__metodo-nombre">{{ m.nombre }}</span>
-                </li>
-              }
-            </ul>
-
-            <span class="familia__cta">
-              Ver métodos
-              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-            </span>
+          <a class="familia__enlace" [routerLink]="bloque.ruta">
+            Ver los {{ bloque.familia.nombre.toLowerCase() }}
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
           </a>
-        }
-      </div>
-    </section>
+        </div>
+      </ui-card>
+    }
 
-    <section class="inicio__material" aria-labelledby="inicio-metodos-t">
-      <h2 id="inicio-metodos-t" class="inicio__seccion-titulo">Los métodos del módulo</h2>
-      <p class="inicio__material-bajada">
-        Cada método trae teoría, ejemplos resueltos, autoevaluación y una calculadora para
-        probar sistemas propios.
-      </p>
-
-      <ul class="inicio__links">
-        @for (m of metodos; track m.key) {
-          <li>
-            <a class="inicio__link" [routerLink]="rutaDe(m)" [style.--color-metodo]="m.color">
-              <span class="inicio__link-nombre">{{ m.nombre }}</span>
-              <span class="inicio__link-desc">{{ m.idea }}</span>
-              <code class="inicio__link-formula">{{ m.formula }}</code>
-              <span class="inicio__link-criterio">{{ m.criterioTexto }}</span>
-            </a>
-          </li>
-        }
-      </ul>
-    </section>
-  </main>
+    <!-- Cómo elegir -->
+    <ui-card padding="lg">
+      <h2 class="familia__nombre">Cuál usar</h2>
+      <dl class="guia">
+        <div class="guia__fila">
+          <dt class="guia__pregunta">¿Tenés que resolver un solo sistema?</dt>
+          <dd class="guia__respuesta">
+            Usá <strong>eliminación gaussiana</strong>. Resuelve cualquier sistema en un
+            número fijo de pasos y no necesita ninguna condición previa. Es la respuesta por
+            defecto.
+          </dd>
+        </div>
+        <div class="guia__fila">
+          <dt class="guia__pregunta">¿Vas a resolver muchos sistemas con la misma A?</dt>
+          <dd class="guia__respuesta">
+            Usá <strong>factorización LU</strong>. La triangularización se calcula una sola
+            vez y cada sistema nuevo se resuelve con dos sustituciones: mucho más barato.
+          </dd>
+        </div>
+        <div class="guia__fila">
+          <dt class="guia__pregunta">¿La matriz es enorme y no entra en memoria?</dt>
+          <dd class="guia__respuesta">
+            Usá <strong>Jacobi</strong> o <strong>Gauss-Seidel</strong>. Cada paso cuesta
+            O(n) porque no arma ninguna matriz. A cambio necesitan que el sistema esté bien
+            condicionado para que el método converja.
+          </dd>
+        </div>
+        <div class="guia__fila">
+          <dt class="guia__pregunta">¿Jacobi converge pero tarda demasiado?</dt>
+          <dd class="guia__respuesta">
+            Probá <strong>Gauss-Seidel</strong>: usa el valor nuevo de las incógnitas que ya
+            resolvió y suele necesitar la mitad de iteraciones.
+          </dd>
+        </div>
+      </dl>
+    </ui-card>
+  </div>
 </div>

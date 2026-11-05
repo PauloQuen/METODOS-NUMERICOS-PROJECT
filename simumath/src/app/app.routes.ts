@@ -1,12 +1,14 @@
-import { Routes } from '@angular/router';
-import { Home } from './components/home/home';
-import { Modulo1 } from './components/modulo1/modulo1';
-import { Teoria } from './components/modulo1/teoria/teoria';
-import { Calculadoras } from './components/modulo1/calculadoras/calculadoras';
-import { Ejemplos } from './components/modulo1/ejemplos/ejemplos';
-import { Autoevaluacion } from './components/modulo1/autoevaluacion/autoevaluacion';
-import { Integrantes } from './components/modulo1/integrantes/integrantes';
-import { Graficos } from './components/modulo1/graficos/graficos';
+import { Routes } from "@angular/router";
+import { Home } from "./components/home/home";
+import { Modulo1 } from "./components/modulo1/modulo1";
+import { Teoria } from "./components/modulo1/teoria/teoria";
+import { Calculadoras } from "./components/modulo1/calculadoras/calculadoras";
+import { Ejemplos } from "./components/modulo1/ejemplos/ejemplos";
+import { Autoevaluacion } from "./components/modulo1/autoevaluacion/autoevaluacion";
+import { Integrantes } from "./components/modulo1/integrantes/integrantes";
+import { Graficos } from "./components/modulo1/graficos/graficos";
+import { Modulo2 } from "./components/modulo2/modulo2";
+import { Modulo3 } from "./components/modulo3/modulo3";
 
 /**
  * Rutas del portal.
@@ -31,30 +33,29 @@ import { Graficos } from './components/modulo1/graficos/graficos';
  * para que capturara el resto, y las otras son hermanos exactos.
  */
 export const routes: Routes = [
-  { path: 'home', component: Home },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: "home", component: Home },
+  { path: "", redirectTo: "home", pathMatch: "full" },
 
-// Módulo 1 — Ecuaciones No Lineales y Errores
+  // Módulo 1 — Ecuaciones No Lineales y Errores
   {
-    path: 'modulo1',
+    path: "modulo1",
     component: Modulo1,
     children: [
-      { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+      { path: "", redirectTo: "inicio", pathMatch: "full" },
 
       // Pantalla A: elige el TIPO de método. Trae su propio hero.
       {
-        path: 'inicio',
-        loadComponent: () =>
-          import('./components/modulo1/inicio/inicio').then((m) => m.Inicio),
+        path: "inicio",
+        loadComponent: () => import("./components/modulo1/inicio/inicio").then((m) => m.Inicio),
       },
 
       // Pantallas generales (material transversal de los cinco métodos).
-      { path: 'teoria-y-errores', component: Teoria },
-      { path: 'calculadoras-interactivas', component: Calculadoras },
-      { path: 'ejemplos-resueltos', component: Ejemplos },
-      { path: 'autoevaluacion-y-recursos', component: Autoevaluacion },
-      { path: 'integrantes-y-referencias', component: Integrantes },
-      { path: 'graficos', component: Graficos },
+      { path: "teoria-y-errores", component: Teoria },
+      { path: "calculadoras-interactivas", component: Calculadoras },
+      { path: "ejemplos-resueltos", component: Ejemplos },
+      { path: "autoevaluacion-y-recursos", component: Autoevaluacion },
+      { path: "integrantes-y-referencias", component: Integrantes },
+      { path: "graficos", component: Graficos },
 
       // ── Tipo → Método: pantallas nuevas, carga diferida ────────────
       // `loadChildren` devuelve el archivo de rutas del método. Así el
@@ -63,90 +64,100 @@ export const routes: Routes = [
       // de familia, o el router leería 'cerrados' como si fuera una
       // familia y bisección quedaría inalcanzable.
       {
-        path: 'tipos/cerrados/biseccion',
+        path: "tipos/cerrados/biseccion",
         loadChildren: () =>
-          import('./components/modulo1/tipos/cerrados/biseccion/biseccion.routes').then(
+          import("./components/modulo1/tipos/cerrados/biseccion/biseccion.routes").then(
             (m) => m.BISECCION_ROUTES,
           ),
       },
       {
-        path: 'tipos/cerrados/regla-falsa',
+        path: "tipos/cerrados/regla-falsa",
         loadChildren: () =>
-          import('./components/modulo1/tipos/cerrados/regla-falsa/regla-falsa.routes').then(
+          import("./components/modulo1/tipos/cerrados/regla-falsa/regla-falsa.routes").then(
             (m) => m.REGLA_FALSA_ROUTES,
           ),
       },
       {
-        path: 'tipos/abiertos/newton-raphson',
+        path: "tipos/abiertos/newton-raphson",
         loadChildren: () =>
-          import(
-            './components/modulo1/tipos/abiertos/newton-raphson/newton-raphson.routes'
-          ).then((m) => m.NEWTON_RAPHSON_ROUTES),
+          import("./components/modulo1/tipos/abiertos/newton-raphson/newton-raphson.routes").then(
+            (m) => m.NEWTON_RAPHSON_ROUTES,
+          ),
       },
       {
-        path: 'tipos/abiertos/secante',
+        path: "tipos/abiertos/secante",
         loadChildren: () =>
-          import('./components/modulo1/tipos/abiertos/secante/secante.routes').then(
+          import("./components/modulo1/tipos/abiertos/secante/secante.routes").then(
             (m) => m.SECANTE_ROUTES,
           ),
       },
       {
-        path: 'tipos/abiertos/punto-fijo',
+        path: "tipos/abiertos/punto-fijo",
         loadChildren: () =>
-          import(
-            './components/modulo1/tipos/abiertos/punto-fijo/punto-fijo.routes'
-          ).then((m) => m.PUNTO_FIJO_ROUTES),
+          import("./components/modulo1/tipos/abiertos/punto-fijo/punto-fijo.routes").then(
+            (m) => m.PUNTO_FIJO_ROUTES,
+          ),
+      },
+      {
+        path: "tipos/polinomios/cardano",
+        loadChildren: () =>
+          import("./components/modulo1/tipos/polinomios/cardano/cardano.routes").then(
+            (m) => m.CARDANO_ROUTES,
+          ),
       },
 
       // Pantalla B: la lista de métodos de una familia. Un solo componente
       // para las tres familias, ver tipo-metodos.ts para el porqué.
       {
-        path: 'tipos/:familia',
+        path: "tipos/:familia",
         loadComponent: () =>
-          import('./components/modulo1/tipos/tipo-metodos/tipo-metodos').then(
-            (m) => m.TipoMetodos,
-          ),
+          import("./components/modulo1/tipos/tipo-metodos/tipo-metodos").then((m) => m.TipoMetodos),
       },
     ],
   },
 
   // Módulo 2 — Sistemas de Ecuaciones Lineales
-  //
-  // Misma estructura que los otros módulos: Pantalla A (elegir familia),
-  // Pantalla B (lista de métodos) y páginas de método con cuatro
-  // pestañas. Los métodos concretos van antes de `tipos/:familia`.
   {
-    path: 'modulo2',
-    loadComponent: () =>
-      import('./components/modulo2/modulo2').then((m) => m.Modulo2),
+    path: "modulo2",
+    component: Modulo2,
     children: [
-      { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+      { path: "", redirectTo: "inicio", pathMatch: "full" },
 
+      // Pantalla A: elige la FAMILIA del método.
       {
-        path: 'inicio',
+        path: "inicio",
         loadComponent: () =>
-          import('./components/modulo2/inicio/inicio').then((m) => m.InicioModulo2),
+          import("./components/modulo2/inicio/inicio").then((m) => m.InicioModulo2),
+      },
+
+      // ── Tipo → Método: carga diferida ───────────────────────────────
+      // Igual que en el Módulo 1: cada método trae contenido largo, un
+      // gráfico, una tabla y cuatro pestañas, así que su código entra al
+      // bundle solo cuando el alumno lo abre.
+      //
+      // OJO con el orden: la ruta CONCRETA de cada método va ANTES de la
+      // de familia, o el router leería 'directos' como si fuera una
+      // familia y 'gauss' quedaría inalcanzable.
+      {
+        path: "tipos/directos/gauss",
+        loadChildren: () =>
+          import("./components/modulo2/tipos/directos/gauss/gauss.routes").then(
+            (m) => m.GAUSS_ROUTES,
+          ),
       },
 
       {
-        path: 'tipos/directos/eliminacion-gauss',
+        path: "tipos/directos/lu",
         loadChildren: () =>
-          import(
-            './components/modulo2/tipos/directos/eliminacion-gauss/eliminacion-gauss.routes'
-          ).then((m) => m.ELIMINACION_GAUSS_ROUTES),
-      },
-      {
-        path: 'tipos/iterativos/matrices-especiales',
-        loadChildren: () =>
-          import(
-            './components/modulo2/tipos/iterativos/matrices-especiales/matrices-especiales.routes'
-          ).then((m) => m.MATRICES_ESPECIALES_ROUTES),
+          import("./components/modulo2/tipos/directos/lu/lu.routes").then((m) => m.LU_ROUTES),
       },
 
+      // Pantalla B: la lista de métodos de una familia. Un solo
+      // componente para las dos familias, ver tipo-metodos.ts.
       {
-        path: 'tipos/:familia',
+        path: "tipos/:familia",
         loadComponent: () =>
-          import('./components/modulo2/tipos/tipo-metodos/tipo-metodos').then(
+          import("./components/modulo2/tipos/tipo-metodos/tipo-metodos").then(
             (m) => m.TipoMetodosModulo2,
           ),
       },
@@ -161,40 +172,46 @@ export const routes: Routes = [
   // `tipos/:familia`, o el router leería 'interpolacion/lagrange' como
   // una familia y nunca llegaría a la página del método.
   {
-    path: 'modulo3',
-    loadComponent: () =>
-      import('./components/modulo3/modulo3').then((m) => m.Modulo3),
+    path: "modulo3",
+    component: Modulo3,
     children: [
-      { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+      { path: "", redirectTo: "inicio", pathMatch: "full" },
 
       // Pantalla A: elige el TIPO de problema (interpolar o ajustar).
       {
-        path: 'inicio',
+        path: "inicio",
         loadComponent: () =>
-          import('./components/modulo3/inicio/inicio').then((m) => m.InicioModulo3),
+          import("./components/modulo3/inicio/inicio").then((m) => m.InicioModulo3),
       },
 
       // Métodos concretos: carga diferida de sus cuatro pestañas.
       {
-        path: 'tipos/interpolacion/lagrange',
+        path: "tipos/interpolacion/lagrange-nuevo",
         loadChildren: () =>
-          import(
-            './components/modulo3/tipos/interpolacion/lagrange/lagrange.routes'
-          ).then((m) => m.LAGRANGE_ROUTES),
+          import("./components/modulo3/tipos/interpolacion/lagrange-nuevo/lagrange.routes").then(
+            (m) => m.LAGRANGE_ROUTES,
+          ),
       },
       {
-        path: 'tipos/ajuste/minimos-cuadrados',
+        path: "tipos/interpolacion/lagrange",
         loadChildren: () =>
-          import(
-            './components/modulo3/tipos/ajuste/minimos-cuadrados/minimos-cuadrados.routes'
-          ).then((m) => m.MINIMOS_CUADRADOS_ROUTES),
+          import("./components/modulo3/tipos/interpolacion/lagrange/lagrange.routes").then(
+            (m) => m.LAGRANGE_ROUTES,
+          ),
+      },
+      {
+        path: "tipos/ajuste/minimos-cuadrados",
+        loadChildren: () =>
+          import("./components/modulo3/tipos/ajuste/minimos-cuadrados/minimos-cuadrados.routes").then(
+            (m) => m.MINIMOS_CUADRADOS_ROUTES,
+          ),
       },
 
       // Pantalla B: lista de métodos de una familia (interpolacion | ajuste).
       {
-        path: 'tipos/:familia',
+        path: "tipos/:familia",
         loadComponent: () =>
-          import('./components/modulo3/tipos/tipo-metodos/tipo-metodos').then(
+          import("./components/modulo3/tipos/tipo-metodos/tipo-metodos").then(
             (m) => m.TipoMetodosModulo3,
           ),
       },
@@ -202,12 +219,12 @@ export const routes: Routes = [
   },
 
   // Atajos por slug histórico (data-path de las maquetas)
-  { path: 'teoria-y-errores', redirectTo: 'modulo1/teoria-y-errores' },
-  { path: 'calculadoras-interactivas', redirectTo: 'modulo1/calculadoras-interactivas' },
-  { path: 'ejemplos-resueltos', redirectTo: 'modulo1/ejemplos-resueltos' },
-  { path: 'autoevaluacion-y-recursos', redirectTo: 'modulo1/autoevaluacion-y-recursos' },
-  { path: 'integrantes-y-referencias', redirectTo: 'modulo1/integrantes-y-referencias' },
-  { path: 'graficos', redirectTo: 'modulo1/graficos' },
+  { path: "teoria-y-errores", redirectTo: "modulo1/teoria-y-errores" },
+  { path: "calculadoras-interactivas", redirectTo: "modulo1/calculadoras-interactivas" },
+  { path: "ejemplos-resueltos", redirectTo: "modulo1/ejemplos-resueltos" },
+  { path: "autoevaluacion-y-recursos", redirectTo: "modulo1/autoevaluacion-y-recursos" },
+  { path: "integrantes-y-referencias", redirectTo: "modulo1/integrantes-y-referencias" },
+  { path: "graficos", redirectTo: "modulo1/graficos" },
 
-  { path: '**', redirectTo: 'home' },
+  { path: "**", redirectTo: "home" },
 ];

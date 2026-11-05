@@ -41,6 +41,14 @@ export class PasosControl implements OnDestroy {
   /** Texto de la iteración actual, para leerla mientras avanza. */
   readonly texto = input('');
 
+  /**
+   * Cómo se llama a una "unidad" del método: "Iteración" para los que
+   * iteran, "Paso" para Cardano, que resuelve de forma cerrada y no
+   * cuenta iteraciones. Con eso sale "Paso 3 de 6" en vez de
+   * "Iteración 3 de 6", sin que este componente sepa de qué método es.
+   */
+  readonly etiquetaDePaso = input('Iteración');
+
   /** Emite el nuevo índice cuando el alumno cambia de paso. */
   readonly pasoCambiado = output<number>();
 
@@ -55,21 +63,44 @@ export class PasosControl implements OnDestroy {
 
   private readonly temporizador = signal<ReturnType<typeof setInterval> | null>(null);
 
-  /** "Iteración 3 de 12" */
+  /** "Iteración 3 de 12" (o "Paso 3 de 6" cuando el método no itera). */
   readonly etiqueta = computed(() => {
     const total = this.total();
-    if (total === 0) return 'Sin iteraciones';
-    return `Iteración ${this.paso() + 1} de ${total}`;
+    if (total === 0) return `Sin ${plural(this.etiquetaDePaso())}`;
+    return `${this.etiquetaDePaso()} ${this.paso() + 1} de ${total}`;
   });
 
   readonly enInicio = computed(() => this.paso() <= 0);
   readonly enFinal = computed(() => this.paso() >= this.total() - 1);
   readonly hayPasos = computed(() => this.total() > 1);
 
+  /*
+   * ── Los textos de los botones también se parametrizan ──────────────
+   * El contador ya decía "Paso 1 de 6" para los métodos directos, pero
+   * los `aria-label` seguían diciendo "Iteración anterior". Un lector de
+   * pantalla leía "Iteración anterior" sobre un control que da pasos:
+   * el mensaje no correspondía a lo que el botón hacía.
+   *
+   * ── Por qué "Ir al inicio" y no "Ir al primer paso" ─────────────────
+   * El artículo y el adjetivo tienen que concordar con el sustantivo:
+   * "el primer paso" pero "la primera iteración". Adivinar el género
+   * desde la palabra es fragile ("monitor" es masculino, "función" es
+   * femenino). Por eso los dos botones de extremos NO llevan artículo:
+   * "Ir al inicio" y "Ir al final" son correctos siempre, y el grupo
+   * ("Controles de paso") ya da el contexto de qué se está recorriendo.
+   */
+  private readonly etiquetaBaja = computed(() => this.etiquetaDePaso().toLowerCase());
+
+  readonly ariaGrupo = computed(() => `Controles de ${this.etiquetaBaja()}`);
+  readonly ariaInicio = computed(() => 'Ir al inicio');
+  readonly ariaAnterior = computed(() => `${this.etiquetaDePaso()} anterior`);
+  readonly ariaSiguiente = computed(() => `${this.etiquetaDePaso()} siguiente`);
+  readonly ariaFinal = computed(() => 'Ir al final');
+
   /**
    * Si el padre cambia el total (por ejemplo, el alumno apretó "Calcular"
    * de nuevo), el índice puede quedar fuera de rango. Este efecto lo
-   * corrige en vez de dejar un gráfico showing un paso inexistente.
+   * corrige en vez de dejar un gráfico mostrando un paso inexistente.
    */
   private readonly ajustarAlTotal = effect(() => {
     const total = this.total();
@@ -144,4 +175,17 @@ export class PasosControl implements OnDestroy {
     const t = this.temporizador();
     if (t !== null) clearInterval(t);
   }
+}
+
+/**
+ * Plural de la etiqueta, para el mensaje cuando no hay pasos.
+ *
+ * No hace falta una lista de plurales: en este vocabulario solo entran
+ * dos casos. Terminada en vocal, el plural agrega "s" ("paso" →
+ * "pasos"); terminada en "-ón", pierde el acento y suma "es"
+ * ("iteración" → "iteraciones"). Con "Iteración" y "Paso" alcanza.
+ */
+function plural(etiqueta: string): string {
+  const baja = etiqueta.toLowerCase();
+  return baja.endsWith('ón') ? `${baja.slice(0, -2)}ones` : `${baja}s`;
 }

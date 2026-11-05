@@ -1,0 +1,36 @@
+<ul class="fuentes__lista">
+  @for (fuente of fuentes(); track fuente.id) {
+    <li class="fuente">
+      <div class="fuente__info">
+        <span class="fuente__tipo">{{ etiquetaTipo(fuente.tipo) }}</span>
+        <p class="fuente__titulo">{{ fuente.titulo }}</p>
+        <p class="fuente__meta">
+          @if (fuente.autor) {
+            {{ fuente.autor }}
+          }
+          @if (fuente.autor && fuente.entidad) {
+            ·
+          }
+          @if (fuente.entidad) {
+            {{ fuente.entidad }}
+          }
+          @if ((fuente.autor || fuente.entidad) && fuente.anio) {
+            ·
+          }
+          @if (fuente.anio) {
+            {{ fuente.anio }}
+          }
+        </p>
+      </div>
+
+      @if (fuente.estado === 'pendiente') {
+        <span class="recursos__pendiente">Pendiente</span>
+      } @else if (fuente.url) {
+        <a class="fuente__link" [href]="fuente.url" target="_blank" rel="noopener noreferrer">
+          Abrir
+          <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+        </a>
+      }
+    </li>
+  }
+</ul>

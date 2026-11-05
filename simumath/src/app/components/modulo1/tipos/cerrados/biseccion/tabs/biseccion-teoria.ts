@@ -2,8 +2,8 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { TEORIA_BISECCION } from '../biseccion.contenido';
 import { COLUMNAS_BISECCION, DATOS_POR_DEFECTO } from '../biseccion.config';
 import { BiseccionService } from '../biseccion.service';
-import { UiCard } from '../../../../../../shared/ui/ui-card/ui-card';
 import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bloque-ejemplo';
+import { TeoriaContenido } from '../../../../../../shared/domain/teoria-contenido/teoria-contenido';
 import { dibujarBiseccion } from '../biseccion.grafico';
 
 /**
@@ -26,7 +26,7 @@ import { dibujarBiseccion } from '../biseccion.grafico';
 @Component({
   selector: 'app-biseccion-teoria',
   standalone: true,
-  imports: [UiCard, BloqueEjemplo],
+  imports: [BloqueEjemplo, TeoriaContenido],
   templateUrl: './biseccion-teoria.html',
   styleUrl: './biseccion-teoria.scss',
 })

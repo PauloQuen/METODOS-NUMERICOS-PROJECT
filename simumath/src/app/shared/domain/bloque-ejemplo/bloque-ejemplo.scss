@@ -72,7 +72,14 @@
   margin: 0;
   line-height: 1.65;
   color: var(--on-surface);
-  white-space: normal;
+  /*
+   * `pre-line` y no `normal`: el Módulo 2 escribe MATRICES en el texto
+   * de los pasos, y una matriz necesita sus saltos de línea. Con
+   * `normal` los saltos se collapsan y la matriz queda en una sola
+   * línea ilegible; con `pre-line` se respeta el salto que el autor
+   * escribió y los espacios de más se ignoran.
+   */
+  white-space: pre-line;
 }
 
 .bloque-ejemplo__parrafo--destacado {

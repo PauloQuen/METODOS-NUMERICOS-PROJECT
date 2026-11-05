@@ -1,7 +1,20 @@
 <div class="autoevaluacion">
-  @for (ejercicio of ejercicios; track ejercicio.id; let i = $index) {
-    <app-bloque-ejercicio
-      [ejercicio]="ejercicio"
+  <header class="autoevaluacion__encabezado">
+    <h2 class="autoevaluacion__titulo">Autoevaluación</h2>
+    <p class="autoevaluacion__intro">
+      Tres ejercicios para practicar Newton-Raphson. Resolvé en papel, comprobá
+      tu comprensión con el <strong>Cuestionario</strong> y verificá tu resultado
+      numérico antes de abrir <strong>Ver solución</strong>.
+    </p>
+  </header>
+
+  @for (ejercicio of ejercicios; track ejercicio.id; let i = $index) {      <app-bloque-ejercicio
+        [ejercicio]="ejercicio"
+        [mejorada]="mejorada"
+        moduloId="modulo1"
+        tipoId="abiertos"
+        metodoId="newton-raphson"
+        [desbloqueoBase]="desbloqueoBase"
       [columnas]="columnas"
       [filas]="estados()[i].filas"
       [filaFinal]="estados()[i].filaFinal"

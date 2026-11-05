@@ -1,0 +1,67 @@
+<div class="resolucion">
+  <div class="resolucion__campo">
+    <label class="resolucion__etiqueta" [for]="inputId()">
+      Tu resultado{{ resolucion().etiqueta ? ' · ' + resolucion().etiqueta : '' }}
+    </label>
+
+    <div class="resolucion__fila">
+      <input
+        class="resolucion__input"
+        type="text"
+        [attr.inputmode]="modoEntrada()"
+        autocomplete="off"
+        [id]="inputId()"
+        [value]="estado().entrada"
+        [attr.aria-describedby]="ayudaId()"
+        [attr.aria-invalid]="estado().verificacion === 'invalido' ? 'true' : null"
+        [attr.placeholder]="placeholder()"
+        (input)="alEscribir($event)"
+        (keydown.enter)="verificar.emit()"
+      />
+
+      @if (resolucion().unidad) {
+        <span class="resolucion__unidad">{{ resolucion().unidad }}</span>
+      }
+
+      <button
+        type="button"
+        class="resolucion__boton resolucion__boton--primario"
+        (click)="verificar.emit()"
+      >
+        Verificar
+      </button>
+    </div>
+
+    <p class="resolucion__ayuda" [id]="ayudaId()">{{ ayuda() }}</p>
+  </div>
+
+  <p
+    class="resolucion__feedback"
+    [class.resolucion__feedback--ok]="estado().verificacion === 'acierto'"
+    [class.resolucion__feedback--casi]="estado().verificacion === 'casi'"
+    [class.resolucion__feedback--mal]="
+      estado().verificacion === 'incorrecto' || estado().verificacion === 'invalido'
+    "
+    aria-live="polite"
+  >
+    {{ mensaje() }}
+  </p>
+
+  <div class="resolucion__final">
+    <button
+      type="button"
+      class="resolucion__boton resolucion__boton--secundario"
+      [attr.aria-expanded]="estado().mostrarRespuesta"
+      [attr.aria-controls]="respuestaId()"
+      (click)="alternarRespuesta.emit()"
+    >
+      {{ estado().mostrarRespuesta ? 'Ocultar respuesta final' : 'Mostrar respuesta final' }}
+    </button>
+
+    @if (estado().mostrarRespuesta) {
+      <p class="resolucion__respuesta" [id]="respuestaId()">
+        {{ resolucion().respuestaFinalTexto }}
+      </p>
+    }
+  </div>
+</div>

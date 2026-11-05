@@ -1,0 +1,16 @@
+<app-panel-ejercicio
+  [panelId]="panelId()"
+  [labelledby]="labelledby()"
+  [titulo]="titulo()"
+  [subtitulo]="subtitulo()"
+  tamano="grande"
+>
+  <app-cuestionario-ejercicio
+    [ejercicioId]="ejercicioId()"
+    [preguntas]="preguntas()"
+    [estado]="estado()"
+    (responder)="responder.emit($event)"
+    (comprobar)="comprobar.emit()"
+    (reintentar)="reintentar.emit()"
+  />
+</app-panel-ejercicio>

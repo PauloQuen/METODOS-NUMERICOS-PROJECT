@@ -1,5 +1,39 @@
 <div class="modulo2">
-  <main class="modulo2__content" [class.modulo2__content--libre]="libre()">
+  <!--
+    El encabezado del módulo SOLO se pinta en las pantallas de entrada y de
+    familia. La página de cada método trae su propio encabezado con migas,
+    título y pestañas: si se apilaran los dos, se vería como un error de
+    maquetación.
+  -->
+  @if (conEncabezado()) {
+    <header class="modulo2__hero">
+      <app-breadcrumb class="modulo2__breadcrumb" [tramos]="miga()" tono="navy" />
+
+      <app-btn
+        class="modulo2__volver"
+        variant="secondary"
+        label="Volver al inicio"
+        icon="arrow_back"
+        routerLink="/home"
+      />
+
+      <app-badge
+        text="Módulo 2 · Sistemas de Ecuaciones Lineales"
+        variant="amber"
+      />
+
+      <h1 class="modulo2__title">Métodos numéricos para sistemas lineales</h1>
+      <p class="modulo2__subtitle">
+        Cuatro métodos para resolver A·x = b: dos que triangularizan el sistema de una y dos
+        que llegan a la solución iterando. Elegí la familia y después el método.
+      </p>
+    </header>
+  }
+
+  <main
+    class="modulo2__content"
+    [class.modulo2__content--libre]="modo() === 'landing'"
+  >
     <router-outlet />
   </main>
 

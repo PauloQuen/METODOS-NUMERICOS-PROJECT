@@ -82,6 +82,27 @@ export const TEORIA_PUNTO_FIJO: ContenidoTeoria = {
     'cuando la reescritura se elige sin mirar su derivada.',
   videoUrl: undefined,
 
+  recursos: [
+    {
+      titulo: 'Método del punto fijo (Wikipedia, español)',
+      url: 'https://es.wikipedia.org/wiki/M%C3%A9todo_del_punto_fijo',
+      tipo: 'lectura',
+      descripcion: 'La iteración x = g(x), el teorema de contracción y la interpretación gráfica.',
+    },
+    {
+      titulo: 'Fixed Point Theorem (MathWorld)',
+      url: 'https://mathworld.wolfram.com/FixedPointTheorem.html',
+      tipo: 'lectura',
+      descripcion: 'Las condiciones que garantizan la existencia y unicidad del punto fijo.',
+    },
+    {
+      titulo: 'Videos de repaso: iteración de punto fijo',
+      url: 'https://www.youtube.com/results?search_query=metodo+del+punto+fijo',
+      tipo: 'video',
+      descripcion: 'Telarañas dibujadas sobre y = g(x) y ejemplos de convergencia y divergencia.',
+    },
+  ],
+
   algoritmo: {
     formula: 'xₙ₊₁ = g(xₙ)',
 

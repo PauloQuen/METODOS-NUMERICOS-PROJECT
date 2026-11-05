@@ -1,0 +1,84 @@
+<div class="cuestionario">
+  @for (pregunta of preguntas(); track pregunta.id; let i = $index) {
+    <fieldset
+      class="cuestionario__pregunta"
+      [class.cuestionario__pregunta--ok]="estado().comprobado && esCorrecta(pregunta)"
+      [class.cuestionario__pregunta--mal]="estado().comprobado && !esCorrecta(pregunta)"
+    >
+      <legend class="cuestionario__enunciado">{{ i + 1 }}. {{ pregunta.enunciado }}</legend>
+
+      <div class="cuestionario__opciones">
+        @for (opcion of pregunta.opciones; track opcion.id) {
+          <label
+            class="cuestionario__opcion"
+            [class.cuestionario__opcion--marcada]="estado().respuestas[pregunta.id] === opcion.id"
+            [class.cuestionario__opcion--correcta]="estado().comprobado && opcion.id === pregunta.correcta"
+            [class.cuestionario__opcion--incorrecta]="
+              estado().comprobado &&
+              estado().respuestas[pregunta.id] === opcion.id &&
+              opcion.id !== pregunta.correcta
+            "
+          >
+            <input
+              type="radio"
+              [name]="nombreGrupo(pregunta.id)"
+              [value]="opcion.id"
+              [checked]="estado().respuestas[pregunta.id] === opcion.id"
+              [disabled]="estado().comprobado"
+              (change)="alResponder(pregunta.id, opcion.id)"
+            />
+            <span class="cuestionario__opcion-texto">{{ opcion.texto }}</span>
+          </label>
+        }
+      </div>
+
+      @if (estado().comprobado) {
+        <p
+          class="cuestionario__feedback"
+          [class.cuestionario__feedback--ok]="esCorrecta(pregunta)"
+          [class.cuestionario__feedback--mal]="!esCorrecta(pregunta)"
+        >
+          <strong>{{ esCorrecta(pregunta) ? 'Correcto.' : 'Incorrecto.' }}</strong>
+          {{ pregunta.explicacion }}
+        </p>
+      }
+    </fieldset>
+  }
+
+  <div class="cuestionario__acciones">
+    <button
+      type="button"
+      class="cuestionario__boton cuestionario__boton--primario"
+      [disabled]="!todasRespondidas() || estado().comprobado"
+      (click)="comprobar.emit()"
+    >
+      Comprobar
+    </button>
+
+    @if (estado().comprobado) {
+      <button
+        type="button"
+        class="cuestionario__boton cuestionario__boton--secundario"
+        (click)="reintentar.emit()"
+      >
+        Reintentar
+      </button>
+    }
+  </div>
+
+  @if (!todasRespondidas() && !estado().comprobado) {
+    <p class="cuestionario__ayuda">
+      Respondé las {{ preguntas().length }} preguntas para habilitar la corrección.
+    </p>
+  }
+
+  <p
+    class="cuestionario__puntaje"
+    [class.cuestionario__puntaje--ok]="estado().comprobado && puntaje() === preguntas().length"
+    aria-live="polite"
+  >
+    @if (estado().comprobado) {
+      {{ mensajePuntaje() }}
+    }
+  </p>
+</div>

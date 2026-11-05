@@ -1,14 +1,26 @@
 /**
- * REGISTRO DEL MÓDULO 2 — fuente única de verdad de sus métodos.
+ * REGISTRO DE MÉTODOS DEL MÓDULO 2 — fuente única de verdad.
  *
- * Igual que en el Módulo 3, acá se escribe UNA vez cada familia y cada
- * método. La navegación, las tarjetas y las rutas se derivan de este
- * archivo, así que agregar un método nuevo no obliga a tocar las
- * pantallas una por una.
+ * ── Por qué el Módulo 2 tiene su propio registro ─────────────────────
+ * El Módulo 1 tiene el suyo (`shared/domain/numerico/registro.ts`) y no
+ * se toca. No es falta de compartir: son COSAS DISTINTAS. El registro del
+ * Módulo 1 resuelve "encontrar la raíz de f(x) = 0" y sus métodos se
+ * distinguen por si acotan la raíz, si usan derivada y si son abiertos o
+ * cerrados. El Módulo 2 resuelve "A·x = b" y sus métodos se distinguen por
+ * lo único que importa acá: si TRIANGULARIZAN el sistema (directos) o si
+ * van APROXIMANDO la solución paso a paso (iterativos).
  *
- * El Módulo 2 resuelve SISTEMAS LINEALES, no ecuaciones sueltas ni
- * tablas de puntos. Por eso sus tipos y su motor son independientes de
- * los otros módulos.
+ * Un solo registro con los dos módulos mezclados sería un archivo con
+ * media tabla vacía y tres `if` por método. Dos registros chicos valen
+ * más que uno grande y confuso.
+ *
+ * ── Cómo se agrega un método ─────────────────────────────────────────
+ * 1. Implementá el motor en la carpeta del método (`directos/lu`, etc.).
+ * 2. Agregá la entrada en `REGISTRO_MODULO2` con su familia, su ruta y su
+ *    fórmula.
+ * 3. Registrá la ruta en `app.routes.ts` (con `loadChildren`).
+ * 4. Nada más: la landing, el breadcrumb y la navegación se actualizan
+ *    solos.
  */
 
 /* ------------------------------------------------------------------ */
@@ -20,8 +32,12 @@ export type FamiliaModulo2Key = 'directos' | 'iterativos';
 export interface FamiliaModulo2 {
   key: FamiliaModulo2Key;
   nombre: string;
-  /** El PRINCIPIO que clasifica: es lo que el alumno elige. */
+  /**
+   * El PRINCIPIO que clasifica, en una frase. Va en la UI porque es la
+   * idea que el alumno necesita para elegir método, no una etiqueta.
+   */
   principio: string;
+  /** Qué garantiza y qué no garantiza esta familia. */
   descripcion: string;
 }
 
@@ -29,18 +45,27 @@ export const FAMILIAS_MODULO2: readonly FamiliaModulo2[] = [
   {
     key: 'directos',
     nombre: 'Métodos directos',
-    principio: 'Resuelven el sistema en un número finito de pasos, sin aproximaciones sucesivas.',
+    principio:
+      'Resuelven de una: triangularizan el sistema y despejan, sin iterar.',
     descripcion:
-      'Transforman la matriz hasta dejarla triangular o diagonal y despejan la solución exacta. ' +
-      'Son la opción natural para sistemas pequeños o medianos y para comparar resultados.',
+      'Transforman el sistema en uno triangular usando operaciones que no ' +
+      'cambian la solución, y después despejan por sustitución hacia atrás. ' +
+      'El número de operaciones es fijo y se conoce de antemano: no hay ' +
+      'criterio de parada porque no hay iteración. Son los que se usan en la ' +
+      'práctica, y su límite es el costo: O(n³) para la eliminación.',
   },
   {
     key: 'iterativos',
     nombre: 'Métodos iterativos',
-    principio: 'Construyen una sucesión de aproximaciones que se acerca a la solución.',
+    principio:
+      'Repiten un paso: van armando una aproximación de la solución.',
     descripcion:
-      'Aprovechan matrices especiales —diagonalmente dominantes, tridiagonales o dispersas— ' +
-      'para resolver sistemas grandes sin factorizar toda la matriz.',
+      'Despejan una incógnita usando las demás y repiten, acercándose a la ' +
+      'solución paso a paso. Son lentos, pero su costo por paso es bajísimo y ' +
+      'no forma matrices: para sistemas enormes son la única opción real. A ' +
+      'cambio necesitan un criterio de parada y, sobre todo, que el sistema ' +
+      'esté bien elegido: con la diagonally dominante o bien condicionada, ' +
+      'convergen; con cualquier otra, pueden divergir.',
   },
 ] as const;
 
@@ -48,110 +73,217 @@ export const FAMILIAS_MODULO2: readonly FamiliaModulo2[] = [
 /* Métodos                                                             */
 /* ------------------------------------------------------------------ */
 
-export type MetodoModulo2Key = 'eliminacion-gauss' | 'matrices-especiales';
+export type MetodoModulo2Key = 'gauss' | 'lu' | 'jacobi' | 'gaussSeidel';
+
+/**
+ * `planificado` = declarado en el registro pero sin motor todavía. La UI lo
+ * muestra con su familia (para que la taxonomía quede completa y se vea
+ * qué falta) pero no lo deja abrir.
+ */
+export type EstadoMetodoModulo2 = 'implementado' | 'planificado';
 
 export interface MetodoModulo2 {
   key: MetodoModulo2Key;
   nombre: string;
-  familia: FamiliaModulo2Key;
-  /** Segmento de URL dentro de la familia. */
+  /** Segmento de URL y carpeta del método, en minúsculas y con guiones. */
   ruta: string;
-  resumen: string;
-  idea: string;
+  familia: FamiliaModulo2Key;
+  estado: EstadoMetodoModulo2;
+
+  /** La recurrencia o la operación central, para mostrarla al lado del nombre. */
   formula: string;
-  criterioTexto: string;
-  /** Color de acento del método. */
-  color: string;
+  /** La idea en una frase, sin jerga. */
+  idea: string;
+  /** Qué tiene que mirar el alumno para elegir este método y no otro. */
+  cuandoUsarlo: string;
+
+  /**
+   * ¿El método ITERA?
+   *
+   * Es la diferencia que más se nota en la pantalla: un método iterativo
+   * tiene tabla de iteraciones con columnas `x1` y `x2` (de ahí sale el
+   * camino que se dibuja en el gráfico) y un criterio de parada. Un
+   * método directo muestra los PASOS que hizo y nada más.
+   */
+  iterativo: boolean;
 }
 
-export const METODOS_MODULO2: readonly MetodoModulo2[] = [
+/**
+ * Los métodos del Módulo 2.
+ *
+ * El ORDEN importa: es el orden en que aparecen en la landing y el que
+ * ve el alumno. Primero los directos (que son los que se usan de verdad),
+ * después los iterativos.
+ */
+export const REGISTRO_MODULO2: readonly MetodoModulo2[] = [
   {
-    key: 'eliminacion-gauss',
-    nombre: 'Eliminación de Gauss',
+    key: 'gauss',
+    nombre: 'Eliminación Gaussiana',
+    ruta: 'gauss',
     familia: 'directos',
-    ruta: 'eliminacion-gauss',
-    resumen:
-      'Transforma el sistema en uno triangular mediante operaciones elementales y resuelve por sustitución regresiva.',
+    estado: 'implementado',
+    formula: 'mᵢₖ = aᵢₖ / aₖₖ   ·   Rᵢ ← Rᵢ − mᵢₖ · Rₖ',
     idea:
-      'Hace ceros debajo de cada pivote, con pivoteo parcial para evitar divisores pequeños, y deja el sistema listo para despejar.',
-    formula: 'A x = b  →  U x = c',
-    criterioTexto:
-      'Termina en un número finito de pasos; el residuo máximo ‖Ax − b‖∞ mide la calidad de la solución.',
-    color: '#1b5e7a',
+      'Triangulariza el sistema con operaciones que no cambian la solución, y después despeja por sustitución hacia atrás.',
+    cuandoUsarlo:
+      'Es el método por defecto: resuelve cualquier sistema en un número fijo de pasos y no necesita ninguna condición previa. Con pivoteo parcial, además, es numéricamente estable.',
+    iterativo: false,
   },
   {
-    key: 'matrices-especiales',
-    nombre: 'Matrices especiales (Gauss-Seidel)',
-    familia: 'iterativos',
-    ruta: 'matrices-especiales',
-    resumen:
-      'Resuelve sistemas con matrices diagonalmente dominantes o tridiagonales mediante iteraciones de Gauss-Seidel.',
+    key: 'lu',
+    nombre: 'Factorización LU',
+    ruta: 'lu',
+    familia: 'directos',
+    estado: 'implementado',
+    formula: 'A = L · U   ·   L·y = b   →   U·x = y',
     idea:
-      'Aprovecha la estructura de la matriz para actualizar cada incógnita con los valores más recientes y converger sin factorizar.',
-    formula: 'xᵢ⁽ᵏ⁺¹⁾ = (bᵢ − Σⱼ≠ᵢ aᵢⱼ xⱼ) / aᵢᵢ',
-    criterioTexto:
-      'Converge si la matriz es diagonalmente dominante; se detiene cuando la diferencia entre iteraciones baja de la tolerancia.',
-    color: '#8a5a00',
+      'La eliminación gaussiana, pero guardada: la triangularización se hace una sola vez y cada sistema nuevo se resuelve con dos sustituciones.',
+    cuandoUsarlo:
+      'Cuando el mismo sistema (o la misma matriz A) se va a resolver muchas veces con distintos lados derechos. Es la base de los resolutores reales.',
+    iterativo: false,
+  },
+  {
+    key: 'jacobi',
+    nombre: 'Jacobi',
+    ruta: 'jacobi',
+    familia: 'iterativos',
+    estado: 'planificado',
+    formula: 'xᵢ⁽ᵏ⁺¹⁾ = (bᵢ − Σⱼ≠ᵢ aᵢⱼ xⱼ⁽ᵏ⁾) / aᵢᵢ',
+    idea:
+      'Despeja cada incógnita usando el valor VIEJO de las demás, todas a la vez.',
+    cuandoUsarlo:
+      'Es el iterativo más simple de entender y de programar. Converge si la matriz es diagonalmente dominante; si no, puede oscilar o divergir.',
+    iterativo: true,
+  },
+  {
+    key: 'gaussSeidel',
+    nombre: 'Gauss-Seidel',
+    ruta: 'gauss-seidel',
+    familia: 'iterativos',
+    estado: 'planificado',
+    formula: 'xᵢ⁽ᵏ⁺¹⁾ = (bᵢ − Σⱼ≠ᵢ aᵢⱼ xⱼ⁽ᵏ⁺¹⁾) / aᵢᵢ',
+    idea:
+      'Igual que Jacobi, pero usa el valor NUEVO de las incógnitas que ya resolvió.',
+    cuandoUsarlo:
+      'Cuando Jacobi converge pero despacio: Gauss-Seidel suele necesitar la mitad de iteraciones, porque la información nueva se usa de inmediato.',
+    iterativo: true,
   },
 ] as const;
 
 /* ------------------------------------------------------------------ */
-/* Derivaciones                                                        */
+/* Consultas del registro                                              */
 /* ------------------------------------------------------------------ */
 
-export function metodosDeFamiliaModulo2(familia: FamiliaModulo2Key): MetodoModulo2[] {
-  return METODOS_MODULO2.filter((m) => m.familia === familia);
-}
+/** Índice por key. */
+export const REGISTRO_MODULO2_POR_KEY = REGISTRO_MODULO2.reduce(
+  (acc, m) => {
+    acc[m.key] = m;
+    return acc;
+  },
+  {} as Record<MetodoModulo2Key, MetodoModulo2>,
+);
 
+/** Atajo seguro: devolver el método o un error que diga qué se pasó. */
 export function metodoModulo2(key: MetodoModulo2Key): MetodoModulo2 {
-  const metodo = METODOS_MODULO2.find((m) => m.key === key);
-  if (!metodo) throw new Error(`Método del Módulo 2 desconocido: ${key}`);
-  return metodo;
+  const m = REGISTRO_MODULO2_POR_KEY[key];
+  if (!m) {
+    throw new Error(`Método del Módulo 2 no registrado: "${key}".`);
+  }
+  return m;
 }
 
-export function familiaModulo2(key: FamiliaModulo2Key): FamiliaModulo2 {
-  const familia = FAMILIAS_MODULO2.find((f) => f.key === key);
-  if (!familia) throw new Error(`Familia del Módulo 2 desconocida: ${key}`);
-  return familia;
+/** Métodos de una familia, en el orden en que se declararon. */
+export function metodosDeFamiliaModulo2(
+  familia: FamiliaModulo2Key,
+): MetodoModulo2[] {
+  return REGISTRO_MODULO2.filter((m) => m.familia === familia);
 }
 
+/** La familia a la que pertenece un método. */
+export function familiaDeModulo2(key: MetodoModulo2Key): FamiliaModulo2 {
+  const metodo = REGISTRO_MODULO2_POR_KEY[key];
+  const f = FAMILIAS_MODULO2.find((x) => x.key === metodo.familia);
+  if (!f) {
+    throw new Error(`Familia del Módulo 2 no registrada: "${metodo.familia}".`);
+  }
+  return f;
+}
+
+/* ------------------------------------------------------------------ */
+/* Rutas — derivadas del registro, nunca escritas a mano en las vistas  */
+/* ------------------------------------------------------------------ */
+
+/** Pantalla que lista los métodos de una familia (`/modulo2/tipos/directos`). */
 export function rutaDeFamiliaModulo2(familia: FamiliaModulo2Key): string {
   return `/modulo2/tipos/${familia}`;
 }
 
-export function rutaDeMetodoModulo2(metodo: MetodoModulo2): string {
-  return `/modulo2/tipos/${metodo.familia}/${metodo.ruta}/teoria`;
-}
-
-export function resumenDeMetodoModulo2(metodo: MetodoModulo2): string {
-  return `${familiaModulo2(metodo.familia).nombre} · ${metodo.criterioTexto}`;
+/** Pestaña de entrada de un método (`/modulo2/tipos/directos/gauss/teoria`). */
+export function rutaDeMetodoModulo2(m: MetodoModulo2): string {
+  return `${rutaDeFamiliaModulo2(m.familia)}/${m.ruta}/teoria`;
 }
 
 /**
- * Validación de integridad del registro.
- * Devuelve una lista de problemas; vacía significa que todo está bien.
+ * Resumen de una línea con lo que decide la elección del método.
+ *
+ * Se arma con los DATOS del registro y no con texto escrito a mano, para
+ * que no pueda contradecir a los datos.
+ */
+export function resumenDeMetodoModulo2(m: MetodoModulo2): string {
+  return m.iterativo
+    ? 'itera: tabla de iteraciones y criterio de parada'
+    : 'pasos fijos: no itera y no tiene criterio de parada';
+}
+
+/* ------------------------------------------------------------------ */
+/* Validación del registro                                              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Chequeos de integridad. Devuelve los problemas encontrados en vez de
+ * lanzar, para que en desarrollo aparezcan TODOS juntos.
  */
 export function validarRegistroModulo2(): string[] {
   const problemas: string[] = [];
-  const keys = new Set<string>();
+
+  const vistos = new Set<string>();
   const rutas = new Set<string>();
 
-  for (const m of METODOS_MODULO2) {
-    if (keys.has(m.key)) problemas.push(`Key repetida: ${m.key}`);
-    keys.add(m.key);
+  for (const m of REGISTRO_MODULO2) {
+    if (vistos.has(m.key)) {
+      problemas.push(`Método duplicado en el registro del Módulo 2: "${m.key}".`);
+    }
+    vistos.add(m.key);
 
-    const rutaCompleta = `${m.familia}/${m.ruta}`;
-    if (rutas.has(rutaCompleta)) problemas.push(`Ruta repetida: ${rutaCompleta}`);
-    rutas.add(rutaCompleta);
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(m.ruta)) {
+      problemas.push(
+        `"${m.key}" declara la ruta "${m.ruta}": tiene que ser minúsculas con guiones, ej. "gauss-seidel".`,
+      );
+    }
+    if (rutas.has(m.ruta)) {
+      problemas.push(`Ruta duplicada en el registro del Módulo 2: "${m.ruta}".`);
+    }
+    rutas.add(m.ruta);
 
     if (!FAMILIAS_MODULO2.some((f) => f.key === m.familia)) {
-      problemas.push(`Familia inexistente en ${m.key}: ${m.familia}`);
+      problemas.push(`"${m.key}" declara la familia "${m.familia}", que no existe.`);
+    }
+
+    if (m.idea.length < 20) {
+      problemas.push(
+        `"${m.key}" tiene una idea demasiado corta: la idea es lo que lee el alumno.`,
+      );
+    }
+    if (m.cuandoUsarlo.length < 40) {
+      problemas.push(`"${m.key}" no explica cuándo usarlo.`);
     }
   }
 
   for (const f of FAMILIAS_MODULO2) {
     if (metodosDeFamiliaModulo2(f.key).length === 0) {
-      problemas.push(`La familia ${f.key} no tiene métodos`);
+      problemas.push(
+        `La familia "${f.key}" no tiene ningún método: quitala o agregale uno.`,
+      );
     }
   }
 

@@ -1,0 +1,124 @@
+<section class="lista">
+  <header class="lista__header">
+    <h1 class="lista__titulo">Autoevaluación</h1>
+    <p class="lista__bajada">
+      Filtrá por tipo de problema. Primero respondé el cuestionario previo (obligatorio). Subí tu resolución/respuesta y recién después se habilita "Ver resolución completa".
+    </p>
+  </header>
+
+  <div class="filtro">
+    <label class="filtro__label">Tipo de ejercicio</label>
+    <div class="filtro__botones">
+      <button type="button" class="filtro__btn" [class.filtro__btn--activo]="filtro() === 'todos'" (click)="filtro.set('todos')">Todos</button>
+      <button type="button" class="filtro__btn" [class.filtro__btn--activo]="filtro() === 'numerico'" (click)="filtro.set('numerico')">Numérico (ya dan los números)</button>
+      <button type="button" class="filtro__btn" [class.filtro__btn--activo]="filtro() === 'casuistica'" (click)="filtro.set('casuistica')">Casuística / Enunciado (requiere interpretación)</button>
+    </div>
+  </div>
+
+  @for (item of ejerciciosFiltrados(); track item.i) {
+    <article class="ejercicio">
+      <header class="ejercicio__header">
+        <div>
+          <span class="ejercicio__tipo">{{ item.e.tipo === 'casuistica' ? 'Casuística' : 'Numérico' }}</span>
+          <h2 class="ejercicio__titulo">{{ item.e.titulo }}</h2>
+        </div>
+      </header>
+
+      <section class="cuestionario">
+        <h3 class="cuestionario__titulo">1) Cuestionario previo (obligatorio)</h3>
+        <p class="cuestionario__bajada">Respondé estas preguntas antes de ver la resolución completa.</p>
+
+        @for (pregunta of cuestionarioPara(item.i); track pregunta.id) {
+          <div class="pregunta">
+            <p class="pregunta__texto">{{ pregunta.texto }}</p>
+            <div class="pregunta__opciones">
+              @for (op of pregunta.opciones; track op.id) {
+                <label class="opcion">
+                  <input
+                    type="radio"
+                    [name]="'q_' + item.i + '_' + pregunta.id"
+                    [value]="op.id"
+                    [checked]="estadoDe(item.i).respuestas[pregunta.id] === op.id"
+                    (change)="responder(item.i, pregunta.id, op.id)"
+                  />
+                  <span>{{ op.texto }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="cuestionario__acciones">
+          <button type="button" class="btn" (click)="corregirCuestionario(item.i)">Corregir cuestionario</button>
+        </div>
+
+        @if (estadoDe(item.i).cuestionarioCompletado) {
+          @if (estadoDe(item.i).cuestionarioAprobado) {
+            <div class="alerta alerta--ok">Cuestionario aprobado. Ya podés subir tu resolución.</div>
+          } @else {
+            <div class="alerta alerta--error">
+              <p class="alerta__titulo">Hay errores. Revisá las explicaciones:</p>
+              <ul>
+                @for (err of estadoDe(item.i).erroresCuestionario; track err) {
+                  <li>{{ err }}</li>
+                }
+              </ul>
+            </div>
+          }
+        }
+      </section>
+
+      <section class="resolucion-subida">
+        <h3 class="resolucion-subida__titulo">2) Subir resolución / respuesta</h3>
+        <p class="resolucion-subida__bajada">Escribí tus pasos + resultado. También podés adjuntar imagen o PDF.</p>
+        <textarea
+          class="resolucion-subida__textarea"
+          rows="6"
+          [ngModel]="estadoDe(item.i).resolucionTexto"
+          (ngModelChange)="actualizarEstado(item.i, { resolucionTexto: $event })"
+          placeholder="Escribí tu resolución acá..."
+        ></textarea>
+        <div class="resolucion-subida__archivo">
+          <input type="file" accept="image/*,.pdf" (change)="onArchivo(item.i, $event)" />
+          @if (estadoDe(item.i).archivoNombre) {
+            <span>Archivo: {{ estadoDe(item.i).archivoNombre }}</span>
+          }
+        </div>
+        <div class="resolucion-subida__acciones">
+          <button type="button" class="btn" (click)="subirResolucion(item.i)">Marcar resolución como enviada</button>
+        </div>
+        @if (estadoDe(item.i).resolucionSubida) {
+          <div class="alerta alerta--ok">Resolución subida. Ya podés habilitar/ver la resolución completa.</div>
+        }
+      </section>
+
+      <section class="solucion">
+        <h3 class="solucion__titulo">3) Ver resolución completa</h3>
+        <p class="solucion__bajada">Solo se habilita si aprobaste el cuestionario y subiste tu resolución.</p>
+        <button
+          type="button"
+          class="btn btn--primario"
+          [disabled]="!puedeVerSolucion(item.i)"
+          (click)="toggleSolucion(item.i)"
+        >
+          {{ estadoDe(item.i).mostrarSolucion ? 'Ocultar resolución completa' : 'Ver resolución completa' }}
+        </button>
+
+        @if (estadoDe(item.i).mostrarSolucion && puedeVerSolucion(item.i)) {
+          <div class="solucion__contenido">
+            <app-bloque-ejercicio-datos
+              [ejercicio]="item.e"
+              [filas]="calculoDe(item.i).filas"
+              [columnas]="columnas"
+              [funcion]="funcionDe(item.i)"
+              [rango]="rangoDe(item.i)"
+              [dibujarMetodo]="dibujoDe(item.i)"
+              leyenda="Polinomio interpolante P(x)"
+              tituloTabla="Aporte de cada dato al polinomio"
+            />
+          </div>
+        }
+      </section>
+    </article>
+  }
+</section>

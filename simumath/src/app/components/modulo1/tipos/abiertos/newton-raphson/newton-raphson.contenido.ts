@@ -74,6 +74,27 @@ export const TEORIA_NEWTON: ContenidoTeoria = {
     'convergencia es cualquier cosa, y con raíces dobles cae a orden 1.',
   videoUrl: undefined,
 
+  recursos: [
+    {
+      titulo: 'Método de Newton (Wikipedia, español)',
+      url: 'https://es.wikipedia.org/wiki/M%C3%A9todo_de_Newton',
+      tipo: 'lectura',
+      descripcion: 'La derivación por Taylor, la convergencia cuadrática y los casos de falla.',
+    },
+    {
+      titulo: "Newton's Method (MathWorld)",
+      url: 'https://mathworld.wolfram.com/NewtonsMethod.html',
+      tipo: 'lectura',
+      descripcion: 'La fórmula, la interpretación geométrica y el orden de convergencia.',
+    },
+    {
+      titulo: 'Videos de repaso: Newton-Raphson',
+      url: 'https://www.youtube.com/results?search_query=metodo+de+newton+raphson',
+      tipo: 'video',
+      descripcion: 'Tangentes dibujadas paso a paso y ejercicios con semillas problemáticas.',
+    },
+  ],
+
   algoritmo: {
     formula: 'xₙ₊₁ = xₙ − f(xₙ) / f′(xₙ)',
 

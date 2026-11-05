@@ -39,14 +39,27 @@
       }
     </section>
 
-    <div class="bloque-ejercicio-datos__acciones">
-      <button type="button" class="bloque-ejercicio-datos__boton" (click)="alternar()">
-        {{ mostrarSolucion() ? 'Ocultar solución' : 'Ver solución' }}
-      </button>
-    </div>
+    <app-exercise-actions
+      [ejercicioId]="ejercicio().id"
+      [panel]="panel()"
+      [tieneCuestionario]="mejorada() && tieneCuestionario()"
+      [tieneResolucion]="mejorada() && tieneResolucion()"
+      [puedeVerSolucion]="puedeVerSolucion()"
+      [textoBloqueado]="textoBloqueado()"
+      [mostrarRendirse]="mostrarRendirse()"
+      (alternarSolucion)="alternarSolucion()"
+      (alternarCuestionario)="alternarCuestionario()"
+      (alternarResolucion)="alternarResolucion()"
+      (rendirse)="rendirse()"
+    />
 
-    @if (mostrarSolucion()) {
-      <div class="bloque-ejercicio-datos__solucion">
+    @if (panel() === 'solucion' && puedeVerSolucion()) {
+      <div
+        class="bloque-ejercicio-datos__solucion"
+        role="region"
+        [id]="'ae-panel-' + ejercicio().id + '-solucion'"
+        [attr.aria-labelledby]="'ae-btn-' + ejercicio().id + '-solucion'"
+      >
         <app-bloque-ejemplo-datos
           [ejemplo]="comoEjemplo()"
           [filas]="filas()"
@@ -57,6 +70,33 @@
           [dibujarMetodo]="dibujarMetodo()"
           [leyenda]="leyenda()"
           [tituloTabla]="tituloTabla()"
+        />
+      </div>
+    }
+
+    @if (mejorada() && panel() === 'cuestionario' && tieneCuestionario()) {
+      <div class="bloque-ejercicio-datos__panel">
+        <app-quiz-panel
+          [ejercicioId]="ejercicio().id"
+          [preguntas]="cuestionario()"
+          [estado]="estadoActividad()"
+          (responder)="responder($event.preguntaId, $event.opcionId)"
+          (comprobar)="comprobarCuestionario()"
+          (reintentar)="reintentarCuestionario()"
+        />
+      </div>
+    }
+
+    @if (mejorada() && panel() === 'resolucion' && resolucion(); as resolucionActual) {
+      <div class="bloque-ejercicio-datos__panel">
+        <app-answer-check-panel
+          [ejercicioId]="ejercicio().id"
+          [resolucion]="resolucionActual"
+          [estado]="estadoActividad()"
+          [formato]="formato()"
+          (entradaChange)="actualizarEntrada($event)"
+          (verificar)="verificarResolucion()"
+          (alternarRespuesta)="alternarRespuesta()"
         />
       </div>
     }

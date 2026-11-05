@@ -27,25 +27,104 @@
       }
     </section>
 
-    <div class="bloque-ejercicio__acciones">
-      <button type="button" class="bloque-ejercicio__boton" (click)="alternar()">
-        {{ mostrarSolucion() ? 'Ocultar solución' : 'Ver solución' }}
-      </button>
-    </div>
+    @if (mejorada()) {
+      <app-exercise-actions
+        [ejercicioId]="ejercicio().id"
+        [panel]="panel()"
+        [tieneCuestionario]="tieneCuestionario()"
+        [tieneResolucion]="tieneResolucion()"
+        [puedeVerSolucion]="puedeVerSolucion()"
+        [textoBloqueado]="textoBloqueado()"
+        [mostrarRendirse]="mostrarRendirse()"
+        (alternarSolucion)="alternarSolucion()"
+        (alternarCuestionario)="alternarCuestionario()"
+        (alternarResolucion)="alternarResolucion()"
+        (rendirse)="rendirse()"
+      />
 
-    @if (mostrarSolucion()) {
-      <div class="bloque-ejercicio__solucion">
-        <app-bloque-ejemplo
-          [ejemplo]="convertirAEjemplo()"
-          [filas]="filas()"
-          [columnas]="columnas()"
-          [filaFinal]="filaFinal()"
-          [funcion]="funcion()"
-          [rango]="rango()"
-          [dibujarMetodo]="dibujarMetodo()"
-          [raiz]="raiz()"
-        />
+      @if (panel() === 'cuestionario' && tieneCuestionario()) {
+        <div class="bloque-ejercicio__panel">
+          <app-quiz-panel
+            [ejercicioId]="ejercicio().id"
+            [preguntas]="cuestionario()"
+            [estado]="estadoActividad()"
+            (responder)="responder($event.preguntaId, $event.opcionId)"
+            (comprobar)="comprobarCuestionario()"
+            (reintentar)="reintentarCuestionario()"
+          />
+        </div>
+      }
+
+      @if (panel() === 'resolucion' && resolucionParaPanel(); as resolucionActual) {
+        <div class="bloque-ejercicio__panel">
+          <app-answer-check-panel
+            [ejercicioId]="ejercicio().id"
+            [resolucion]="resolucionActual"
+            [estado]="estadoActividad()"
+            [formato]="ejercicio().formatoRespuesta ?? 'escalar'"
+            (entradaChange)="actualizarEntrada($event)"
+            (verificar)="verificarResolucion()"
+            (alternarRespuesta)="alternarRespuesta()"
+          />
+        </div>
+      }
+
+      @if (panel() === 'solucion' && puedeVerSolucion()) {
+        <div
+          class="bloque-ejercicio__solucion"
+          role="region"
+          [id]="'ae-panel-' + ejercicio().id + '-solucion'"
+          [attr.aria-labelledby]="'ae-btn-' + ejercicio().id + '-solucion'"
+        >
+          <app-bloque-ejemplo
+            [ejemplo]="convertirAEjemplo()"
+            [filas]="filas()"
+            [columnas]="columnas()"
+            [filaFinal]="filaFinal()"
+            [highlightBadge]="highlightBadge()"
+            [funcion]="funcion()"
+            [rango]="rango()"
+            [dibujarMetodo]="dibujarMetodo()"
+            [raiz]="raiz()"
+            [textosPasos]="textosPasos()"
+            [tituloPasos]="tituloPasos()"
+            [etiquetaPaso]="etiquetaPaso()"
+            [tituloCriterio]="tituloCriterio()"
+            (pasoCambiado)="pasoCambiado.emit($event)"
+          >
+            <ng-content select="[slot='grafico']"></ng-content>
+          </app-bloque-ejemplo>
+        </div>
+      }
+    } @else {
+      <div class="bloque-ejercicio__acciones">
+        <button type="button" class="bloque-ejercicio__boton" (click)="alternar()">
+          {{ mostrarSolucion() ? 'Ocultar solución' : 'Ver solución' }}
+        </button>
       </div>
+
+      @if (mostrarSolucion()) {
+        <div class="bloque-ejercicio__solucion">
+          <app-bloque-ejemplo
+            [ejemplo]="convertirAEjemplo()"
+            [filas]="filas()"
+            [columnas]="columnas()"
+            [filaFinal]="filaFinal()"
+            [highlightBadge]="highlightBadge()"
+            [funcion]="funcion()"
+            [rango]="rango()"
+            [dibujarMetodo]="dibujarMetodo()"
+            [raiz]="raiz()"
+            [textosPasos]="textosPasos()"
+            [tituloPasos]="tituloPasos()"
+            [etiquetaPaso]="etiquetaPaso()"
+            [tituloCriterio]="tituloCriterio()"
+            (pasoCambiado)="pasoCambiado.emit($event)"
+          >
+            <ng-content select="[slot='grafico']"></ng-content>
+          </app-bloque-ejemplo>
+        </div>
+      }
     }
   </ui-card>
 </div>

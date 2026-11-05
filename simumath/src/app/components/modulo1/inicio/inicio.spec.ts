@@ -49,9 +49,11 @@ describe('Inicio (Pantalla A)', () => {
     expect(texto).toContain('Newton-Raphson');
     expect(texto).toContain('Secante');
     expect(texto).toContain('Punto Fijo');
-    // Cardano está planificado: se muestra igual, con su badge.
     expect(texto).toContain('Fórmula de Cardano');
-    expect(texto).toContain('Próximamente');
+    // Módulo 1 completo: los seis métodos están implementados, así que no
+    // queda ninguna familia ni tarjeta con el badge "Próximamente".
+    expect(texto).toContain('1 de 1 disponibles');
+    expect(texto).not.toContain('Próximamente');
   });
 
   it('cada tarjeta de familia enlaza a su lista de métodos', async () => {

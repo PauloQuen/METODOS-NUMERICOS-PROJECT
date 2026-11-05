@@ -3,6 +3,7 @@ import type {
   EjercicioModulo3,
   TeoriaModulo3,
 } from '../../../modelos/modulo3.model';
+import { AUTOEVALUACION_MINIMOS_CUADRADOS } from './minimos-cuadrados.autoevaluacion';
 
 /**
  * CONTENIDO DE MÍNIMOS CUADRADOS: teoría, ejemplos y ejercicios.
@@ -443,7 +444,7 @@ export const EJEMPLOS_MINIMOS_CUADRADOS: EjemploModulo3[] = [
 /* Autoevaluación (3 numéricos + 3 casuísticas)                        */
 /* ------------------------------------------------------------------ */
 
-export const EJERCICIOS_MINIMOS_CUADRADOS: EjercicioModulo3[] = [
+const EJERCICIOS_BASE_MINIMOS_CUADRADOS: EjercicioModulo3[] = [
   {
     id: 'mc-ej-num-1',
     titulo: 'Ejercicio 1 · Seis mediciones',
@@ -714,3 +715,15 @@ export const EJERCICIOS_MINIMOS_CUADRADOS: EjercicioModulo3[] = [
     },
   },
 ];
+
+/**
+ * Los ejercicios con su autoevaluación. El contenido matemático vive en
+ * el arreglo de arriba; las preguntas y la respuesta verificable, en el
+ * archivo `*.autoevaluacion.ts`, para que editar una cosa no obligue a
+ * recorrer la otra.
+ */
+export const EJERCICIOS_MINIMOS_CUADRADOS: EjercicioModulo3[] =
+  EJERCICIOS_BASE_MINIMOS_CUADRADOS.map((ejercicio) => ({
+    ...ejercicio,
+    ...AUTOEVALUACION_MINIMOS_CUADRADOS[ejercicio.id],
+  }));

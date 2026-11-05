@@ -69,6 +69,27 @@ export const TEORIA_SECANTE: ContenidoTeoria = {
     'justamente lo que la hace práctica cuando la derivada es incómoda.',
   videoUrl: undefined,
 
+  recursos: [
+    {
+      titulo: 'Método de la secante (Wikipedia, español)',
+      url: 'https://es.wikipedia.org/wiki/M%C3%A9todo_de_la_secante',
+      tipo: 'lectura',
+      descripcion: 'La fórmula, la relación con Newton y el orden de convergencia superlineal.',
+    },
+    {
+      titulo: 'Secant Method (MathWorld)',
+      url: 'https://mathworld.wolfram.com/SecantMethod.html',
+      tipo: 'lectura',
+      descripcion: 'La definición y el análisis del error sin calcular la derivada.',
+    },
+    {
+      titulo: 'Videos de repaso: método de la secante',
+      url: 'https://www.youtube.com/results?search_query=metodo+de+la+secante',
+      tipo: 'video',
+      descripcion: 'Ejemplos con dos semillas y comparación gráfica con la tangente de Newton.',
+    },
+  ],
+
   algoritmo: {
     formula: 'xₙ₊₁ = xₙ − f(xₙ)·(xₙ − xₙ₋₁) / (f(xₙ) − f(xₙ₋₁))',
 

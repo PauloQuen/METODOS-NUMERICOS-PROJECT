@@ -1,0 +1,32 @@
+<div class="gauss" [style]="estilo()">
+  <app-breadcrumb class="gauss__miga" [tramos]="miga()" />
+
+  <header class="gauss__encabezado">
+    <div class="gauss__titulos">
+      <p class="gauss__familia">Métodos directos</p>
+      <h1 class="gauss__nombre">{{ metodo.nombre }}</h1>
+      <p class="gauss__resumen">{{ metodo.resumen }}</p>
+    </div>
+
+    <nav class="gauss__pestanas" aria-label="Secciones de Eliminación Gaussiana">
+      @for (p of pestanas; track p.ruta) {
+        <a
+          class="gauss__pestana"
+          [routerLink]="['/modulo2/tipos/directos/gauss', p.ruta]"
+          routerLinkActive="gauss__pestana--activa"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [attr.aria-current]="rutaActual() === p.ruta ? 'page' : null"
+        >
+          <span class="material-symbols-outlined gauss__icono" aria-hidden="true">
+            {{ p.icono }}
+          </span>
+          <span>{{ p.texto }}</span>
+        </a>
+      }
+    </nav>
+  </header>
+
+  <div class="gauss__contenido">
+    <router-outlet />
+  </div>
+</div>

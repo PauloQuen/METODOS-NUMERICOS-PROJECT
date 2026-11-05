@@ -20,6 +20,9 @@
  * `*.contenido.ts` y `*.grafico.ts`.
  */
 
+import type { FormatoRespuesta, ValorCorrecto } from '../../../shared/autoevaluacion-mejorada/respuesta.strategy';
+import type { DesbloqueoConfig, RecursoTeoria } from '../../../shared/models/metodo.model';
+
 /* ------------------------------------------------------------------ */
 /* Datos de entrada                                                     */
 /* ------------------------------------------------------------------ */
@@ -104,10 +107,75 @@ export interface EjemploModulo3 {
   calculo: DatosModulo3;
 }
 
+/** Una opción de una pregunta del cuestionario de autoevaluación. */
+export interface OpcionCuestionarioM3 {
+  /** Identificador corto dentro de la pregunta ("a", "b", "v", "f"). */
+  id: string;
+  /** Texto visible de la opción. */
+  texto: string;
+}
+
+/**
+ * Una pregunta de comprensión ligada a UN ejercicio.
+ *
+ * Las preguntas son parte del contenido del método, no de la plantilla:
+ * así el cuestionario habla de los datos reales del ejercicio y no de
+ * generalidades que servirían para cualquier método.
+ */
+export interface PreguntaCuestionarioM3 {
+  /** Identificador único dentro del ejercicio. */
+  id: string;
+  /** Opción múltiple (4 opciones) o verdadero/falso (2 opciones). */
+  tipo: 'opcion-multiple' | 'verdadero-falso';
+  /** La pregunta, en una oración clara. */
+  enunciado: string;
+  /** Las opciones que ve el alumno. */
+  opciones: OpcionCuestionarioM3[];
+  /** `id` de la opción correcta. */
+  correcta: string;
+  /** Explicación breve que se muestra después de comprobar. */
+  explicacion: string;
+}
+
+/**
+ * Lo mínimo para verificar la respuesta numérica de un ejercicio.
+ *
+ * `respuestaFinalTexto` es UNA línea con el valor final y el polinomio
+ * simplificado. El desarrollo paso a paso sigue viviendo en
+ * "Ver solución": acá no se repite.
+ */
+export interface ResolucionEjercicioM3 {
+  /**
+   * Valor que se considera correcto. Es un número para `escalar`,
+   * `entero` y `error`; un vector para `vector` y `polinomio`; y una
+   * matriz para `matriz`. La interpretación la hace la estrategia del
+   * formato declarado en el ejercicio.
+   */
+  valorCorrecto: ValorCorrecto;
+  /** Tolerancia de acierto. Por defecto, 0.01 (relativa para `error`). */
+  tolerancia?: number;
+  /** Unidad del resultado ("m", "m³/s"); vacía si es adimensional. */
+  unidad?: string;
+  /** Etiqueta del resultado ("P(2.25)", "h(5)"). */
+  etiqueta?: string;
+  /** Valor final + polinomio simplificado, en una sola línea. */
+  respuestaFinalTexto: string;
+  /** Puntos donde evaluar el polinomio si se acepta una forma equivalente. */
+  puntosPrueba?: number[];
+}
+
 /** Un ejercicio de autoevaluación: un ejemplo + una pista. */
 export interface EjercicioModulo3 extends EjemploModulo3 {
   /** Pista que se muestra junto al botón "Ver solución". */
   pista?: string;
+  /** Preguntas de comprensión. Si falta, el ejercicio no muestra el botón. */
+  cuestionario?: PreguntaCuestionarioM3[];
+  /** Respuesta verificable. Si falta, el ejercicio no muestra el botón. */
+  resolucion?: ResolucionEjercicioM3;
+  /** Formato de la respuesta verificable. Por defecto, `escalar`. */
+  formatoRespuesta?: FormatoRespuesta;
+  /** Ajuste de la política de desbloqueo para este ejercicio. */
+  desbloqueo?: DesbloqueoConfig;
 }
 
 /* ------------------------------------------------------------------ */
@@ -121,16 +189,7 @@ export interface EjercicioModulo3 extends EjemploModulo3 {
  * explicado mejor afuera. La teoría de este módulo es corta a propósito;
  * el detalle vive en estos enlaces (videos y lecturas).
  */
-export interface RecursoExterno {
-  /** Título del recurso. */
-  titulo: string;
-  /** URL completa. */
-  url: string;
-  /** Qué es: video, lectura, herramienta interactiva... */
-  tipo: 'video' | 'lectura' | 'interactivo';
-  /** Por qué sirve, en una línea. */
-  descripcion: string;
-}
+export interface RecursoExterno extends RecursoTeoria {}
 
 /* ------------------------------------------------------------------ */
 /* Teoría                                                               */

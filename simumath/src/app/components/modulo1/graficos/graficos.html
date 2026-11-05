@@ -47,6 +47,15 @@
       <p class="graf__leyenda">
         @if (r.error) {
           <span class="graf__leyenda-item graf__leyenda-item--error">{{ r.error }}</span>
+        } @else if (esExacto()) {
+          <!--
+            Un método exacto (Cardano) no converge: resuelve. La leyenda no
+            puede hablar de "iteraciones" porque mentiría sobre cómo funciona.
+          -->
+          <span class="graf__leyenda-item">
+            <span class="graf__dot graf__dot--raiz" aria-hidden="true"></span>
+            Raíces reales: {{ raicesTexto(r) }}
+          </span>
         } @else if (r.converged) {
           <span class="graf__leyenda-item">
             <span class="graf__dot graf__dot--iter" aria-hidden="true"></span>

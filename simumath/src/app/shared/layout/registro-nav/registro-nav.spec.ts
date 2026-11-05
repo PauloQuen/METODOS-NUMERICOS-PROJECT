@@ -1,7 +1,11 @@
 import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistroNav } from './registro-nav';
-import { metodosDeFamilia, type MetodoKey } from '../../domain/numerico/registro';
+import {
+  REGISTRO_POR_KEY,
+  metodosDeFamilia,
+  type MetodoKey,
+} from '../../domain/numerico/registro';
 
 @Component({
   standalone: true,
@@ -43,6 +47,19 @@ describe('RegistroNav', () => {
   /** Solo los que están a la vista. */
   const metodosVisibles = (): HTMLButtonElement[] =>
     metodos().filter((b) => !b.closest('[hidden]'));
+
+  /**
+   * Expande las tres familias del fixture actual. Cardano vive en
+   * `polinomios`, que arranca colapsada: sin esto no está a la vista.
+   */
+  const abrirTodasLasFamilias = (): void => {
+    for (let i = 0; i < 3; i++) {
+      if (disparador(i).getAttribute('aria-expanded') === 'false') {
+        disparador(i).click();
+        fixture.detectChanges();
+      }
+    }
+  };
 
   describe('jerarquía', () => {
     it('muestra una sección por cada familia con métodos', () => {
@@ -114,8 +131,8 @@ describe('RegistroNav', () => {
       }
     });
 
-    it('lista todos los métodos registrados, incluidos los planificados', () => {
-      // 5 implementados + 1 planificado.
+    it('lista todos los métodos registrados', () => {
+      // 6 implementados: el Módulo 1 está completo (Cardano fue el último).
       expect(metodos().length).toBe(6);
     });
 
@@ -126,17 +143,54 @@ describe('RegistroNav', () => {
     });
 
     it('no emite nada para un método planificado', () => {
-      const cardano = metodosVisibles().find((b) => b.textContent?.includes('Cardano'));
-      expect(cardano).toBeTruthy();
-      cardano!.click();
-      fixture.detectChanges();
-      expect(host.elegidos.length).toBe(0);
+      // Ya no queda ningún planificado real: el Módulo 1 cerró con los seis
+      // implementados. La rama sigue existiendo en el componente para el
+      // próximo método que se anuncie antes de estar listo, así que la
+      // ejercitamos simulando el estado.
+      //
+      // Hay que destruir el fixture del beforeEach: en zoneless,
+      // `detectChanges()` tickea TODAS las vistas vivas, y la vieja ya
+      // renderizó a Cardano como implementado. Si sigue viva, el tick nuevo
+      // ve un cambio a mitad de pasada y tira NG0100.
+      const cardano = REGISTRO_POR_KEY['cardano'];
+      const estadoOriginal = cardano.estado;
+      cardano.estado = 'planificado';
+      try {
+        fixture.destroy();
+        fixture = TestBed.createComponent(Host);
+        host = fixture.componentInstance;
+        fixture.detectChanges();
+        abrirTodasLasFamilias();
+
+        const boton = metodosVisibles().find((b) => b.textContent?.includes('Cardano'));
+        expect(boton).toBeTruthy();
+        boton!.click();
+        fixture.detectChanges();
+        expect(host.elegidos.length).toBe(0);
+      } finally {
+        cardano.estado = estadoOriginal;
+        // Sin detectChanges acá: el próximo beforeEach monta un fixture nuevo.
+      }
     });
 
     it('marca el planificado como deshabilitado y con badge', () => {
-      const cardano = metodosVisibles().find((b) => b.textContent?.includes('Cardano'));
-      expect(cardano!.disabled).toBeTrue();
-      expect(cardano!.textContent).toContain('Próximamente');
+      // Misma simulación que el test anterior, por la misma razón.
+      const cardano = REGISTRO_POR_KEY['cardano'];
+      const estadoOriginal = cardano.estado;
+      cardano.estado = 'planificado';
+      try {
+        fixture.destroy();
+        fixture = TestBed.createComponent(Host);
+        host = fixture.componentInstance;
+        fixture.detectChanges();
+        abrirTodasLasFamilias();
+
+        const boton = metodosVisibles().find((b) => b.textContent?.includes('Cardano'));
+        expect(boton!.disabled).toBeTrue();
+        expect(boton!.textContent).toContain('Próximamente');
+      } finally {
+        cardano.estado = estadoOriginal;
+      }
     });
 
     it('el resumen combina orden y requisitos, y coincide con el registro', () => {

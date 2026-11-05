@@ -1,0 +1,68 @@
+<div class="acciones">
+  <button
+    type="button"
+    class="boton boton--primario"
+    [class.boton--bloqueado]="!puedeVerSolucion()"
+    [id]="idBoton('solucion')"
+    [disabled]="!puedeVerSolucion()"
+    [attr.aria-disabled]="!puedeVerSolucion() ? 'true' : null"
+    [attr.aria-describedby]="!puedeVerSolucion() ? ayudaId() : null"
+    [attr.aria-expanded]="panel() === 'solucion'"
+    [attr.aria-controls]="'ae-panel-' + ejercicioId() + '-solucion'"
+    (click)="alternarSolucion.emit()"
+  >
+    {{ panel() === 'solucion' ? 'Ocultar solución' : 'Ver solución' }}
+  </button>
+
+  @if (tieneCuestionario()) {
+    <button
+      type="button"
+      class="boton boton--secundario"
+      [class.boton--activo]="panel() === 'cuestionario'"
+      [id]="idBoton('cuestionario')"
+      [attr.aria-expanded]="panel() === 'cuestionario'"
+      [attr.aria-controls]="'ae-panel-' + ejercicioId() + '-cuestionario'"
+      (click)="alternarCuestionario.emit()"
+    >
+      Cuestionario
+    </button>
+  }
+
+  @if (tieneResolucion()) {
+    <button
+      type="button"
+      class="boton boton--secundario"
+      [class.boton--activo]="panel() === 'resolucion'"
+      [id]="idBoton('resolucion')"
+      [attr.aria-expanded]="panel() === 'resolucion'"
+      [attr.aria-controls]="'ae-panel-' + ejercicioId() + '-resolucion'"
+      (click)="alternarResolucion.emit()"
+    >
+      Resolución
+    </button>
+  }
+</div>
+
+@if (!puedeVerSolucion()) {
+  <p class="ayuda-bloqueo" [id]="ayudaId()">{{ textoBloqueado() }}</p>
+}
+
+@if (mostrarRendirse()) {
+  @if (!confirmando()) {
+    <button type="button" class="boton boton--secundario boton--chico" (click)="confirmando.set(true)">
+      Ver solución de todos modos
+    </button>
+  } @else {
+    <div class="confirmacion" role="group" aria-label="Confirmar que se muestra la solución">
+      <span>¿Mostrar la solución completa?</span>
+      <button type="button" class="boton boton--primario boton--chico" (click)="confirmarRendirse()">
+        Sí, mostrarla
+      </button>
+      <button type="button" class="boton boton--secundario boton--chico" (click)="confirmando.set(false)">
+        Cancelar
+      </button>
+    </div>
+  }
+}
+
+<p class="solo-lectores" aria-live="polite">{{ anuncio() }}</p>

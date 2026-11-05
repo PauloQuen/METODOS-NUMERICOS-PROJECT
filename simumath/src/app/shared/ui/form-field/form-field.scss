@@ -33,6 +33,18 @@
       border-color: var(--primary);
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
     }
+
+    /*
+     * El área de texto (matrices del Módulo 2) usa una fuente de
+     * ancho fijo: así los números quedan alineados en columnas y el
+     * alumno ve la matriz como una matriz, no como un párrafo.
+     */
+    &--multilinea {
+      font-family: var(--font-mono, ui-monospace, 'Courier New', monospace);
+      line-height: 1.5;
+      resize: vertical;
+      white-space: pre;
+    }
   }
 
   &__hint {

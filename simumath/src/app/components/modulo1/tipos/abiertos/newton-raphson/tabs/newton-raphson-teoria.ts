@@ -2,14 +2,14 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { TEORIA_NEWTON } from '../newton-raphson.contenido';
 import { COLUMNAS_NEWTON } from '../newton-raphson.config';
 import { NewtonRaphsonService } from '../newton-raphson.service';
-import { UiCard } from '../../../../../../shared/ui/ui-card/ui-card';
 import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bloque-ejemplo';
+import { TeoriaContenido } from '../../../../../../shared/domain/teoria-contenido/teoria-contenido';
 import { dibujarNewtonRaphson } from '../newton-raphson.grafico';
 
 @Component({
   selector: 'app-newton-raphson-teoria',
   standalone: true,
-  imports: [UiCard, BloqueEjemplo],
+  imports: [BloqueEjemplo, TeoriaContenido],
   templateUrl: './newton-raphson-teoria.html',
   styleUrl: './newton-raphson-teoria.scss',
 })

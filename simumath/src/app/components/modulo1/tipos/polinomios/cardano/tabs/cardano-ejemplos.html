@@ -1,0 +1,16 @@
+<div class="autoevaluacion">
+  @for (ejemplo of ejemplos; track ejemplo.id; let i = $index) {
+    <app-bloque-ejemplo
+      [ejemplo]="ejemplo"
+      [columnas]="columnas"
+      [filas]="estados()[i].filas"
+      [filaFinal]="undefined"
+      [funcion]="funciones[i]"
+      [rango]="rangos()[i]"
+      [dibujarMetodo]="dibujar"
+      tituloPasos="Pasos (resolución paso a paso)"
+      etiquetaPaso="Paso"
+      tituloCriterio="Discriminante y casos"
+    />
+  }
+</div>

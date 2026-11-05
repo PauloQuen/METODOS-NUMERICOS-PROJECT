@@ -1,0 +1,59 @@
+<section class="recursos">
+  <header class="recursos__header">
+    <h2 class="recursos__titulo">Recursos</h2>
+    <p class="recursos__bajada">Videos, lecturas y fuentes para profundizar.</p>
+  </header>
+
+  @for (grupo of gruposVisibles(); track grupo.id) {
+    <section class="recursos__grupo" [attr.aria-labelledby]="'recursos-' + grupo.id">
+      @if (gruposVisibles().length > 1) {
+        <header class="recursos__grupo-header">
+          <h3 class="recursos__grupo-titulo" [id]="'recursos-' + grupo.id">{{ grupo.titulo }}</h3>
+          @if (grupo.descripcion) {
+            <p class="recursos__grupo-desc">{{ grupo.descripcion }}</p>
+          }
+        </header>
+      }
+
+      @if (grupo.videos.length > 0) {
+        <section class="recursos__bloque">
+          <h4 class="recursos__subtitulo">Videos</h4>
+          <div class="recursos__grid">
+            @for (video of grupo.videos; track video.id) {
+              <app-video-card [video]="video" />
+            }
+          </div>
+        </section>
+      }
+
+      @if (grupo.fuentes.length > 0) {
+        <section class="recursos__bloque">
+          <h4 class="recursos__subtitulo">Lecturas y fuentes</h4>
+          <app-source-list [fuentes]="grupo.fuentes" />
+        </section>
+      }
+
+      @if (grupo.profundizacion.length > 0) {
+        <section class="recursos__bloque">
+          <h4 class="recursos__subtitulo">Enlaces de profundización</h4>
+          <ul class="prof__lista">
+            @for (profundizacion of grupo.profundizacion; track profundizacion.id) {
+              <li>
+                @if (profundizacion.ruta) {
+                  <a [href]="profundizacion.ruta">{{ profundizacion.texto }}</a>
+                } @else if (profundizacion.url) {
+                  <a [href]="profundizacion.url" target="_blank" rel="noopener noreferrer">
+                    {{ profundizacion.texto }}
+                    <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+                  </a>
+                } @else {
+                  <span>{{ profundizacion.texto }}</span>
+                }
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </section>
+  }
+</section>

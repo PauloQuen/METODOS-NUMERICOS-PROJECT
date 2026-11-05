@@ -1,0 +1,72 @@
+<div class="calculadora">
+  <header class="calculadora__encabezado">
+    <h2 class="calculadora__titulo">Calculadora de Eliminación Gaussiana</h2>
+    <p class="calculadora__intro">
+      Escribí la matriz de coeficientes (una fila por ecuación, con los
+      coeficientes separados por espacios) y el lado derecho, corré la
+      eliminación con pivoteo parcial y seguí paso a paso con el visor.
+      El método es <strong>directo</strong>: no itera, hace un número fijo
+      de operaciones y despeja la solución por sustitución hacia atrás.
+    </p>
+  </header>
+
+  <!--
+    Arriba: el formulario con su respuesta (los muestra CalculadoraShell,
+    que es genérico y ya los trae) y, al lado, el gráfico.
+
+    Ojo: la respuesta NO se vuelve a mostrar en una tarjeta propia de esta
+    pestaña. La solución, el conteo de pasos y el residuo aparecen una
+    sola vez, en el shell, para que el alumno no tenga que decidir
+    cuál de los dos números mira.
+  -->
+  <div class="calculadora__grilla">
+    <app-calculadora-shell
+      [campos]="campos"
+      [(valores)]="valores"
+      [respuesta]="respuesta()"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (hayCalculo()) {
+      <div class="calculadora__columna-derecha">
+        <ui-card padding="lg">
+          <h3 class="seccion__titulo">Gráfico</h3>
+          <app-grafico-sistema
+            [sistema]="sistema()"
+            [solucion]="solucion()"
+            [iteraciones]="filas()"
+            [pasoActual]="paso()"
+            [rango]="rango()"
+            [dibujarSistema]="dibujar"
+            leyenda="Rectas del sistema y construcción de la solución por sustitución hacia atrás"
+          />
+        </ui-card>
+
+        <ui-card padding="lg">
+          <h3 class="seccion__titulo">Paso a paso</h3>
+          <app-pasos-control
+            [total]="total()"
+            [paso]="paso()"
+            [texto]="textoDelPaso()"
+            etiquetaDePaso="Paso"
+            (pasoCambiado)="alCambiarPaso($event)"
+          />
+        </ui-card>
+      </div>
+    }
+  </div>
+
+  <!-- La tabla completa de pasos, solo si hay cálculo -->
+  @if (hayCalculo()) {
+    <ui-card padding="lg">
+      <h3 class="seccion__titulo">Pasos de la eliminación</h3>
+      <app-iteration-table
+        [columns]="columnas"
+        [rows]="filas()"
+        [highlightRowIndex]="filas().length - 1"
+        highlightBadge="Solución hallada"
+      />
+    </ui-card>
+  }
+</div>

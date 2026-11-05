@@ -2,14 +2,14 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { TEORIA_PUNTO_FIJO } from '../punto-fijo.contenido';
 import { COLUMNAS_PUNTO_FIJO } from '../punto-fijo.config';
 import { PuntoFijoService } from '../punto-fijo.service';
-import { UiCard } from '../../../../../../shared/ui/ui-card/ui-card';
 import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bloque-ejemplo';
+import { TeoriaContenido } from '../../../../../../shared/domain/teoria-contenido/teoria-contenido';
 import { dibujarPuntoFijo } from '../punto-fijo.grafico';
 
 @Component({
   selector: 'app-punto-fijo-teoria',
   standalone: true,
-  imports: [UiCard, BloqueEjemplo],
+  imports: [BloqueEjemplo, TeoriaContenido],
   templateUrl: './punto-fijo-teoria.html',
   styleUrl: './punto-fijo-teoria.scss',
 })

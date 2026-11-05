@@ -6,6 +6,14 @@ export interface IterationColumn {
   key: string;
   label: string;
   align?: 'left' | 'right' | 'center';
+  /**
+   * ¿La celda va en fuente monoespaciada?
+   *
+   * El Módulo 2 escribe filas de matriz. Con una fuente de ancho fijo y
+   * `white-space: pre` los números quedan en columna, que es como se
+   * lee una matriz en el cuaderno.
+   */
+  monoespaciado?: boolean;
 }
 
 /**
@@ -35,5 +43,10 @@ export class IterationTable {
       : col.align === 'center'
         ? 'cell--center'
         : 'cell--right';
+  }
+
+  /** Clase extra de la celda, según la columna. */
+  cellExtra(col: IterationColumn): string {
+    return col.monoespaciado ? 'it-table__cell--mono' : '';
   }
 }

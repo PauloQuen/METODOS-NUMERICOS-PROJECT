@@ -36,6 +36,19 @@ export class FormField {
    */
   readonly hint = input('');
 
+  /**
+   * ¿El campo es de varias líneas?
+   *
+   * El Módulo 2 escribe una MATRIZ, y una matriz se escribe en varias
+   * filas: "3 1 2" arriba, "1 -1 1" abajo. En un `<input>` de una sola
+   * línea eso no entra. Con esta bandera el campo se dibuja como un
+   * `<textarea>` y el alumno ve la matriz como la ve en el cuaderno.
+   */
+  readonly multilinea = input(false);
+
+  /** Cuántas filas tiene el área de texto (solo si `multilinea`). */
+  readonly filas = input(4);
+
   /** Valor del campo, en dos direcciones ([(value)]). */
   readonly value = model('');
 
@@ -43,6 +56,7 @@ export class FormField {
   readonly enter = output<void>();
 
   onInput(event: Event): void {
-    this.value.set((event.target as HTMLInputElement).value);
+    const destino = event.target as HTMLInputElement | HTMLTextAreaElement;
+    this.value.set(destino.value);
   }
 }

@@ -68,9 +68,11 @@
 
         <!-- Pasos (1.ª y 2.ª iteración) -->
         <section class="bloque-ejemplo__seccion">
-          <h4 class="bloque-ejemplo__subtitulo">Pasos (iteraciones a mano)</h4>
+          <h4 class="bloque-ejemplo__subtitulo">{{ tituloPasos() }}</h4>
           @for (p of ejemplo().pasos; track $index; let i = $index) {
-            <p class="bloque-ejemplo__paso"><strong>Iteración {{ i + 1 }}</strong></p>
+            <p class="bloque-ejemplo__paso">
+              <strong>{{ etiquetaPaso() }} {{ i + 1 }}</strong>
+            </p>
             <p class="bloque-ejemplo__parrafo">{{ p }}</p>
           }
         </section>
@@ -83,7 +85,7 @@
 
         <!-- Criterio -->
         <section class="bloque-ejemplo__seccion">
-          <h4 class="bloque-ejemplo__subtitulo">Criterio de convergencia</h4>
+          <h4 class="bloque-ejemplo__subtitulo">{{ tituloCriterio() }}</h4>
           <p class="bloque-ejemplo__parrafo">{{ ejemplo().criterio }}</p>
         </section>
       </div>
@@ -91,20 +93,34 @@
       <!-- Columna 2: gráfico + pasos -->
       <div class="bloque-ejemplo__grafico">
         <ui-card padding="md">
-          <app-grafico-metodo
-            [funcion]="funcion()"
-            [iteraciones]="filas()"
-            [pasoActual]="pasoActual()"
-            [rango]="rango()"
-            [dibujarMetodo]="dibujarMetodo()"
-            [leyenda]="ejemplo().ecuacion"
-            [raiz]="raiz()"
-          />
+          <!--
+            El gráfico es un SLOT. Por defecto se dibuja el gráfico de
+            la función f(x) (el del Módulo 1), pero quien use este bloque
+            puede proyectar su propio gráfico en el hueco `grafico`.
+
+            El Módulo 2 lo hace: sus sistemas no son curvas, son rectas,
+            y proyectar `<app-grafico-sistema slot="grafico">` le permite
+            reutilizar TODO el layout (texto, pasos, tabla, conclusión)
+            sin duplicarlo y sin que este componente tenga que saber
+            qué es una matriz.
+          -->
+          <ng-content select="[slot='grafico']">
+            <app-grafico-metodo
+              [funcion]="funcion()"
+              [iteraciones]="filas()"
+              [pasoActual]="pasoActual()"
+              [rango]="rango()"
+              [dibujarMetodo]="dibujarMetodo()"
+              [leyenda]="ejemplo().ecuacion"
+              [raiz]="raiz()"
+            />
+          </ng-content>
           <div class="bloque-ejemplo__pasos">
             <app-pasos-control
               [total]="filas().length"
               [paso]="pasoActual()"
               [texto]="textoPaso(pasoActual())"
+              [etiquetaDePaso]="etiquetaPaso()"
               (pasoCambiado)="alCambiarPaso($event)"
             />
           </div>
@@ -126,7 +142,7 @@
         [columns]="columnas()"
         [rows]="filas()"
         [highlightRowIndex]="filaFinal()"
-        [highlightBadge]="'Cumple criterio'"
+        [highlightBadge]="highlightBadge()"
       />
     </section>
   </ui-card>

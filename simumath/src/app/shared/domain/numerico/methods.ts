@@ -32,6 +32,7 @@
  *   POST /api/modulo1/calculadoras/newton      body: SemillaRequest
  *   POST /api/modulo1/calculadoras/secante     body: SecanteRequest
  *   POST /api/modulo1/calculadoras/puntoFijo   body: PuntoFijoRequest
+ *   POST /api/modulo1/calculadoras/cardano     body: PolinomioRequest
  *
  * Los valores del body llegan como STRING (vienen de inputs del front); el
  * backend debe parsearlos con Number() y validarlos ANTES de llamar al
@@ -50,6 +51,7 @@ import {
   razonDeParada,
 } from './criterio';
 import { parsearFuncion } from './evaluador-funciones';
+import { resolverCardano } from './cardano';
 
 export type IterRow = Record<string, string | number>;
 
@@ -134,6 +136,13 @@ export interface SecanteRequest {
   /** Segunda aproximación x₁. */
   semilla2: string;
   tolerancia: string;
+}
+
+/** Body de Cardano: POST .../cardano. No hay semilla ni tolerancia:
+ *  el método no itera, resuelve la cúbica de una. */
+export interface PolinomioRequest {
+  /** Polinomio de grado ≤ 3, p. ej. 'x^3 - x - 2'. */
+  funcion: string;
 }
 
 /** Respuesta de TODOS los endpoints: idéntica a MetodoResultado. */
@@ -600,4 +609,39 @@ export function newton(
     return { rows, converged: false, iterations: maxIter, error: 'No convergió dentro del máximo de iteraciones.' };
   }
   return { rows, converged: true, iterations: iteracionesHechas, parada };
+}
+
+/**
+ * Fórmula de Cardano: resuelve a·x³ + b·x² + c·x + d = 0 SIN iterar.
+ *
+ * Es el único método del módulo que no usa tolerancia ni criterio de
+ * parada: no hay sucesión que acotar. La tabla que devuelve no son
+ * iteraciones sino los pasos del desarrollo algebraico (depresión de la
+ * cúbica, discriminante, caso y raíces), y `iterations` viene en 0.
+ *
+ * Los coeficientes se leen de la función por evaluación en puntos
+ * fijos, con verificación en puntos extra: si f no era una cúbica, la
+ * respuesta trae `error` y ninguna fila. Detalle completo en
+ * `cardano.ts`.
+ *
+ * @endpoint POST /api/modulo1/calculadoras/cardano — body: PolinomioRequest.
+ */
+export function cardano(f: (x: number) => number): MetodoResultado {
+  const r = resolverCardano(f);
+
+  if (r.error) {
+    return { rows: [], converged: false, iterations: 0, error: r.error };
+  }
+
+  const rows: IterRow[] = r.pasos.map((p) => ({
+    paso: p.paso,
+    etapa: p.etapa,
+    detalle: p.detalle,
+    // Las raíces llevan su valor exacto (no el string de fmt) para que
+    // el gráfico las marque sin pasar por parseFloat; el resto va en
+    // «—», que valorNumericoDe lee como NaN y el dibujo ignora.
+    valor: p.valor === null ? '—' : p.valor,
+  }));
+
+  return { rows, converged: true, iterations: 0 };
 }

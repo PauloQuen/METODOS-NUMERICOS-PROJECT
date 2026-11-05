@@ -8,6 +8,7 @@ import {
   familiaDe,
   metodo,
   puntosDeIteracion,
+  raicesDeFilas,
   REGISTRO_POR_KEY,
   type MetodoKey,
 } from '../../../shared/domain/numerico/registro';
@@ -118,6 +119,15 @@ const EJEMPLOS: Partial<Record<MetodoKey, EjemploGrafico>> = {
     semilla: 1.5,
     tolerancia: 0.00000001,
   },
+  cardano: {
+    // Cúbica factorizable con raíces enteras (1, 2 y 3): se ven las tres
+    // marcas sobre el eje en el mismo cuadro, que es lo que hace visible
+    // que Cardano NO itera: las da todas de una sola cuenta.
+    funcion: 'x^3 - 6*x^2 + 11*x - 6',
+    titulo: 'f(x) = x³ − 6x² + 11x − 6',
+    descripcion: 'Resolución cerrada: las tres raíces reales (x = 1, 2 y 3) salen de la fórmula, sin iterar.',
+    tolerancia: 0.00000001,
+  },
 };
 
 @Component({
@@ -131,6 +141,8 @@ export class Graficos {
   /** Ficha y familia del método activo, para el encabezado. */
   readonly ficha = computed(() => metodo(this.metodo()));
   readonly familiaActiva = computed(() => familiaDe(this.metodo()));
+  /** ¿El método resuelve en forma cerrada (familia `polinomios`, hoy Cardano)? */
+  readonly esExacto = computed(() => this.ficha().familia === 'polinomios');
   readonly ejemplos = EJEMPLOS;
 
   readonly metodo = signal<MetodoKey>('biseccion');
@@ -173,6 +185,12 @@ export class Graficos {
     // que adivinar si se llama 'c', 'xᵢ' o 'x0' según el método.
     const v = (fila as Record<string, unknown>)[metodo(this.metodo()).columnaValor];
     return v !== undefined ? String(v) : '—';
+  }
+
+  /** Todas las raíces de un método exacto, formateadas y unidas. */
+  raicesTexto(r: MetodoResultado): string {
+    const raices = raicesDeFilas(metodo(this.metodo()), r.rows);
+    return raices.length ? raices.map((x) => fmtNum(x)).join(', ') : '—';
   }
 
   /** Ejecuta el método del ejemplo con sus datos fijos. Nunca lanza. */
@@ -410,21 +428,79 @@ export class Graficos {
       this.dibujarIteraciones(ctx, px, py, puntos, c);
     }
 
-    // Punto de la raíz aproximada (última fila del resultado).
-    const raiz = r?.rows.at(-1);
-    if (raiz) {
-      const xr = coordenadaRaiz(metodo(this.metodo()), raiz);
-      if (Number.isFinite(xr)) {
-        const yr = f(xr);
-        ctx.fillStyle = c.punto;
-        ctx.strokeStyle = c.fondo;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(px(xr), py(yr), 5.5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
+    // Raíces sobre el eje x.
+    //
+    // Un método exacto (familia `polinomios`, hoy Cardano) devuelve TODAS sus
+    // raíces de una sola vez: se marcan todas, que es lo que muestra que no
+    // itera. Un método iterativo aproxima UNA: se marca la última fila. La
+    // detección sale de la familia, no de un `if (metodo === 'cardano')`.
+    if (this.ficha().familia === 'polinomios' && r) {
+      this.dibujarRaices(ctx, px, py, raicesDeFilas(metodo(this.metodo()), r.rows), c);
+    } else {
+      const raiz = r?.rows.at(-1);
+      if (raiz) {
+        const xr = coordenadaRaiz(metodo(this.metodo()), raiz);
+        if (Number.isFinite(xr)) {
+          const yr = f(xr);
+          ctx.fillStyle = c.punto;
+          ctx.strokeStyle = c.fondo;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(px(xr), py(yr), 5.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
       }
     }
+  }
+
+  /**
+   * Marca TODAS las raíces de un método exacto con un círculo sobre el eje x
+   * y su vertical punteada, rotuladas x₁, x₂, x₃. Es lo que hace visible que
+   * Cardano resuelve la cúbica de una sola cuenta, sin iterar.
+   */
+  private dibujarRaices(
+    ctx: CanvasRenderingContext2D,
+    px: (x: number) => number,
+    py: (y: number) => number,
+    raices: number[],
+    c: Colores,
+  ): void {
+    if (!raices.length) return;
+
+    ctx.save();
+    ctx.font = '11px "Plus Jakarta Sans", Arial, sans-serif';
+    raices.forEach((x, i) => {
+      const sx = px(x);
+      const sy = py(0);
+
+      // Vertical punteada desde la base del gráfico hasta el eje.
+      ctx.strokeStyle = c.punto;
+      ctx.setLineDash([4, 4]);
+      ctx.lineWidth = 1.25;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(sx, 0);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Círculo de la raíz sobre el eje.
+      ctx.fillStyle = c.punto;
+      ctx.strokeStyle = c.fondo;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Rótulo x₁, x₂, x₃ (subíndices hasta 3; después, número plano).
+      const indice = i < 3 ? ['₁', '₂', '₃'][i] : String(i + 1);
+      ctx.fillStyle = c.punto;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(`x${indice}`, sx, sy - 9);
+    });
+    ctx.restore();
   }
 
   /** Escalera (telaraña) del punto fijo: (xₖ, xₖ) → (xₖ, g(xₖ)) → (g(xₖ), g(xₖ)). */

@@ -32,7 +32,10 @@ describe('registro del Módulo 3', () => {
   });
 
   it('la familia de interpolación contiene a Lagrange y la de ajuste a mínimos cuadrados', () => {
-    expect(metodosDeFamiliaModulo3('interpolacion').map((m) => m.key)).toEqual(['lagrange']);
+    expect(metodosDeFamiliaModulo3('interpolacion').map((m) => m.key)).toEqual([
+      'lagrange',
+      'lagrange-nuevo',
+    ]);
     expect(metodosDeFamiliaModulo3('ajuste').map((m) => m.key)).toEqual(['minimos-cuadrados']);
   });
 

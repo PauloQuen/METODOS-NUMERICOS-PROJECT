@@ -8,6 +8,8 @@
           [label]="campo.etiqueta"
           [placeholder]="campo.placeholder ?? ''"
           [type]="campo.tipo"
+          [multilinea]="campo.multilinea ?? false"
+          [filas]="campo.filas ?? 4"
           [hint]="campo.ayuda"
           [value]="valorDe(campo.key)"
           (valueChange)="alCambiar(campo.key, $event)"
@@ -39,7 +41,18 @@
             <span class="shell__dato-valor shell__dato-valor--destacado">{{ r.raiz }}</span>
           </div>
         }
-        @if (r.iteraciones !== undefined) {
+        @if (r.solucion) {
+          <div class="shell__dato">
+            <span class="shell__dato-label">Solución del sistema</span>
+            <span class="shell__dato-valor shell__dato-valor--destacado">{{ r.solucion }}</span>
+          </div>
+        }
+        @if (r.conteo !== undefined) {
+          <div class="shell__dato">
+            <span class="shell__dato-label">{{ r.etiquetaConteo ?? 'Iteraciones' }}</span>
+            <span class="shell__dato-valor">{{ r.conteo }}</span>
+          </div>
+        } @else if (r.iteraciones !== undefined) {
           <div class="shell__dato">
             <span class="shell__dato-label">Iteraciones</span>
             <span class="shell__dato-valor">{{ r.iteraciones }}</span>

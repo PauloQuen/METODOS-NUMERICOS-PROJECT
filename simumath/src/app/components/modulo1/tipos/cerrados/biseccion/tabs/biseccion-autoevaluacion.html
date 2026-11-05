@@ -2,10 +2,10 @@
   <header class="autoevaluacion__encabezado">
     <h2 class="autoevaluacion__titulo">Autoevaluación</h2>
     <p class="autoevaluacion__intro">
-      Tres ejercicios para practicar Bisección. Resolvé en papel o con la
-      calculadora y, cuando tengas tu resultado, apretá <strong>Ver solución</strong>.
-      La tabla y el gráfico de la solución salen directamente del algoritmo:
-      no están escritos a mano, así que podés comparar paso a paso.
+      Tres ejercicios para practicar Bisección. Resolvé en papel, comprobá tu
+      comprensión con el <strong>Cuestionario</strong> y verificá tu resultado antes de
+      abrir <strong>Ver solución</strong>. La tabla y el gráfico salen directamente del
+      algoritmo, así que podés comparar paso a paso.
     </p>
   </header>
 
@@ -13,6 +13,11 @@
     <section class="autoevaluacion__bloque">
       <app-bloque-ejercicio
         [ejercicio]="ejercicio"
+        [mejorada]="mejorada"
+        moduloId="modulo1"
+        tipoId="cerrados"
+        metodoId="biseccion"
+        [desbloqueoBase]="desbloqueoBase"
         [funcion]="funcionDe($index)"
         [filas]="calculoDe($index).filas"
         [columnas]="columnas"

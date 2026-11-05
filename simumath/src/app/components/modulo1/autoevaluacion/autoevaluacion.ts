@@ -98,12 +98,24 @@ const EJERCICIOS_AUTO: EjercicioAuto[] = [
   },
 ];
 
-@Component({
+import { Component as NgComponent } from '@angular/core';
+import { AutoevaluacionMejorada } from './autoevaluacion-mejorada';
+import { RecursosSection } from '../../../shared/recursos/recursos-section';
+import { RECURSOS_MODULO1 } from '../recursos/modulo1-recursos.data';
+
+// La autoevaluación transversal usa el mismo modelo que las páginas de
+// método: tres actividades y desbloqueo condicionado. Si hiciera falta
+// volver al comportamiento viejo, alcanza con apagar esta bandera.
+const AUTOEVAL_MEJORADA_FLAG = true;
+
+@NgComponent({
   selector: 'app-autoevaluacion',
-  imports: [UiCard, Badge],
+  imports: [UiCard, Badge, AutoevaluacionMejorada, RecursosSection],
   templateUrl: './autoevaluacion.html',
   styleUrl: './autoevaluacion.scss',
 })
 export class Autoevaluacion {
   readonly ejercicios = EJERCICIOS_AUTO;
+  readonly mejorada = AUTOEVAL_MEJORADA_FLAG;
+  readonly recursos = RECURSOS_MODULO1;
 }

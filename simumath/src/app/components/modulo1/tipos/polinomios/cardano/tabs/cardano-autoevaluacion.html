@@ -1,0 +1,28 @@
+<div class="autoevaluacion">
+  <header class="autoevaluacion__encabezado">
+    <h2 class="autoevaluacion__titulo">Autoevaluación</h2>
+    <p class="autoevaluacion__intro">
+      Tres ejercicios para practicar Cardano. Resolvé en papel, respondé el
+      <strong>Cuestionario</strong> y verificá tus raíces antes de ver el desarrollo.
+    </p>
+  </header>
+
+  @for (ejercicio of ejercicios; track ejercicio.id; let i = $index) {      <app-bloque-ejercicio
+        [ejercicio]="ejercicio"
+        [mejorada]="mejorada"
+        moduloId="modulo1"
+        tipoId="polinomios"
+        metodoId="cardano"
+        [desbloqueoBase]="desbloqueoBase"
+      [columnas]="columnas"
+      [filas]="estados()[i].filas"
+      [filaFinal]="undefined"
+      [funcion]="funciones[i]"
+      [rango]="rangos()[i]"
+      [dibujarMetodo]="dibujar"
+      tituloPasos="Pasos (resolución paso a paso)"
+      etiquetaPaso="Paso"
+      tituloCriterio="Discriminante y casos"
+    />
+  }
+</div>

@@ -4,6 +4,10 @@ import { COLUMNAS_LAGRANGE } from '../lagrange.config';
 import { LagrangeService, type LagrangeEstado } from '../lagrange.service';
 import { crearDibujoLagrange } from '../lagrange.grafico';
 import { BloqueEjercicioDatos } from '../../../../shared/bloque-ejercicio-datos/bloque-ejercicio-datos';
+import {
+  autoevaluacionMejoradaM3,
+  politicaDeMetodoM3,
+} from '../../../../autoevaluacion.config';
 
 /**
  * PESTAÑA DE AUTOEVALUACIÓN de Lagrange (3 numéricos + 3 casuísticas).
@@ -26,6 +30,9 @@ export class LagrangeAutoevaluacion {
   readonly ejercicios = EJERCICIOS_LAGRANGE;
 
   readonly columnas = COLUMNAS_LAGRANGE;
+
+  readonly mejorada = autoevaluacionMejoradaM3('interpolacion', 'lagrange');
+  readonly desbloqueoBase = politicaDeMetodoM3('interpolacion', 'lagrange');
 
   /** El cálculo de cada ejercicio, hecho una vez. */
   protected readonly calculos: LagrangeEstado[] = this.ejercicios.map((e) =>

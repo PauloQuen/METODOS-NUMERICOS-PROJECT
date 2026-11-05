@@ -1,0 +1,65 @@
+<div class="calculadora">
+  <header class="calculadora__encabezado">
+    <h2 class="calculadora__titulo">Calculadora de Factorización LU</h2>
+    <p class="calculadora__intro">
+      Escribí la matriz de coeficientes (una fila por ecuación, con los
+      coeficientes separados por espacios) y el lado derecho, corré la
+      factorización LU (Doolittle) y seguí paso a paso con el visor.
+      El método es <strong>directo</strong>: no itera, hace un número fijo
+      de operaciones. La diferencia con Gauss es que aquí la descomposición
+      A = L·U se <strong>guarda</strong>: si después querés resolver el
+      mismo sistema con otro lado derecho, solo hacés dos sustituciones.
+    </p>
+  </header>
+
+  <div class="calculadora__grilla">
+    <app-calculadora-shell
+      [campos]="campos"
+      [(valores)]="valores"
+      [respuesta]="respuesta()"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (hayCalculo()) {
+      <div class="calculadora__columna-derecha">
+        <ui-card padding="lg">
+          <h3 class="seccion__titulo">Gráfico</h3>
+          <app-grafico-sistema
+            [sistema]="sistema()"
+            [solucion]="solucion()"
+            [iteraciones]="filas()"
+            [pasoActual]="paso()"
+            [rango]="rango()"
+            [dibujarSistema]="dibujar"
+            [sistemasExtra]="extra()"
+            leyenda="Rectas del sistema y construcción de la solución por sustitución; durante la descomposición se dibuja también el sistema triangular U·x = y"
+          />
+        </ui-card>
+
+        <ui-card padding="lg">
+          <h3 class="seccion__titulo">Paso a paso</h3>
+          <app-pasos-control
+            [total]="total()"
+            [paso]="paso()"
+            [texto]="textoDelPaso()"
+            etiquetaDePaso="Paso"
+            (pasoCambiado)="alCambiarPaso($event)"
+          />
+        </ui-card>
+      </div>
+    }
+  </div>
+
+  @if (hayCalculo()) {
+    <ui-card padding="lg">
+      <h3 class="seccion__titulo">Pasos de la factorización</h3>
+      <app-iteration-table
+        [columns]="columnas"
+        [rows]="filas()"
+        [highlightRowIndex]="filas().length - 1"
+        highlightBadge="Solución hallada"
+      />
+    </ui-card>
+  }
+</div>

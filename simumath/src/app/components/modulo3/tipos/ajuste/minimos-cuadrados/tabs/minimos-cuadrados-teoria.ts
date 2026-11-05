@@ -1,10 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TEORIA_MINIMOS_CUADRADOS } from '../minimos-cuadrados.contenido';
 import { COLUMNAS_MINIMOS_CUADRADOS } from '../minimos-cuadrados.config';
 import { MinimosCuadradosService } from '../minimos-cuadrados.service';
 import { crearDibujoMinimosCuadrados } from '../minimos-cuadrados.grafico';
-import { UiCard } from '../../../../../../shared/ui/ui-card/ui-card';
 import { BloqueEjemploDatos } from '../../../../shared/bloque-ejemplo-datos/bloque-ejemplo-datos';
+import { TeoriaContenido } from '../../../../../../shared/domain/teoria-contenido/teoria-contenido';
 
 /**
  * PESTAÑA DE TEORÍA de Mínimos Cuadrados.
@@ -16,9 +16,8 @@ import { BloqueEjemploDatos } from '../../../../shared/bloque-ejemplo-datos/bloq
 @Component({
   selector: 'app-minimos-cuadrados-teoria',
   standalone: true,
-  imports: [UiCard, BloqueEjemploDatos],
+  imports: [BloqueEjemploDatos, TeoriaContenido],
   templateUrl: './minimos-cuadrados-teoria.html',
-  styleUrl: '../../../../shared/estilos/teoria.scss',
 })
 export class MinimosCuadradosTeoria {
   readonly teoria = TEORIA_MINIMOS_CUADRADOS;
@@ -54,20 +53,4 @@ export class MinimosCuadradosTeoria {
     prediccion: this.estadoCasuistica.prediccion,
   });
 
-  protected readonly abierta = signal<'fundamento' | 'falla' | 'precision' | null>(null);
-
-  protected alternar(que: 'fundamento' | 'falla' | 'precision'): void {
-    this.abierta.update((actual) => (actual === que ? null : que));
-  }
-
-  protected iconoRecurso(tipo: string): string {
-    switch (tipo) {
-      case 'video':
-        return 'play_circle';
-      case 'interactivo':
-        return 'touch_app';
-      default:
-        return 'article';
-    }
-  }
 }

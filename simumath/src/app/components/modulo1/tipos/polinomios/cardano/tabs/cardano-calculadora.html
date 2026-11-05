@@ -1,0 +1,59 @@
+<div class="calculadora">
+  <header class="calculadora__encabezado">
+    <h2 class="calculadora__titulo">Calculadora de Cardano</h2>
+    <p class="calculadora__intro">
+      Resolvé una cúbica <code>a·x³ + b·x² + c·x + d = 0</code>. Es una resolución cerrada: se
+      muestra el desarrollo paso a paso (coeficientes, p,q, Δ, caso) y las raíces reales. Se admiten
+      <code>^</code> para potencias. Si no es de grado 3 o es trascendente, se avisa el motivo.
+    </p>
+  </header>
+
+  <div class="calculadora__grilla">
+    <app-calculadora-shell
+      [campos]="campos"
+      [(valores)]="valores"
+      [respuesta]="respuesta()"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (hayCalculo()) {
+      <div class="calculadora__columna-derecha">
+        <ui-card padding="lg">
+          <h3 class="seccion__titulo">Gráfico</h3>
+          <app-grafico-metodo
+            [funcion]="funcion()"
+            [iteraciones]="filas()"
+            [pasoActual]="paso()"
+            [rango]="rango()"
+            [dibujarMetodo]="dibujar"
+            [raiz]="raices()[0]"
+            leyenda="Cardano: marcas de las raíces reales obtenidas por fórmula"
+          />
+        </ui-card>
+        <ui-card padding="lg">
+          <h3 class="seccion__titulo">Paso a paso</h3>
+          <app-pasos-control
+            [total]="total()"
+            [paso]="paso()"
+            [texto]="textoDelPaso()"
+            [etiquetaDePaso]="'Paso'"
+            (pasoCambiado)="alCambiarPaso($event)"
+          />
+        </ui-card>
+      </div>
+    }
+  </div>
+
+  @if (hayCalculo()) {
+    <ui-card padding="lg">
+      <h3 class="seccion__titulo">Pasos (resolución paso a paso)</h3>
+      <app-iteration-table
+        [columns]="columnas"
+        [rows]="filas()"
+        [highlightRowIndex]="undefined"
+        [highlightBadge]="''"
+      />
+    </ui-card>
+  }
+</div>

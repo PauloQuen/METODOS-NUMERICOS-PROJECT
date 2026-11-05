@@ -70,6 +70,17 @@
     white-space: nowrap;
   }
 
+  /*
+   * Celda monoespaciada: la usa el Módulo 2 para escribir FILAS DE
+   * MATRIZ. `pre` conserva los espacios de relleno (el navegador los
+   * colapsaría) y a la vez impide el salto de línea, así que la fila
+   * queda en una sola línea y los números en columna.
+   */
+  &__cell--mono {
+    font-family: var(--font-mono, ui-monospace, 'Courier New', monospace);
+    white-space: pre;
+  }
+
   &__badge {
     margin-left: var(--space-sm);
   }

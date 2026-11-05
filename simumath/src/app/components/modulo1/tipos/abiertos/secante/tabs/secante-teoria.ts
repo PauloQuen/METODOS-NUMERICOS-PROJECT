@@ -2,14 +2,14 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { TEORIA_SECANTE } from '../secante.contenido';
 import { COLUMNAS_SECANTE } from '../secante.config';
 import { SecanteService } from '../secante.service';
-import { UiCard } from '../../../../../../shared/ui/ui-card/ui-card';
 import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bloque-ejemplo';
+import { TeoriaContenido } from '../../../../../../shared/domain/teoria-contenido/teoria-contenido';
 import { dibujarSecante } from '../secante.grafico';
 
 @Component({
   selector: 'app-secante-teoria',
   standalone: true,
-  imports: [UiCard, BloqueEjemplo],
+  imports: [BloqueEjemplo, TeoriaContenido],
   templateUrl: './secante-teoria.html',
   styleUrl: './secante-teoria.scss',
 })

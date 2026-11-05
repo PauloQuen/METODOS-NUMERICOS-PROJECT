@@ -1,0 +1,43 @@
+<div class="autoevaluacion">
+  <header class="autoevaluacion__encabezado">
+    <h2 class="autoevaluacion__titulo">Autoevaluación</h2>
+    <p class="autoevaluacion__intro">
+      Tres sistemas para practicar factorización LU. Resolvé en papel, respondé
+      el <strong>Cuestionario</strong> y verificá tu vector solución antes de ver el
+      desarrollo.
+    </p>
+  </header>
+
+  @for (ejercicio of ejercicios; track ejercicio.id; let i = $index) {
+    <app-bloque-ejercicio
+      [ejercicio]="ejercicio"
+      [mejorada]="mejorada"
+      moduloId="modulo2"
+      tipoId="directos"
+      metodoId="lu"
+      [desbloqueoBase]="desbloqueoBase"
+      [columnas]="columnas"
+      [filas]="estados()[i].filas"
+      [filaFinal]="estados()[i].filaFinal"
+      [highlightBadge]="'Solución hallada'"
+      [textosPasos]="estados()[i].textosPasos"
+      [rango]="rangos()[i]"
+      tituloPasos="Pasos (descomposición y sustituciones)"
+      etiquetaPaso="Paso"
+      tituloCriterio="Descomposición y sustituciones"
+      (pasoCambiado)="alCambiarPaso(i, $event)"
+    >
+      <app-grafico-sistema
+        slot="grafico"
+        [sistema]="estados()[i].sistema"
+        [solucion]="estados()[i].solucion"
+        [iteraciones]="estados()[i].filas"
+        [pasoActual]="pasoDe(i)"
+        [rango]="rangos()[i]"
+        [sistemasExtra]="extras()[i]"
+        [dibujarSistema]="dibujar"
+        leyenda="Rectas del sistema, sistema triangular y construcción de la solución"
+      />
+    </app-bloque-ejercicio>
+  }
+</div>

@@ -50,7 +50,7 @@ export const FAMILIAS_MODULO3: readonly FamiliaModulo3[] = [
 /* Métodos                                                             */
 /* ------------------------------------------------------------------ */
 
-export type MetodoModulo3Key = 'lagrange' | 'minimos-cuadrados';
+export type MetodoModulo3Key = 'lagrange' | 'lagrange-nuevo' | 'minimos-cuadrados';
 
 export interface MetodoModulo3 {
   key: MetodoModulo3Key;
@@ -81,6 +81,16 @@ export const METODOS_MODULO3: readonly MetodoModulo3[] = [
     formula: 'P(x) = Σ yᵢ · Lᵢ(x)',
     criterioTexto: 'Pasa exacto por los n + 1 puntos; el error depende de la función real.',
     color: '#1b6b93',
+  },
+  {
+    key: 'lagrange-nuevo',
+    nombre: 'Interpolación de Lagrange (Mejorado)',
+    ruta: 'lagrange-nuevo',
+    familia: 'interpolacion',
+    idea: 'Construye un polinomio que pasa por todos los puntos, con autoevaluación mejorada.',
+    formula: 'P(x) = Σ yᵢ · Lᵢ(x)',
+    criterioTexto: 'Pasa exacto por los n + 1 puntos; con cuestionario previo y subida de resolución.',
+    color: '#2563eb',
   },
   {
     key: 'minimos-cuadrados',

@@ -3,6 +3,8 @@ import { EJERCICIOS_SECANTE } from '../secante.contenido';
 import { COLUMNAS_SECANTE } from '../secante.config';
 import { SecanteService } from '../secante.service';
 import { BloqueEjercicio } from '../../../../../../shared/domain/bloque-ejercicio/bloque-ejercicio';
+import { autoevaluacionMejoradaM1, politicaDeMetodoM1 } from '../../../../autoevaluacion.config';
+import { AUTOEVALUACION_SECANTE } from '../secante.autoevaluacion';
 import { dibujarSecante } from '../secante.grafico';
 
 @Component({
@@ -13,7 +15,13 @@ import { dibujarSecante } from '../secante.grafico';
   styleUrl: './secante-autoevaluacion.scss',
 })
 export class SecanteAutoevaluacion {
-  readonly ejercicios = EJERCICIOS_SECANTE;
+  readonly ejercicios = EJERCICIOS_SECANTE.map((e) => ({
+    ...e,
+    ...(AUTOEVALUACION_SECANTE[e.id] ?? {}),
+  }));
+
+  readonly mejorada = autoevaluacionMejoradaM1('abiertos', 'secante');
+  readonly desbloqueoBase = politicaDeMetodoM1('abiertos', 'secante');
   readonly columnas = COLUMNAS_SECANTE;
   readonly dibujar = dibujarSecante;
 

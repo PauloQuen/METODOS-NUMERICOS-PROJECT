@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.panel-ejercicio {
+  padding: 0.85rem 1rem;
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+}
+
+/* La resolución es compacta: no necesita todo el ancho de la tarjeta. */
+.panel-ejercicio--compacto {
+  max-width: 38rem;
+}
+
+.panel-ejercicio__titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--on-surface);
+}
+
+.panel-ejercicio__subtitulo {
+  margin: 0.25rem 0 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.55;
+  color: var(--on-surface-variant);
+}
+
+.panel-ejercicio__cuerpo {
+  margin-top: 0.75rem;
+  font-size: var(--text-body-md);
+  line-height: 1.65;
+  color: var(--on-surface);
+}
+
+@media (max-width: 640px) {
+  .panel-ejercicio--compacto {
+    max-width: none;
+  }
+}

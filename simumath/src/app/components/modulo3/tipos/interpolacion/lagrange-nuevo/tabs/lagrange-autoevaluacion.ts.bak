@@ -1,0 +1,258 @@
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { EJERCICIOS_LAGRANGE } from '../lagrange.contenido';
+import { COLUMNAS_LAGRANGE } from '../lagrange.config';
+import { LagrangeService, type LagrangeEstado } from '../lagrange.service';
+import { crearDibujoLagrange } from '../lagrange.grafico';
+import { BloqueEjercicioDatos } from '../../../../shared/bloque-ejercicio-datos/bloque-ejercicio-datos';
+
+type TipoFiltro = 'todos' | 'numerico' | 'casuistica';
+
+interface PreguntaCuestionario {
+  id: string;
+  texto: string;
+  opciones: { id: string; texto: string; correcta: boolean }[];
+  explicacion: string;
+}
+
+interface EstadoEjercicio {
+  filtro: TipoFiltro;
+  cuestionarioCompletado: boolean;
+  cuestionarioAprobado: boolean;
+  respuestas: Record<string, string>;
+  erroresCuestionario: string[];
+  resolucionTexto: string;
+  resolucionSubida: boolean;
+  archivoNombre: string | null;
+  mostrarSolucion: boolean;
+}
+
+const CUESTIONARIO_NUMERICO: PreguntaCuestionario[] = [
+  {
+    id: 'metodo',
+    texto: '¿Qué método conviene para este ejercicio?',
+    opciones: [
+      { id: 'a', texto: 'Interpolación de Lagrange', correcta: true },
+      { id: 'b', texto: 'Mínimos cuadrados', correcta: false },
+      { id: 'c', texto: 'Bisección', correcta: false },
+      { id: 'd', texto: 'Newton-Raphson', correcta: false },
+    ],
+    explicacion: 'Se pide estimar un valor con una tabla de puntos exactos → Interpolación.',
+  },
+  {
+    id: 'criterio',
+    texto: '¿Qué criterio se cumple al interpolar con todos los puntos?',
+    opciones: [
+      { id: 'a', texto: 'El polinomio pasa exactamente por todos los puntos', correcta: true },
+      { id: 'b', texto: 'Minimiza la suma de residuos al cuadrado', correcta: false },
+      { id: 'c', texto: 'Se detiene por error relativo', correcta: false },
+      { id: 'd', texto: 'Requiere intervalo con cambio de signo', correcta: false },
+    ],
+    explicacion: 'Lagrange construye un polinomio que pasa exactamente por cada nodo.',
+  },
+  {
+    id: 'parametro',
+    texto: '¿Qué parámetro nos permite obtener la estimación?',
+    opciones: [
+      { id: 'a', texto: 'El valor x donde se quiere evaluar P(x)', correcta: true },
+      { id: 'b', texto: 'La tolerancia tol', correcta: false },
+      { id: 'c', texto: 'El número de iteraciones', correcta: false },
+      { id: 'd', texto: 'El intervalo [a,b]', correcta: false },
+    ],
+    explicacion: 'Hay que indicar x* para evaluar el polinomio interpolante.',
+  },
+  {
+    id: 'tipo',
+    texto: '¿Qué tipo de problema es?',
+    opciones: [
+      { id: 'a', texto: 'Interpolación (curva pasa por todos los puntos)', correcta: true },
+      { id: 'b', texto: 'Ajuste de curvas (mínimos cuadrados)', correcta: false },
+      { id: 'c', texto: 'Resolución de ecuación f(x)=0', correcta: false },
+      { id: 'd', texto: 'Sistemas lineales', correcta: false },
+    ],
+    explicacion: 'Con tabla exacta y se pide estimar entre/para un valor → interpolación.',
+  },
+];
+
+const CUESTIONARIO_CASUISTICA: PreguntaCuestionario[] = [
+  {
+    id: 'interpretacion',
+    texto: '¿Qué datos debo extraer primero del enunciado?',
+    opciones: [
+      { id: 'a', texto: 'Los pares (x,y) para armar la tabla', correcta: true },
+      { id: 'b', texto: 'Solo el valor final', correcta: false },
+      { id: 'c', texto: 'Únicamente la fórmula', correcta: false },
+      { id: 'd', texto: 'Nada, ya vienen dados', correcta: false },
+    ],
+    explicacion: 'En casuística hay que identificar magnitudes, unidades y armar (x,y).',
+  },
+  {
+    id: 'metodo',
+    texto: '¿Cuál es el método más adecuado?',
+    opciones: [
+      { id: 'a', texto: 'Interpolación de Lagrange', correcta: true },
+      { id: 'b', texto: 'Mínimos cuadrados', correcta: false },
+      { id: 'c', texto: 'Gauss-Seidel', correcta: false },
+      { id: 'd', texto: 'Regla Falsa', correcta: false },
+    ],
+    explicacion: 'Se quieren estimar valores con datos puntuales y se asume tabla confiable.',
+  },
+  {
+    id: 'xestrella',
+    texto: '¿Qué significa x* en este contexto?',
+    opciones: [
+      { id: 'a', texto: 'El instante/valor donde se quiere estimar la magnitud', correcta: true },
+      { id: 'b', texto: 'La raíz de la ecuación', correcta: false },
+      { id: 'c', texto: 'El error tolerado', correcta: false },
+      { id: 'd', texto: 'El número de iteraciones', correcta: false },
+    ],
+    explicacion: 'x* es el punto de interpolación (puede estar entre los datos).',
+  },
+  {
+    id: 'familia',
+    texto: '¿Interpolación o ajuste?',
+    opciones: [
+      { id: 'a', texto: 'Interpolación, porque se busca el valor con ese modelo puntual', correcta: true },
+      { id: 'b', texto: 'Ajuste, siempre se minimiza error cuadrático', correcta: false },
+      { id: 'c', texto: 'Ninguno, es un sistema', correcta: false },
+      { id: 'd', texto: 'Es bisección', correcta: false },
+    ],
+    explicacion: 'Si el enunciado pide estimar con esos datos puntuales, típicamente es interpolación.',
+  },
+];
+
+@Component({
+  selector: 'app-lagrange-autoevaluacion',
+  standalone: true,
+  imports: [BloqueEjercicioDatos, FormsModule],
+  templateUrl: './lagrange-autoevaluacion.html',
+  styleUrl: '../../../../shared/estilos/lista.scss',
+})
+export class LagrangeAutoevaluacion {
+  private readonly servicio = inject(LagrangeService);
+
+  readonly ejercicios = EJERCICIOS_LAGRANGE;
+  readonly columnas = COLUMNAS_LAGRANGE;
+
+  protected readonly calculos: LagrangeEstado[] = this.ejercicios.map((e) =>
+    this.servicio.calcularEjemplo(e),
+  );
+
+  private readonly funciones = this.ejercicios.map((e) => this.servicio.polinomioDe(e.calculo));
+  private readonly rangos = this.ejercicios.map((e) => this.servicio.rangoPara(e.calculo));
+  private readonly dibujos = this.ejercicios.map((e, i) =>
+    crearDibujoLagrange({ evaluarEn: e.calculo.evaluarEn, valor: this.calculos[i].valor }),
+  );
+
+  protected filtro = signal<TipoFiltro>('todos');
+  protected estados = signal<EstadoEjercicio[]>(
+    this.ejercicios.map(() => ({
+      filtro: 'todos',
+      cuestionarioCompletado: false,
+      cuestionarioAprobado: false,
+      respuestas: {},
+      erroresCuestionario: [],
+      resolucionTexto: '',
+      resolucionSubida: false,
+      archivoNombre: null,
+      mostrarSolucion: false,
+    })),
+  );
+
+  protected ejerciciosFiltrados = computed(() => {
+    const f = this.filtro();
+    if (f === 'todos') return this.ejercicios.map((e, i) => ({ e, i }));
+    return this.ejercicios
+      .map((e, i) => ({ e, i }))
+      .filter(({ e }) => e.tipo === f);
+  });
+
+  protected cuestionarioPara(indice: number): PreguntaCuestionario[] {
+    const e = this.ejercicios[indice];
+    return e.tipo === 'casuistica' ? CUESTIONARIO_CASUISTICA : CUESTIONARIO_NUMERICO;
+  }
+
+  protected estadoDe(indice: number): EstadoEjercicio {
+    return this.estados()[indice];
+  }
+
+  protected actualizarEstado(indice: number, parcial: Partial<EstadoEjercicio>): void {
+    this.estados.update((arr) => {
+      const copia = [...arr];
+      copia[indice] = { ...copia[indice], ...parcial };
+      return copia;
+    });
+  }
+
+  protected responder(indice: number, preguntaId: string, opcionId: string): void {
+    const est = this.estadoDe(indice);
+    this.actualizarEstado(indice, {
+      respuestas: { ...est.respuestas, [preguntaId]: opcionId },
+    });
+  }
+
+  protected corregirCuestionario(indice: number): void {
+    const preguntas = this.cuestionarioPara(indice);
+    const est = this.estadoDe(indice);
+    const errores: string[] = [];
+    for (const p of preguntas) {
+      const resp = est.respuestas[p.id];
+      const correcta = p.opciones.find((o) => o.correcta)?.id;
+      if (resp !== correcta) {
+        errores.push(`Pregunta "${p.texto}": respuesta incorrecta. ${p.explicacion}`);
+      }
+    }
+    this.actualizarEstado(indice, {
+      cuestionarioCompletado: true,
+      cuestionarioAprobado: errores.length === 0,
+      erroresCuestionario: errores,
+    });
+  }
+
+  protected subirResolucion(indice: number): void {
+    const est = this.estadoDe(indice);
+    if (est.resolucionTexto.trim().length === 0 && !est.archivoNombre) {
+      alert('Subí tu resolución en texto o adjuntá un archivo (imagen/PDF).');
+      return;
+    }
+    this.actualizarEstado(indice, { resolucionSubida: true });
+  }
+
+  protected onArchivo(indice: number, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) {
+      this.actualizarEstado(indice, { archivoNombre: file.name });
+    }
+  }
+
+  protected puedeVerSolucion(indice: number): boolean {
+    const est = this.estadoDe(indice);
+    return est.cuestionarioAprobado && est.resolucionSubida;
+  }
+
+  protected toggleSolucion(indice: number): void {
+    if (!this.puedeVerSolucion(indice)) {
+      alert('Para ver la resolución completa debés aprobar el cuestionario previo y subir tu resolución/respuesta.');
+      return;
+    }
+    const est = this.estadoDe(indice);
+    this.actualizarEstado(indice, { mostrarSolucion: !est.mostrarSolucion });
+  }
+
+  protected calculoDe(indice: number): LagrangeEstado {
+    return this.calculos[indice];
+  }
+
+  protected funcionDe(indice: number): (x: number) => number {
+    return this.funciones[indice];
+  }
+
+  protected rangoDe(indice: number): { min: number; max: number } {
+    return this.rangos[indice];
+  }
+
+  protected dibujoDe(indice: number) {
+    return this.dibujos[indice];
+  }
+}

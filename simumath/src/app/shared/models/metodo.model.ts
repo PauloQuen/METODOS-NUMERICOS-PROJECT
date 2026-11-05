@@ -1,3 +1,8 @@
+import type {
+  FormatoRespuesta,
+  ValorCorrecto,
+} from '../autoevaluacion-mejorada/respuesta.strategy';
+
 /**
  * Formas de datos que comparten TODOS los métodos del Módulo 1.
  *
@@ -35,6 +40,15 @@ export interface Columna {
   /** Texto del encabezado. */
   label: string;
   align?: 'left' | 'right' | 'center';
+  /**
+   * ¿La celda va en fuente monoespaciada?
+   *
+   * El Módulo 2 escribe FILAS DE MATRIZ: "0  −1.5  −1  |  1". Para que
+   * esas columnas queden alineadas hay que aplicar una fuente de ancho
+   * fijo y conservar los espacios de relleno, que el navegador colapsa
+   * si no se lo pide explícitamente.
+   */
+  monoespaciado?: boolean;
 }
 
 /* ------------------------------------------------------------------ */
@@ -76,7 +90,28 @@ export interface ExtraccionDatos {
  * cambia, lo que cambia es que la casuística tiene que mostrar de dónde
  * salen los números. Por eso el campo `extraccion` es opcional.
  */
-export interface Ejemplo {
+export interface Ejemplo extends EjemploBase {
+  /** Con qué datos se calcula la tabla y el gráfico. */
+  calculo: DatosCalculo;
+}
+
+/**
+ * La parte de un ejemplo que NO depende del tipo de problema.
+ *
+ * ── Por qué existe ─────────────────────────────────────────────────────
+ * Todo lo que un ejemplo muestra en pantalla (título, planteamiento,
+ * interpretación, pasos, algoritmo, criterio, conclusión) es idéntico
+ * para el Módulo 1 y para el Módulo 2. Lo ÚNICO que cambia son los datos
+ * con los que se calcula: en el Módulo 1 es una función, en el Módulo 2
+ * es una matriz.
+ *
+ * Como los componentes compartidos (`bloque-ejemplo`, `bloque-ejercicio`)
+ * solo muestran esa parte común y nunca tocan los datos de cálculo, la
+ * separación evita duplicar 40 líneas de tipos y, sobre todo, evita
+ * duplicar el LAYOUT: el Módulo 2 reutiliza el mismo bloque, con su
+ * propio gráfico proyectado adentro.
+ */
+export interface EjemploBase {
   id: string;
   titulo: string;
   tipo: 'numerico' | 'casuistica';
@@ -101,23 +136,46 @@ export interface Ejemplo {
   criterio: string;
   /** Cierre con la respuesta y su interpretación. */
   conclusion: string;
-
-  /** Con qué datos se calcula la tabla y el gráfico. */
-  calculo: DatosCalculo;
 }
 
 /**
  * Un ejercicio de autoevaluación. Es un Ejemplo más el "reto" de
  * resolverlo antes de ver la solución, así que hereda todo.
  */
-export interface Ejercicio extends Ejemplo {
+export interface Ejercicio extends Ejemplo, EjercicioBase {
   /** Pista que se muestra junto al botón "Ver solución". */
   pista?: string;
+}
+
+/**
+ * El mismo ejercicio, sin atar el tipo de datos con el que se calcula.
+ * Es lo que recibe `bloque-ejercicio`, que muestra el enunciado y
+ * delega la solución al `bloque-ejemplo`.
+ */
+export interface EjercicioBase extends EjemploBase {
+  /** Pista que se muestra junto al botón "Ver solución". */
+  pista?: string;
+  /** Cuestionario de comprensión (opcional). */
+  cuestionario?: PreguntaCuestionarioAuto[];
+  /** Verificación numérica (opcional). */
+  resolucion?: ResolucionVerificable;
+  /** Configuración de desbloqueo (opcional). */
+  desbloqueo?: DesbloqueoConfig;
+  /** Formato de la respuesta verificable. Por defecto, `escalar`. */
+  formatoRespuesta?: FormatoRespuesta;
 }
 
 /* ------------------------------------------------------------------ */
 /* Teoría                                                               */
 /* ------------------------------------------------------------------ */
+
+/** Un enlace externo para ampliar la teoría (video, lectura o simulador). */
+export interface RecursoTeoria {
+  titulo: string;
+  url: string;
+  tipo: 'video' | 'lectura' | 'interactivo';
+  descripcion: string;
+}
 
 /** La tarjeta ancha de información del algoritmo (Bloque 2 de Teoría). */
 export interface InfoAlgoritmo {
@@ -144,6 +202,8 @@ export interface ContenidoTeoria {
   ordenConvergencia: string;
   /** Link del video (opcional). */
   videoUrl?: string;
+  /** Recursos de internet para ampliar (opcional). */
+  recursos?: RecursoTeoria[];
   /** La tarjeta de algoritmo. */
   algoritmo: InfoAlgoritmo;
   /** Ejemplo numérico de la teoría. */
@@ -152,8 +212,25 @@ export interface ContenidoTeoria {
   ejemploCasuistica: Ejemplo;
 }
 
+/**
+ * Lo que necesita el marco compartido de Teoría.
+ *
+ * Los tres módulos tienen los mismos campos comunes; solo cambian el
+ * nombre del tercer bloque (orden, error o precisión) y la forma de los
+ * ejemplos. Por eso el marco recibe esta vista estructural y cada
+ * página le pasa su propio texto para la tercera idea.
+ */
+export interface TeoriaPlantillaVista {
+  concepto: string;
+  fundamento: string;
+  cuandoFalla: string;
+  videoUrl?: string;
+  recursos?: readonly RecursoTeoria[];
+  algoritmo: InfoAlgoritmo;
+}
+
 /* ------------------------------------------------------------------ */
-/* Calculadora                                                          */
+/* Calculadora                                                         */
 /* ------------------------------------------------------------------ */
 
 /** Un campo de entrada de la calculadora. */
@@ -180,6 +257,15 @@ export interface CampoCalculadora {
    * HTML es solo la ayuda visual del navegador.
    */
   tipo: 'text' | 'number';
+  /**
+   * ¿El campo ocupa varias líneas?
+   *
+   * El Módulo 2 escribe matrices, que van en varias filas. Con esta
+   * bandera el campo se dibuja como un área de texto.
+   */
+  multilinea?: boolean;
+  /** Cuántas filas muestra el área de texto. */
+  filas?: number;
   /** Placeholder del input. */
   placeholder?: string;
 }
@@ -190,8 +276,30 @@ export interface RespuestaCalculadora {
   exito: boolean;
   /** La raíz aproximada, formateada. */
   raiz?: string;
+  /**
+   * La solución del sistema, formateada: "(2, 3)".
+   *
+   * El Módulo 2 no busca una raíz: busca un VECTOR. Por eso la
+   * respuesta trae las dos cosas y la calculadora muestra la que
+   * corresponda: la raíz en el Módulo 1, la solución en el Módulo 2.
+   */
+  solucion?: string;
   /** Cuántas iteraciones hizo. */
   iteraciones?: number;
+  /**
+   * Cuántas unidades de trabajo hizo el método, cuando no son iteraciones.
+   *
+   * Un método DIRECTO no itera: hace una cantidad fija de pasos (una
+   * eliminación y una sustitución). Decir "iteraciones" ahí sería
+   * mentira, así que estos dos campos permiten nombrar el conteo como
+   * corresponde: "Pasos" para la eliminación, "Iteraciones" para Jacobi.
+   *
+   * Si vienen vacíos, la calculadora usa `iteraciones` y el rótulo
+   * "Iteraciones", que es el caso del Módulo 1.
+   */
+  conteo?: number;
+  /** Cómo se llama el conteo: "Pasos", "Iteraciones". */
+  etiquetaConteo?: string;
   /** El error que se logró. */
   error?: string;
   /** Conclusión en palabras. */
@@ -243,4 +351,35 @@ export interface ContextoGrafico {
   rango: { min: number; max: number };
   /** La raíz encontrada, si ya se encontró. */
   raiz?: number;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Autoevaluación mejorada (aditivo)                                   */
+/* ------------------------------------------------------------------ */
+
+export interface PreguntaCuestionarioAuto {
+  id: string;
+  tipo: 'opcion-multiple' | 'verdadero-falso';
+  enunciado: string;
+  opciones: { id: string; texto: string }[];
+  correcta: string;
+  explicacion: string;
+}
+
+export interface ResolucionVerificable {
+  /** Número, vector o matriz, según el formato declarado en el ejercicio. */
+  valorCorrecto: ValorCorrecto;
+  tolerancia?: number;
+  etiqueta?: string;
+  unidad?: string;
+  respuestaFinalTexto?: string;
+  /** Puntos donde evaluar el polinomio si se acepta una forma equivalente. */
+  puntosPrueba?: number[];
+}
+
+export interface DesbloqueoConfig {
+  politica?: 'cuestionario' | 'respuesta' | 'cualquiera' | 'ambos';
+  umbralCuestionario?: number;
+  intentosParaRendirse?: number;
 }

@@ -1,0 +1,54 @@
+<div #contenedor class="grafico-sistema__contenedor">
+  <div class="grafico-sistema__controles" aria-label="Controles de zoom y vista del gráfico">
+    <button
+      type="button"
+      class="grafico-sistema__boton"
+      (click)="alejar()"
+      title="Alejar (zoom -)"
+      aria-label="Alejar"
+    >
+      <span class="material-symbols-outlined">zoom_out</span>
+    </button>
+    <button
+      type="button"
+      class="grafico-sistema__boton"
+      (click)="acercar()"
+      title="Acercar (zoom +)"
+      aria-label="Acercar"
+    >
+      <span class="material-symbols-outlined">zoom_in</span>
+    </button>
+    <button
+      type="button"
+      class="grafico-sistema__boton"
+      (click)="reiniciarVista()"
+      title="Restablecer zoom y posición (doble clic también)"
+      aria-label="Restablecer vista"
+    >
+      <span class="material-symbols-outlined">refresh</span>
+    </button>
+  </div>
+
+  @if (esPlano2D()) {
+    <canvas
+      #lienzo
+      class="grafico-sistema__lienzo"
+      role="img"
+      [attr.aria-label]="descripcionGrafico()"
+    ></canvas>
+  } @else {
+    <!--
+      Un sistema de tres o más incógnitas no cabe en dos ejes. En vez
+      de mostrar un gráfico vacío (o peor, uno que mienta), se explica
+      por qué no hay gráfico y la tabla de pasos sigue funcionando.
+    -->
+    <div class="grafico-sistema__aviso" role="note">
+      <span class="material-symbols-outlined" aria-hidden="true">info</span>
+      <p>
+        El gráfico representa las rectas del sistema en el plano x₁–x₂, así que se aplica
+        a sistemas de 2 ecuaciones y 2 incógnitas. Con este sistema la solución se ve en la
+        tabla de pasos, más abajo.
+      </p>
+    </div>
+  }
+</div>

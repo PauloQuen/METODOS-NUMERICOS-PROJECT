@@ -2,14 +2,14 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { TEORIA_REGLA_FALSA } from '../regla-falsa.contenido';
 import { COLUMNAS_REGLA_FALSA, DATOS_POR_DEFECTO } from '../regla-falsa.config';
 import { ReglaFalsaService } from '../regla-falsa.service';
-import { UiCard } from '../../../../../../shared/ui/ui-card/ui-card';
 import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bloque-ejemplo';
+import { TeoriaContenido } from '../../../../../../shared/domain/teoria-contenido/teoria-contenido';
 import { dibujarReglaFalsa } from '../regla-falsa.grafico';
 
 @Component({
   selector: 'app-regla-falsa-teoria',
   standalone: true,
-  imports: [UiCard, BloqueEjemplo],
+  imports: [BloqueEjemplo, TeoriaContenido],
   templateUrl: './regla-falsa-teoria.html',
   styleUrl: './regla-falsa-teoria.scss',
 })

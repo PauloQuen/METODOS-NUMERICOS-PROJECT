@@ -7,6 +7,10 @@ import {
 } from '../minimos-cuadrados.service';
 import { crearDibujoMinimosCuadrados } from '../minimos-cuadrados.grafico';
 import { BloqueEjercicioDatos } from '../../../../shared/bloque-ejercicio-datos/bloque-ejercicio-datos';
+import {
+  autoevaluacionMejoradaM3,
+  politicaDeMetodoM3,
+} from '../../../../autoevaluacion.config';
 
 /**
  * PESTAÑA DE AUTOEVALUACIÓN de Mínimos Cuadrados (3 + 3).
@@ -26,6 +30,9 @@ export class MinimosCuadradosAutoevaluacion {
 
   readonly ejercicios = EJERCICIOS_MINIMOS_CUADRADOS;
   readonly columnas = COLUMNAS_MINIMOS_CUADRADOS;
+
+  readonly mejorada = autoevaluacionMejoradaM3('ajuste', 'minimos-cuadrados');
+  readonly desbloqueoBase = politicaDeMetodoM3('ajuste', 'minimos-cuadrados');
 
   protected readonly calculos: MinimosCuadradosEstado[] = this.ejercicios.map((e) =>
     this.servicio.calcularEjemplo(e),

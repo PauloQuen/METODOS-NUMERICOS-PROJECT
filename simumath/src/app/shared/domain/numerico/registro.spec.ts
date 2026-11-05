@@ -60,13 +60,14 @@ describe('registro de métodos', () => {
       }
     });
 
-    it('clasifica los cinco métodos implementados según el principio de cada familia', () => {
+    it('clasifica los seis métodos implementados según el principio de cada familia', () => {
       const porFamilia = Object.fromEntries(
         FAMILIAS.map((f) => [f.key, metodosDeFamilia(f.key).map((m) => m.key)]),
       );
 
       expect(porFamilia['cerrados']).toEqual(['biseccion', 'reglaFalsa']);
       expect(porFamilia['abiertos']).toEqual(['newton', 'secante', 'puntoFijo']);
+      expect(porFamilia['polinomios']).toEqual(['cardano']);
     });
 
     it('la familia cerrada es la única que exige intervalo y cambio de signo', () => {
@@ -226,10 +227,22 @@ describe('registro de métodos', () => {
       );
     });
 
-    it('falla claro si se pide un método planificado', () => {
-      expect(() => ejecutarMetodo('cardano', raiz, {}, { tol: 1e-6 })).toThrowError(
-        /no implementado todavía/,
-      );
+    it('falla claro si se pide un método declarado pero sin implementar', () => {
+      // El Módulo 1 cerró con los seis métodos implementados, así que ya no
+      // queda ningún `planificado` real que ejercite este guard. Lo simulamos
+      // un instante (y lo restauramos pase lo que pase): el guard existe para
+      // el próximo método que se anuncie antes de estar listo, y sin este test
+      // podría borrarse sin que nadie note que la UI quedaría muda.
+      const cardano = REGISTRO_POR_KEY['cardano'];
+      const ejecutarOriginal = cardano.ejecutar;
+      try {
+        cardano.ejecutar = undefined;
+        expect(() => ejecutarMetodo('cardano', raiz, {}, { tol: 1e-6 })).toThrowError(
+          /no implementado todavía/,
+        );
+      } finally {
+        cardano.ejecutar = ejecutarOriginal;
+      }
     });
 
     it('falla claro con una key que no existe', () => {

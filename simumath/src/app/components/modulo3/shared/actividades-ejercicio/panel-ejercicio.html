@@ -1,0 +1,17 @@
+<section
+  class="panel-ejercicio"
+  [class.panel-ejercicio--compacto]="tamano() === 'compacto'"
+  [id]="panelId()"
+  role="region"
+  [attr.aria-labelledby]="labelledby()"
+>
+  <h4 class="panel-ejercicio__titulo">{{ titulo() }}</h4>
+
+  @if (subtitulo()) {
+    <p class="panel-ejercicio__subtitulo">{{ subtitulo() }}</p>
+  }
+
+  <div class="panel-ejercicio__cuerpo">
+    <ng-content />
+  </div>
+</section>

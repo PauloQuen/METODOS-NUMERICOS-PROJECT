@@ -1,0 +1,55 @@
+<article class="video-card">
+  <header class="video-card__header">
+    <h4 class="video-card__titulo">{{ video().titulo }}</h4>
+    @if (video().canal || video().duracion) {
+      <p class="video-card__meta">
+        {{ video().canal }}
+        @if (video().canal && video().duracion) {
+          ·
+        }
+        {{ video().duracion }}
+      </p>
+    }
+  </header>
+
+  @if (video().descripcion) {
+    <p class="video-card__desc">{{ video().descripcion }}</p>
+  }
+
+  @if (video().estado === 'pendiente') {
+    <div class="recursos__pendiente">Recurso pendiente de verificar</div>
+  } @else if (video().youtubeId || video().url) {
+    <button
+      type="button"
+      class="recursos__btn"
+      [attr.aria-expanded]="abierto()"
+      [attr.aria-controls]="frameId()"
+      (click)="alternar()"
+    >
+      {{ abierto() ? 'Ocultar video' : 'Ver video' }}
+    </button>
+
+    @if (abierto()) {
+      @if (embedUrlSeguro(); as src) {
+        <div class="video-card__frame" [id]="frameId()">
+          <iframe
+            [src]="src"
+            [title]="video().titulo"
+            frameborder="0"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+      }
+    }
+
+    @if (urlExterna()) {
+      <a class="video-card__enlace" [href]="urlExterna()" target="_blank" rel="noopener noreferrer">
+        Abrir en una pestaña nueva
+        <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+      </a>
+    }
+  }
+</article>

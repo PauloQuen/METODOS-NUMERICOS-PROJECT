@@ -38,6 +38,7 @@ import {
 } from './criterio';
 import {
   biseccion,
+  cardano,
   newton,
   puntoFijo,
   reglaFalsa,
@@ -421,23 +422,31 @@ export const REGISTRO: readonly MetodoRegistrado[] = [
     nombre: 'Fórmula de Cardano',
     ruta: 'cardano',
     familia: 'polinomios',
-    estado: 'planificado',
+    estado: 'implementado',
     formula: 'x = −b/(3a) + ∛(−q/2 + √Δ) + ∛(−q/2 − √Δ)',
     idea:
       'Resuelve la cúbica completa por álgebra, sin iterar: da la raíz en forma cerrada.',
     cuandoUsarlo:
-      'Cuando el polinomio es de grado ≤ 3 y querés la respuesta exacta, no una aproximación. Es instantánea, pero solo aplica a polinomios.',
+      'Cuando el polinomio es de grado ≤ 3 y querés la respuesta exacta, no una aproximación. Es instantáneo, pero solo aplica a polinomios.',
     orden: null,
     ordenTexto: 'exacto (no itera)',
     requiereIntervalo: false,
     requiereCambioDeSigno: false,
     usaDerivada: false,
     operaSobreG: false,
-    columnas: [],
-    columnaValor: '',
+    // La tabla de Cardano no son iteraciones: son los pasos del
+    // desarrollo algebraico. Las raíces son las últimas filas, y su
+    // 'valor' numérico es lo que el gráfico usa para marcarlas.
+    columnas: ['paso', 'etapa', 'detalle', 'valor'],
+    columnaValor: 'valor',
     columnaResiduo: null,
+    // No pide ni intervalo ni semilla: solo la expresión de la cúbica.
     entradas: [],
-    ejemplo: { funcion: 'x^3 - x - 2', nota: 'Una cúbica con coeficiente de x² = 0: ya está en forma deprimida, que es lo que Cardano necesita.' },
+    ejemplo: {
+      funcion: 'x^3 - x - 2',
+      nota: 'Una cúbica con coeficiente de x² = 0: ya está en forma deprimida, que es lo que Cardano necesita.',
+    },
+    ejecutar: (fn) => cardano(fn),
   },
 ] as const;
 
@@ -735,4 +744,19 @@ export function puntosDeIteracion(
  */
 export function coordenadaRaiz(m: MetodoRegistrado, fila: IterRow): number {
   return valorNumericoDe(fila, m.columnaValor);
+}
+
+/**
+ * TODAS las raíces que un método reporta en sus filas.
+ *
+ * La usan los métodos exactos (familia `polinomios`), que devuelven varias
+ * raíces de una sola vez —a diferencia de los iterativos, que vuelcan una
+ * aproximación por fila y marcan una sola. Se leen de `columnaValor`, que
+ * para Cardano es `valor`: las filas del desarrollo algebraico traen '—'
+ * (NaN, se saltean) y las de raíz traen el número.
+ */
+export function raicesDeFilas(m: MetodoRegistrado, rows: readonly IterRow[]): number[] {
+  return rows
+    .map((f) => valorNumericoDe(f, m.columnaValor))
+    .filter((x) => Number.isFinite(x));
 }

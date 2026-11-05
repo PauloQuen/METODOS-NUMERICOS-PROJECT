@@ -1,0 +1,80 @@
+<app-teoria-contenido
+  [teoria]="teoria"
+  [terceraTexto]="teoria.ordenConvergencia"
+  terceraTitulo="El error y el costo: cuándo conviene LU"
+  terceraIcono="error"
+  tituloMetodo="El algoritmo"
+  tituloCriterios="Qué se verifica en cada paso"
+  tituloRecomendaciones="Recomendaciones"
+>
+  <!--
+    6. Ejemplo numérico.
+
+    El gráfico va en el SLOT `grafico`: es un `app-grafico-sistema`, no
+    el gráfico de función del Módulo 1. El bloque se encarga del layout
+    (texto, pasos, tabla, conclusión) y el gráfico se proyecta adentro,
+    así que los dos módulos comparten el molde sin mezclarse.
+
+    `sistemasExtra` es lo que LU tiene y Gauss no: durante la
+    descomposición, el sistema triangular U·x = y se dibuja encima, con
+    trazo atenuado. Se ve cómo la segunda recta se aplana.
+  -->
+  <section class="teoria-m3__seccion">
+    <h2 class="teoria-m3__titulo">Ejemplo numérico resuelto</h2>
+    <app-bloque-ejemplo
+      [ejemplo]="teoria.ejemploNormal"
+      [columnas]="columnas"
+      [filas]="ejemploNumerico().filas"
+      [filaFinal]="ejemploNumerico().filaFinal"
+      [textosPasos]="ejemploNumerico().textosPasos"
+      [highlightBadge]="'Solución hallada'"
+      [rango]="rangoNumerico()"
+      tituloPasos="Pasos (descomposición y sustituciones)"
+      etiquetaPaso="Paso"
+      tituloCriterio="Descomposición y sustituciones"
+      (pasoCambiado)="pasoNumerico.set($event)"
+    >
+      <app-grafico-sistema
+        slot="grafico"
+        [sistema]="ejemploNumerico().sistema"
+        [solucion]="ejemploNumerico().solucion"
+        [iteraciones]="ejemploNumerico().filas"
+        [pasoActual]="pasoNumerico()"
+        [rango]="rangoNumerico()"
+        [sistemasExtra]="extraNumerico()"
+        [dibujarSistema]="dibujar"
+        leyenda="Rectas del sistema, sistema triangular y construcción de la solución"
+      />
+    </app-bloque-ejemplo>
+  </section>
+
+  <!-- 7. Ejemplo de casuística -->
+  <section class="teoria-m3__seccion">
+    <h2 class="teoria-m3__titulo">Ejemplo desde una casuística real</h2>
+    <app-bloque-ejemplo
+      [ejemplo]="teoria.ejemploCasuistica"
+      [columnas]="columnas"
+      [filas]="ejemploCasuistica().filas"
+      [filaFinal]="ejemploCasuistica().filaFinal"
+      [textosPasos]="ejemploCasuistica().textosPasos"
+      [highlightBadge]="'Solución hallada'"
+      [rango]="rangoCasuistica()"
+      tituloPasos="Pasos (descomposición y sustituciones)"
+      etiquetaPaso="Paso"
+      tituloCriterio="Descomposición y sustituciones"
+      (pasoCambiado)="pasoCasuistica.set($event)"
+    >
+      <app-grafico-sistema
+        slot="grafico"
+        [sistema]="ejemploCasuistica().sistema"
+        [solucion]="ejemploCasuistica().solucion"
+        [iteraciones]="ejemploCasuistica().filas"
+        [pasoActual]="pasoCasuistica()"
+        [rango]="rangoCasuistica()"
+        [sistemasExtra]="extraCasuistica()"
+        [dibujarSistema]="dibujar"
+        leyenda="Rectas del sistema, sistema triangular y construcción de la solución"
+      />
+    </app-bloque-ejemplo>
+  </section>
+</app-teoria-contenido>
