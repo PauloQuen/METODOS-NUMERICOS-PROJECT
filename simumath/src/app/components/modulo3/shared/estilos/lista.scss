@@ -38,3 +38,18 @@
   padding-bottom: 0;
   border-bottom: none;
 }
+
+.lista-m3-tab__nueva-tanda {
+  align-self: flex-start;
+  padding: .75rem 1.2rem;
+  border: 1px solid var(--outline-variant);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--on-surface);
+  cursor: pointer;
+  font: inherit;
+}
+.lista-m3-tab__nueva-tanda:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}

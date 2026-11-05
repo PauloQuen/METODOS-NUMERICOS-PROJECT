@@ -1,0 +1,55 @@
+:host { display: block; margin: 1.5rem 0; --tinta: var(--primary, #2563eb); --acento: #b45309; }
+.pizarra { border: 1px solid var(--outline-variant); border-radius: 14px; overflow: hidden; background: var(--surface); color: var(--on-surface); }
+.pizarra__cabecera { display: flex; justify-content: space-between; align-items: center; gap: .75rem; flex-wrap: wrap; padding: .85rem 1rem; background: color-mix(in srgb, var(--tinta) 7%, var(--surface)); border-bottom: 1px solid var(--outline-variant); }
+.pizarra__etiqueta { font-weight: 700; color: var(--tinta); }
+.pizarra__contenido { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+.pizarra__cuentas { min-width: 0; padding: 1.2rem; }
+.operaciones { margin: 0; padding-left: 1.6rem; }
+.operacion { padding: .5rem 0 .85rem .3rem; animation: aparecer .4s ease-out both; }
+.operacion::marker { color: var(--tinta); font-weight: 700; }
+.operacion__etiqueta { font-size: .85rem; color: var(--on-surface-variant); }
+.ecuacion { font-family: 'Cambria Math', 'STIX Two Math', Georgia, serif; font-size: 1.12rem; line-height: 1.7; overflow-x: auto; padding: .55rem .25rem; }
+.fraccion { display: inline-flex; flex-direction: column; text-align: center; vertical-align: middle; max-width: none; }
+.fraccion > span { padding: .2rem .6rem; white-space: nowrap; }
+.fraccion > span:first-child { border-bottom: 2px solid currentColor; }
+.resultado { display: flex; flex-direction: column; gap: .4rem; margin: .75rem 0; padding: 1rem; border-left: 4px solid var(--tinta); background: color-mix(in srgb, var(--tinta) 7%, var(--surface)); border-radius: 6px; animation: aparecer .4s ease-out both; overflow-wrap: anywhere; }
+.resultado > span { font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--on-surface-variant); }
+.resultado strong { font-family: 'Cambria Math', Georgia, serif; font-size: 1.15rem; }
+.pizarra__controles { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-top: 1rem; }
+.pizarra__controles > span, .pizarra__controles p { color: var(--on-surface-variant); font-size: .8rem; margin: 0; }
+button { border: 1px solid var(--outline-variant); border-radius: 8px; padding: .55rem .8rem; font: inherit; font-size: .85rem; background: var(--surface); color: var(--on-surface); cursor: pointer; }
+.boton-siguiente { border-color: var(--tinta); color: var(--tinta); }
+button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--tinta); outline-offset: 3px; }
+.tabla-scroll { overflow-x: auto; margin-bottom: 1rem; }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; text-align: right; font-variant-numeric: tabular-nums; }
+caption { text-align: left; color: var(--on-surface-variant); padding-bottom: .6rem; }
+th, td { padding: .45rem .65rem; border-bottom: 1px solid var(--outline-variant); white-space: nowrap; }
+th { color: var(--tinta); }
+.producto { background: color-mix(in srgb, var(--tinta) 5%, var(--surface)); }
+tfoot { font-weight: 700; color: var(--tinta); }
+.grafico { min-width: 0; margin: 0; padding: 1.2rem; border-left: 1px solid var(--outline-variant); }
+figcaption { font-weight: 600; font-size: .9rem; }
+svg { width: 100%; height: auto; overflow: visible; margin: .75rem 0; }
+svg text { fill: var(--on-surface-variant); font-size: 10px; font-family: inherit; }
+.fondo { fill: color-mix(in srgb, var(--tinta) 3%, var(--surface)); }
+.rejilla { stroke: var(--outline-variant); stroke-dasharray: 3 4; }
+.ejes { fill: none; stroke: var(--on-surface-variant); stroke-width: 1; }
+.dato { fill: var(--tinta); stroke: var(--surface); stroke-width: 1.5; }
+.destacado { stroke: var(--acento); stroke-width: 3; }
+.nodo { animation: aparecer .4s ease-out both; }
+.curva { fill: none; stroke: var(--tinta); stroke-width: 2.5; stroke-dasharray: 1; stroke-dashoffset: 1; animation: trazar 1.3s ease-out forwards; }
+.residuo { stroke: var(--acento); stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: 1; animation: trazar .7s .8s ease-out forwards; }
+.proyeccion { stroke: var(--acento); stroke-dasharray: 4 4; }
+.estimacion { fill: var(--acento); stroke: var(--surface); stroke-width: 2; animation: aparecer .5s 1s both; }
+svg .texto-objetivo { fill: var(--acento); font-weight: bold; }
+.leyenda { display: flex; flex-wrap: wrap; gap: .5rem .85rem; font-size: .75rem; }
+.leyenda span { display: inline-flex; align-items: center; gap: .35rem; }
+.leyenda i { display: inline-block; width: .6rem; height: .6rem; border-radius: 50%; background: var(--tinta); }
+.leyenda .muestra-curva { height: 2px; width: 1rem; border-radius: 0; }
+.leyenda .muestra-objetivo, .leyenda .muestra-residuo { background: var(--acento); }
+.leyenda .muestra-residuo { width: 2px; height: .8rem; border-radius: 0; }
+.grafico p { font-size: .8rem; line-height: 1.6; color: var(--on-surface-variant); }
+@keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes trazar { to { stroke-dashoffset: 0; } }
+@media (max-width: 760px) { .pizarra__contenido { grid-template-columns: minmax(0, 1fr); } .grafico { border-left: 0; border-top: 1px solid var(--outline-variant); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } .curva, .residuo { stroke-dashoffset: 0; } }

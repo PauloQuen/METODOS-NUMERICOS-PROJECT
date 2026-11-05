@@ -1,0 +1,90 @@
+<section class="pizarra" aria-label="Desarrollo matemático visual">
+  <header class="pizarra__cabecera">
+    <span class="pizarra__etiqueta">Desarrollo matemático</span>
+    <button type="button" (click)="repetir()">Repetir animación</button>
+  </header>
+  <div class="pizarra__contenido">
+    <div class="pizarra__cuentas">
+      @if (visual().tabla; as tabla) {
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo del paso">
+          <table>
+            <caption>{{ tabla.columnas.length > 3 ? 'Calculamos x² y xy en cada fila' : 'Datos que usaremos para interpolar' }}</caption>
+            <thead><tr>@for (columna of tabla.columnas; track $index) { <th scope="col">{{ columna }}</th> }</tr></thead>
+            <tbody>
+              @for (fila of tabla.filas; track $index) {
+                <tr>@for (celda of fila; track $index) { <td [class.producto]="tabla.columnas.length > 3 && $index >= 3">{{ celda }}</td> }</tr>
+              }
+            </tbody>
+            @if (resuelto() && tabla.totales) {
+              <tfoot><tr>@for (celda of tabla.totales; track $index) { <td>{{ celda }}</td> }</tr></tfoot>
+            }
+          </table>
+        </div>
+      }
+      @for (replay of [repeticion()]; track replay) {
+        <ol class="operaciones" aria-live="polite" aria-relevant="additions">
+          @for (operacion of operaciones(); track $index) {
+            <li class="operacion">
+              <span class="operacion__etiqueta">{{ operacion.etiqueta }}</span>
+              <div class="ecuacion" tabindex="0" role="group" [attr.aria-label]="operacion.etiqueta">
+                @if (operacion.numerador) {
+                  <span class="fraccion" [attr.aria-label]="'(' + operacion.numerador + ') dividido entre (' + operacion.denominador + ')'">
+                    <span>{{ operacion.numerador }}</span>
+                    <span>{{ operacion.denominador }}</span>
+                  </span>
+                } @else { <span>{{ operacion.expresion }}</span> }
+              </div>
+            </li>
+          }
+        </ol>
+        @if (completo() && resuelto()) {
+          <div class="resultado" role="status"><span>Resultado del paso</span><strong>{{ visual().resultado }}</strong></div>
+        }
+        <div class="pizarra__controles">
+          @if (!completo()) {
+            <button type="button" class="boton-siguiente" (click)="mostrarSiguiente()">Mostrar siguiente operación ↓</button>
+          } @else if (!resuelto()) {
+            <p>Completa la pregunta para confirmar el resultado de este paso.</p>
+          }
+          <span>{{ operaciones().length }} / {{ visual().operaciones.length }} operaciones</span>
+        </div>
+      }
+    </div>
+    <figure class="grafico">
+      <figcaption>{{ visual().grafico.titulo }}</figcaption>
+      @for (replay of [repeticion()]; track replay) {
+        <svg viewBox="0 0 400 265" role="img" [attr.aria-label]="visual().grafico.descripcion">
+          <rect x="50" y="25" width="320" height="195" class="fondo" rx="8" />
+          @for (altura of [65, 115, 165]; track altura) { <line x1="50" x2="370" [attr.y1]="altura" [attr.y2]="altura" class="rejilla" /> }
+          <path d="M50 25 V220 H380" class="ejes" />
+          <text x="378" y="240">x</text><text x="28" y="24">y</text>
+          <text [attr.x]="plano().limites.xmin" y="242" text-anchor="start">{{ plano().xmin }}</text>
+          <text [attr.x]="plano().limites.xmax" y="242" text-anchor="end">{{ plano().xmax }}</text>
+          <text x="44" [attr.y]="plano().limites.ymax + 3" text-anchor="end">{{ plano().ymax }}</text>
+          <text x="44" [attr.y]="plano().limites.ymin + 3" text-anchor="end">{{ plano().ymin }}</text>
+          @if (plano().curva) { <path [attr.d]="plano().curva" class="curva" pathLength="1" /> }
+          @for (residuo of plano().residuos; track $index) {
+            <line [attr.x1]="residuo.x" [attr.x2]="residuo.x" [attr.y1]="residuo.y1" [attr.y2]="residuo.y2" class="residuo" pathLength="1" />
+          }
+          @for (punto of plano().puntos; track punto.i) {
+            <g class="nodo" [style.animation-delay.ms]="($index * 80)">
+              <circle [attr.cx]="punto.cx" [attr.cy]="punto.cy" r="4.5" class="dato" [class.destacado]="visual().grafico.destacarPrimero && $index === 0" />
+              <text [attr.x]="punto.cx + 7" [attr.y]="punto.cy - 8">{{ punto.i }}</text>
+            </g>
+          }
+          @if (plano().estimacion; as objetivo) {
+            <line [attr.x1]="objetivo.cx" [attr.x2]="objetivo.cx" y1="220" [attr.y2]="objetivo.cy" class="proyeccion" />
+            <circle [attr.cx]="objetivo.cx" [attr.cy]="objetivo.cy" r="6" class="estimacion" />
+            <text [attr.x]="objetivo.cx" [attr.y]="objetivo.cy - 12" text-anchor="middle" class="texto-objetivo">x*</text>
+          }
+        </svg>
+      }
+      <div class="leyenda">
+        <span><i class="muestra-dato"></i> Datos</span>
+        @if (plano().curva) { <span><i class="muestra-curva"></i> Modelo</span><span><i class="muestra-objetivo"></i> Estimación</span> }
+        @if (plano().residuos.length) { <span><i class="muestra-residuo"></i> Residuos</span> }
+      </div>
+      <p>{{ visual().grafico.descripcion }}</p>
+    </figure>
+  </div>
+</section>

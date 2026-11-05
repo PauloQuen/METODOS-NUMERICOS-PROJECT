@@ -1,4 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { crearBanco } from '../../../../autoevaluacion/banco';
+import { PracticaM3Service } from '../../../../autoevaluacion/practica.service';
+import { Component, computed, inject } from '@angular/core';
 import { EJERCICIOS_MINIMOS_CUADRADOS } from '../minimos-cuadrados.contenido';
 import { COLUMNAS_MINIMOS_CUADRADOS } from '../minimos-cuadrados.config';
 import {
@@ -28,38 +30,39 @@ import {
 export class MinimosCuadradosAutoevaluacion {
   private readonly servicio = inject(MinimosCuadradosService);
 
-  readonly ejercicios = EJERCICIOS_MINIMOS_CUADRADOS;
+  private readonly practica = inject(PracticaM3Service);
+  readonly banco = crearBanco(EJERCICIOS_MINIMOS_CUADRADOS, 'minimos-cuadrados');
+  readonly ejercicios = this.practica.tanda('minimos-cuadrados', this.banco);
+  nuevaTanda(): void { this.practica.nuevaTanda('minimos-cuadrados', this.banco); }
   readonly columnas = COLUMNAS_MINIMOS_CUADRADOS;
 
   readonly mejorada = autoevaluacionMejoradaM3('ajuste', 'minimos-cuadrados');
   readonly desbloqueoBase = politicaDeMetodoM3('ajuste', 'minimos-cuadrados');
 
-  protected readonly calculos: MinimosCuadradosEstado[] = this.ejercicios.map((e) =>
-    this.servicio.calcularEjemplo(e),
-  );
+  protected readonly calculos = computed(() => this.ejercicios().map(e => this.servicio.calcularEjemplo(e)));
 
-  private readonly funciones = this.ejercicios.map((e) => this.servicio.rectaDe(e.calculo));
-  private readonly rangos = this.ejercicios.map((e) => this.servicio.rangoPara(e.calculo));
-  private readonly dibujos = this.ejercicios.map((e, i) =>
+  private readonly funciones = computed(() => this.ejercicios().map(e => this.servicio.rectaDe(e.calculo)));
+  private readonly rangos = computed(() => this.ejercicios().map(e => this.servicio.rangoPara(e.calculo)));
+  private readonly dibujos = computed(() => this.ejercicios().map((e, i) =>
     crearDibujoMinimosCuadrados({
       evaluarEn: e.calculo.evaluarEn,
-      prediccion: this.calculos[i].prediccion,
+      prediccion: this.calculos()[i].prediccion,
     }),
-  );
+  ));
 
   protected calculoDe(indice: number): MinimosCuadradosEstado {
-    return this.calculos[indice];
+    return this.calculos()[indice];
   }
 
   protected funcionDe(indice: number): (x: number) => number {
-    return this.funciones[indice];
+    return this.funciones()[indice];
   }
 
   protected rangoDe(indice: number): { min: number; max: number } {
-    return this.rangos[indice];
+    return this.rangos()[indice];
   }
 
   protected dibujoDe(indice: number) {
-    return this.dibujos[indice];
+    return this.dibujos()[indice];
   }
 }

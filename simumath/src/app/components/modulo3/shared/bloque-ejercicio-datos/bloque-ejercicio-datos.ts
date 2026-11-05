@@ -1,3 +1,6 @@
+import { NgTemplateOutlet } from '@angular/common';
+import { SolucionGuiadaM3 } from '../../autoevaluacion/solucion-guiada';
+import type { PasoGuiadoM3 } from '../../autoevaluacion/banco';
 import { Component, computed, inject, input } from '@angular/core';
 import { UiCard } from '../../../../shared/ui/ui-card/ui-card';
 import { BloqueEjemploDatos } from '../bloque-ejemplo-datos/bloque-ejemplo-datos';
@@ -49,7 +52,7 @@ import { AnswerCheckPanel } from '../../../../shared/autoevaluacion-mejorada/ans
 @Component({
   selector: 'app-bloque-ejercicio-datos',
   standalone: true,
-  imports: [UiCard, BloqueEjemploDatos, ExerciseActions, QuizPanel, AnswerCheckPanel],
+  imports: [NgTemplateOutlet, SolucionGuiadaM3, UiCard, BloqueEjemploDatos, ExerciseActions, QuizPanel, AnswerCheckPanel],
   templateUrl: './bloque-ejercicio-datos.html',
   styleUrl: './bloque-ejercicio-datos.scss',
 })
@@ -59,6 +62,7 @@ export class BloqueEjercicioDatos {
 
   /** Ejercicio a resolver. */
   readonly ejercicio = input.required<EjercicioModulo3>();
+  readonly guia = input<PasoGuiadoM3[]>([]);
 
   /** Filas calculadas de la solución. */
   readonly filas = input<Record<string, number | string>[]>([]);
