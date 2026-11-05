@@ -60,6 +60,7 @@
         [id]="'ae-panel-' + ejercicio().id + '-solucion'"
         [attr.aria-labelledby]="'ae-btn-' + ejercicio().id + '-solucion'"
       >
+        <ng-template #desarrollo>
         <app-bloque-ejemplo-datos
           [ejemplo]="comoEjemplo()"
           [filas]="filas()"
@@ -71,6 +72,12 @@
           [leyenda]="leyenda()"
           [tituloTabla]="tituloTabla()"
         />
+        </ng-template>
+        @if (guia().length) {
+          <app-solucion-guiada-m3 [ejercicioId]="ejercicio().id" [pasos]="guia()" [desarrollo]="desarrollo" />
+        } @else {
+          <ng-container [ngTemplateOutlet]="desarrollo" />
+        }
       </div>
     }
 
