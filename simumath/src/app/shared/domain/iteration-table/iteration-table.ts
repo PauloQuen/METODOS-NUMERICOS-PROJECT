@@ -1,3 +1,5 @@
+import { MatrizVista } from '../matriz-vista/matriz-vista';
+import { leerFilaMatriz } from '../matriz-vista/texto-matricial';
 import { Component, input } from '@angular/core';
 import { Badge } from '../../ui/badge/badge';
 
@@ -24,11 +26,13 @@ export interface IterationColumn {
 @Component({
   selector: 'app-iteration-table',
   standalone: true,
-  imports: [Badge],
+  imports: [Badge, MatrizVista],
   templateUrl: './iteration-table.html',
   styleUrl: './iteration-table.scss',
 })
 export class IterationTable {
+  readonly formatoMatricial = input(false);
+  filaMatriz(valor: string | number) { return typeof valor === 'string' ? leerFilaMatriz(valor) : undefined; }
   readonly columns = input<IterationColumn[]>([]);
   readonly rows = input<Record<string, string | number>[]>([]);
   /** Índice de la fila que alcanza el criterio (se resalta). */

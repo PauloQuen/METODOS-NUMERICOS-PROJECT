@@ -1,4 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { crearBancoRaices } from '../../../../autoevaluacion/bancos/crear-banco';
+import { SesionPracticaService } from '../../../../../../shared/practica-guiada/sesion-practica.service';
+import { Component, computed, inject } from '@angular/core';
 import { EJERCICIOS_NEWTON } from '../newton-raphson.contenido';
 import { COLUMNAS_NEWTON } from '../newton-raphson.config';
 import { NewtonRaphsonService } from '../newton-raphson.service';
@@ -15,10 +17,15 @@ import { dibujarNewtonRaphson } from '../newton-raphson.grafico';
   styleUrl: './newton-raphson-autoevaluacion.scss',
 })
 export class NewtonRaphsonAutoevaluacion {
-  readonly ejercicios = EJERCICIOS_NEWTON.map((e) => ({
+  private readonly sesion = inject(SesionPracticaService);
+  readonly banco = crearBancoRaices(EJERCICIOS_NEWTON.map((e) => ({
     ...e,
     ...(AUTOEVALUACION_NEWTON[e.id] ?? {}),
-  }));
+  })), 'newton-raphson');
+  readonly ejercicios = this.sesion.tanda('modulo1/newton-raphson', this.banco);
+  nuevaTanda(): void {
+    this.sesion.renovar('modulo1/newton-raphson', this.banco);
+  }
 
   readonly mejorada = autoevaluacionMejoradaM1('abiertos', 'newton-raphson');
   readonly desbloqueoBase = politicaDeMetodoM1('abiertos', 'newton-raphson');
@@ -27,16 +34,16 @@ export class NewtonRaphsonAutoevaluacion {
 
   private readonly servicio = inject(NewtonRaphsonService);
 
-  protected readonly estados = signal(
-    this.ejercicios.map((e) => this.servicio.calcularEjemplo(e)),
+  protected readonly estados = computed(() =>
+    this.ejercicios().map((e) => this.servicio.calcularEjemplo(e)),
   );
 
-  protected readonly funciones = this.ejercicios.map((e) =>
+  protected readonly funciones = computed(() => this.ejercicios().map((e) =>
     this.servicio.funcionDeEjemplo(e),
-  );
+  ));
 
   protected readonly rangos = computed(() =>
-    this.ejercicios.map((e, i) =>
+    this.ejercicios().map((e, i) =>
       this.servicio.rangoPara(e.calculo, this.estados()[i].raiz),
     ),
   );

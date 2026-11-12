@@ -1,0 +1,66 @@
+<section class="guia" aria-label="Solución guiada visual">
+  <p class="progreso" aria-live="polite">{{ completa() ? 'Recorrido completado' : 'Paso ' + (indice()+1) + ' de ' + etapas().length }}</p>
+  <ol class="etapas" aria-label="Etapas de resolución">
+    @for(etapa of etapas();track $index) { <li [class.actual]="$index===indice()" [attr.aria-current]="$index===indice()?'step':null" [title]="etapa.titulo">{{ $index < indice()?'✓':$index+1}} <span>{{etapa.titulo}}</span></li> }
+  </ol>
+  @if(!completa()) {
+    @if(actual();as paso) {
+      <h4>{{paso.titulo}}</h4><p class="explicacion">{{paso.explicacion}}</p>
+      <div class="pizarra">
+        <header><strong>Desarrollo matemático</strong><button type="button" (click)="repetir()">Repetir animación</button></header>
+        @for(repeticion of [replay()];track repeticion) {
+          <div class="pizarra__interior">
+            <div class="cuentas">
+              <ol aria-live="polite" aria-relevant="additions">
+                @for(cuenta of cuentas();track $index) {
+                  <li class="operacion"><small>{{cuenta.etiqueta}}</small>
+                    <app-formula-matematica [texto]="cuenta.expresion ?? '('+cuenta.numerador+')/('+cuenta.denominador+')'" />
+                  </li>
+                }
+              </ol>
+              @if(operaciones() < paso.cuentas.length) { <button type="button" (click)="mostrar()">Mostrar siguiente operación ↓</button> }
+              @if((acierto()||!paso.pregunta) && operaciones()>=paso.cuentas.length) {
+                <div class="resultado"><small>Resultado del paso</small><app-formula-matematica [texto]="paso.resultado" /></div>
+              }
+            </div>
+            @if(grafico();as g) {
+              <figure>
+                <figcaption>Construcción de la aproximación</figcaption>
+                <svg viewBox="0 0 380 245" role="img" [attr.aria-label]="paso.titulo + ': curva, puntos y construcción del método'">
+                  <rect x="30" y="20" width="330" height="200" rx="8" class="fondo" />
+                  <line x1="30" x2="360" [attr.y1]="g.y0" [attr.y2]="g.y0" class="eje" />
+                  <line [attr.x1]="g.x0" [attr.x2]="g.x0" y1="20" y2="220" class="eje" />
+                  @if(g.intervalo;as intervalo) {<line [attr.x1]="intervalo.a" [attr.x2]="intervalo.b" y1="215" y2="215" class="intervalo"/>}
+                  <path [attr.d]="g.curva" class="curva" pathLength="1" />
+                  @for(linea of g.lineas;track $index) { <path [attr.d]="linea" class="construccion" pathLength="1" /> }
+                  @for(p of g.puntos;track $index) { <g class="punto"><circle [attr.cx]="p.cx" [attr.cy]="p.cy" r="4"/><text [attr.x]="p.cx+6" [attr.y]="p.cy-8">{{p.etiqueta}}</text></g> }
+                  <text x="35" y="238">{{g.xmin}}</text><text x="350" y="238" text-anchor="end">{{g.xmax}}</text><text x="365" [attr.y]="g.y0-5">x</text>
+                </svg>
+                <p>Azul: {{paso.grafico?.identidad?'g(x)':'f(x)'}}. Naranja: construcción del paso. Los puntos señalan las aproximaciones utilizadas.</p>
+              </figure>
+            }
+          </div>
+          @if(paso.matrices?.length) {
+            <div class="matrices">
+              @for(matriz of paso.matrices;track $index) {
+                <app-matriz-vista [titulo]="matriz.titulo" [valores]="matriz.valores" [aumentada]="matriz.aumentada ?? false" [filaActiva]="matriz.fila" [columnaActiva]="matriz.columna" />
+              }
+            </div>
+          }
+        }
+      </div>
+      @if(paso.pregunta;as pregunta) {
+        <fieldset [disabled]="acierto()"><legend>{{pregunta.enunciado}}</legend>
+          @for(opcion of pregunta.opciones;track opcion.id) {<label><input type="radio" [name]="ejercicioId()+'-paso-'+indice()" [value]="opcion.id" [checked]="elegida()===opcion.id" (change)="elegir(opcion.id)"/>{{opcion.texto}}</label>}
+        </fieldset>
+        @if(!acierto()) {<button type="button" [disabled]="!elegida()" (click)="comprobar()">Comprobar paso</button>}
+        @if(comprobada()) {<p role="status">{{acierto()?'¡Correcto!':'Revisa el procedimiento e inténtalo de nuevo.'}} {{pregunta.explicacion}}</p>}
+      }
+      <div class="acciones"><button type="button" [disabled]="indice()===0" (click)="anterior()">Paso anterior</button><button type="button" [disabled]="!!paso.pregunta&&!acierto()" (click)="siguiente()">{{indice()===etapas().length-1?'Finalizar ejercicio':'Continuar'}}</button></div>
+    }
+  } @else {
+    <p>Has completado la resolución. Puedes consultar el desarrollo completo y repasar las etapas.</p>
+    <button type="button" (click)="reiniciar()">Repasar desde el inicio</button>
+    <ng-container [ngTemplateOutlet]="desarrollo()" />
+  }
+</section>

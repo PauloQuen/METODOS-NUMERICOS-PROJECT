@@ -1,3 +1,4 @@
+import { MatrizVista } from '../../../../../../shared/domain/matriz-vista/matriz-vista';
 import { Component, computed, inject, signal } from '@angular/core';
 import { LuService } from '../lu.service';
 import { CAMPOS_CALCULADORA, COLUMNAS_LU } from '../lu.config';
@@ -6,7 +7,6 @@ import { formatearResiduo, formatearSolucion } from '../lu.algoritmo';
 import { CalculadoraShell } from '../../../../../../shared/domain/calculadora-shell/calculadora-shell';
 import { IterationTable } from '../../../../../../shared/domain/iteration-table/iteration-table';
 import { PasosControl } from '../../../../../../shared/domain/pasos-control/pasos-control';
-import { GraficoSistema } from '../../../../../../shared/domain/grafico-sistema/grafico-sistema';
 import { UiCard } from '../../../../../../shared/ui/ui-card/ui-card';
 import type { RespuestaCalculadora } from '../../../../../../shared/models/metodo.model';
 
@@ -41,11 +41,14 @@ import type { RespuestaCalculadora } from '../../../../../../shared/models/metod
 @Component({
   selector: 'app-lu-calculadora',
   standalone: true,
-  imports: [CalculadoraShell, IterationTable, PasosControl, GraficoSistema, UiCard],
+  imports: [CalculadoraShell, IterationTable, PasosControl, MatrizVista, UiCard],
   templateUrl: './lu-calculadora.html',
   styleUrl: './lu-calculadora.scss',
 })
 export class LuCalculadora {
+  protected readonly aumentada = computed(() => this.sistema().A.map((fila,i) => [...fila, this.sistema().b[i]]));
+  protected vectorColumna(vector: number[]): number[][] { return vector.map(v => [v]); }
+
   private readonly servicio = inject(LuService);
 
   /** Los campos del formulario: los define `lu.config.ts`. */

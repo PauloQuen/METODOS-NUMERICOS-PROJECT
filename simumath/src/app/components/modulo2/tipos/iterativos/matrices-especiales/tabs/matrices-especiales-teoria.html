@@ -147,42 +147,4 @@
       </div>
     </div>
   </section>
-
-  <section class="teoria-m2__seccion">
-    <h2 class="teoria-m2__titulo">Ejemplo numérico</h2>
-    <app-bloque-ejemplo-sistema
-      [ejemplo]="teoria.ejemploNormal"
-      [filas]="normal.filas"
-      [columnas]="normal.columnas"
-      [solucion]="normal.x"
-      [bondad]="errorDe(normal)"
-      etiquetaBondad="Error final"
-      [pasos]="normal.pasos"
-      [funcion]="funcionCero"
-      [rango]="rangoNormal"
-      [rangoY]="rangoYNormal"
-      [dibujarMetodo]="dibujo"
-      leyenda="Error de cambio por iteración"
-      tituloTabla="Iteraciones de Gauss-Seidel"
-    />
-  </section>
-
-  <section class="teoria-m2__seccion">
-    <h2 class="teoria-m2__titulo">Ejemplo de casuística</h2>
-    <app-bloque-ejemplo-sistema
-      [ejemplo]="teoria.ejemploCasuistica"
-      [filas]="casuistica.filas"
-      [columnas]="casuistica.columnas"
-      [solucion]="casuistica.x"
-      [bondad]="errorDe(casuistica)"
-      etiquetaBondad="Error final"
-      [pasos]="casuistica.pasos"
-      [funcion]="funcionCero"
-      [rango]="rangoCasuistica"
-      [rangoY]="rangoYCasuistica"
-      [dibujarMetodo]="dibujo"
-      leyenda="Error de cambio por iteración"
-      tituloTabla="Iteraciones de Gauss-Seidel"
-    />
-  </section>
 </div>

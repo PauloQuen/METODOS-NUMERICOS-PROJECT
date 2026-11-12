@@ -10,7 +10,6 @@ import {
 import { PanelSistema } from '../../../../shared/panel-sistema/panel-sistema';
 import { IterationTable } from '../../../../../../shared/domain/iteration-table/iteration-table';
 import { PasosControl } from '../../../../../../shared/domain/pasos-control/pasos-control';
-import { GraficoMetodo } from '../../../../../../shared/domain/grafico-metodo/grafico-metodo';
 import { UiCard } from '../../../../../../shared/ui/ui-card/ui-card';
 import { crearDibujoConvergencia, rangoConvergencia, rangoError } from '../../../../shared/grafico-convergencia';
 import { formatearNumero, formatearVector } from '../../../../shared/sistema';
@@ -24,7 +23,7 @@ import type { DibujarMetodo } from '../../../../../../shared/models/metodo.model
 @Component({
   selector: 'app-matrices-especiales-calculadora',
   standalone: true,
-  imports: [PanelSistema, IterationTable, PasosControl, GraficoMetodo, UiCard],
+  imports: [PanelSistema, IterationTable, PasosControl, UiCard],
   templateUrl: './matrices-especiales-calculadora.html',
   styleUrl: '../../../../shared/estilos/calculadora.scss',
 })

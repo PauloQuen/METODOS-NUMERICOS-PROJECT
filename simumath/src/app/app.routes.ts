@@ -4,7 +4,6 @@ import { Modulo1 } from "./components/modulo1/modulo1";
 import { Teoria } from "./components/modulo1/teoria/teoria";
 import { Calculadoras } from "./components/modulo1/calculadoras/calculadoras";
 import { Ejemplos } from "./components/modulo1/ejemplos/ejemplos";
-import { Autoevaluacion } from "./components/modulo1/autoevaluacion/autoevaluacion";
 import { Integrantes } from "./components/modulo1/integrantes/integrantes";
 import { Graficos } from "./components/modulo1/graficos/graficos";
 import { Modulo2 } from "./components/modulo2/modulo2";
@@ -53,7 +52,11 @@ export const routes: Routes = [
       { path: "teoria-y-errores", component: Teoria },
       { path: "calculadoras-interactivas", component: Calculadoras },
       { path: "ejemplos-resueltos", component: Ejemplos },
-      { path: "autoevaluacion-y-recursos", component: Autoevaluacion },
+      {
+        path: "autoevaluacion-y-recursos",
+        loadComponent: () =>
+          import("./components/modulo1/autoevaluacion/autoevaluacion").then((m) => m.Autoevaluacion),
+      },
       { path: "integrantes-y-referencias", component: Integrantes },
       { path: "graficos", component: Graficos },
 

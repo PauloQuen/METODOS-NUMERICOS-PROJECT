@@ -2,14 +2,14 @@
   <header class="autoevaluacion__encabezado">
     <h2 class="autoevaluacion__titulo">Autoevaluación</h2>
     <p class="autoevaluacion__intro">
-      Tres ejercicios para practicar Bisección. Resolvé en papel, comprobá tu
-      comprensión con el <strong>Cuestionario</strong> y verificá tu resultado antes de
-      abrir <strong>Ver solución</strong>. La tabla y el gráfico salen directamente del
-      algoritmo, así que podés comparar paso a paso.
+      Banco de {{ banco.length }} ejercicios. Cada tanda combina tres problemas numéricos y tres
+      aplicaciones, con cuatro preguntas aleatorias por ejercicio. Desbloquea la solución y
+      sigue el desarrollo matemático visual. Tu progreso se conserva al cambiar de pestaña.
     </p>
+    <button type="button" class="autoevaluacion__tanda" (click)="nuevaTanda()">Generar otra tanda</button>
   </header>
 
-  @for (ejercicio of ejercicios; track ejercicio.id) {
+  @for (ejercicio of ejercicios(); track ejercicio.id) {
     <section class="autoevaluacion__bloque">
       <app-bloque-ejercicio
         [ejercicio]="ejercicio"

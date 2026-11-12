@@ -54,29 +54,7 @@
 
         <section class="bloque-sistema__seccion">
           <h4 class="bloque-sistema__subtitulo">Sistema aumentado [A | b]</h4>
-          <div class="bloque-sistema__tabla-scroll">
-            <table class="bloque-sistema__tabla-datos">
-              <thead>
-                <tr>
-                  <th>Ec.</th>
-                  @for (v of variables(); track v) {
-                    <th>{{ v }}</th>
-                  }
-                  <th>b</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (fila of filasAumentadas(); track $index; let i = $index) {
-                  <tr>
-                    <td>{{ i + 1 }}</td>
-                    @for (valor of fila; track $index) {
-                      <td>{{ formatear(valor) }}</td>
-                    }
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
+          <app-matriz-vista titulo="[A | b]" [valores]="filasAumentadas()" [aumentada]="true" />
         </section>
 
         <section class="bloque-sistema__seccion">
@@ -88,7 +66,7 @@
           <h4 class="bloque-sistema__subtitulo">Pasos</h4>
           @for (p of ejemplo().pasos; track $index; let i = $index) {
             <p class="bloque-sistema__paso"><strong>Paso {{ i + 1 }}</strong></p>
-            <p class="bloque-sistema__parrafo">{{ p }}</p>
+            <app-texto-matricial [texto]="p" />
           }
         </section>
 
@@ -105,22 +83,14 @@
 
       <!-- Columna 2: gráfico / solución y pasos -->
       <div class="bloque-sistema__lateral">
-        @if (funcion(); as f) {
+        @if (filas().length) {
           <ui-card padding="md">
-            <app-grafico-metodo
-              [funcion]="f"
-              [iteraciones]="filas()"
-              [pasoActual]="pasoActual()"
-              [rango]="rango()"
-              [rangoY]="rangoY()"
-              [dibujarMetodo]="dibujarMetodo()"
-              [leyenda]="leyenda()"
-            />
             <div class="bloque-sistema__pasos">
               <app-pasos-control
                 [total]="filas().length"
                 [paso]="pasoActual()"
                 [texto]="textoPaso(pasoActual())"
+                [formatoMatricial]="true"
                 (pasoCambiado)="alCambiarPaso($event)"
               />
             </div>
@@ -153,7 +123,7 @@
     <section class="bloque-sistema__tabla">
       <h4 class="bloque-sistema__subtitulo">{{ tituloTabla() }}</h4>
       <app-iteration-table
-        [columns]="columnas()"
+        [columns]="columnas()" [formatoMatricial]="true"
         [rows]="filas()"
         [highlightRowIndex]="filaFinal()"
         [highlightBadge]="badgeFila()"

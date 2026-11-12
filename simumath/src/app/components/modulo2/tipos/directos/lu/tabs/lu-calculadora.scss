@@ -23,18 +23,10 @@
   color: var(--on-surface-variant);
 }
 
-/*
- * El formulario va a la izquierda y el gráfico a la derecha.
- *
- * El ancho del formulario está acotado a propósito: los campos son
- * cortos (una matriz de 3×3 y un vector) y, si la columna creciera,
- * el gráfico quedaría apretado y la matriz se leería en una franja
- * angosta.
- */
 .calculadora__grilla {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: minmax(280px, 400px) 1fr;
+  grid-template-columns: minmax(260px, .75fr) minmax(0, 1.6fr);
   align-items: start;
 }
 
@@ -56,3 +48,7 @@
     grid-template-columns: 1fr;
   }
 }
+
+.calculadora__grilla > *, .calculadora__columna-derecha { min-width: 0; }
+.calculadora__matrices { display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem; align-items: flex-start; }
+.calculadora__matrices > * { max-width: 100%; }
