@@ -1,0 +1,1 @@
+import{a as b,b as c,c as d,d as e,e as f,f as g}from"./chunk-JTEPTQGV.js";import{e as a}from"./chunk-OG55QIAO.js";import"./chunk-2NFLSA4Y.js";export{f as CAMPOS_PROPAGACION,b as COLUMNAS_PROPAGACION,d as EJEMPLOS_PROPAGACION,e as EJERCICIOS_PROPAGACION,c as TEORIA_PROPAGACION,g as calcularPropagacion,a as relativoTexto};

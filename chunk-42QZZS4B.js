@@ -1,1 +1,0 @@
-import{e as r,i as t,j as i}from"./chunk-P57RI4GV.js";var s={politica:"cualquiera",umbralCuestionario:.66,intentosParaRendirse:3},l={directos:{},iterativos:{}},n={gauss:{},lu:{}};function a(o,e){return[r,s,l[o]??{},n[e]??{}]}function D(o,e){return t(i,{moduloId:"modulo2",tipoId:o,metodoId:e})}export{a,D as b};

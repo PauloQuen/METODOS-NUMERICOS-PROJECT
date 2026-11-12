@@ -1,0 +1,1 @@
+function t(o,e){let l=`${e.moduloId}/${e.tipoId}`,d=`${l}/${e.metodoId}`;return o.metodos?.[d]!==void 0?o.metodos[d]:o.tipos?.[l]!==void 0?o.tipos[l]:o.modulos?.[e.moduloId]!==void 0?o.modulos[e.moduloId]:o.global??!1}var u={global:!1,modulos:{modulo0:!0,modulo1:!0,modulo2:!0,modulo3:!0}};export{t as a,u as b};

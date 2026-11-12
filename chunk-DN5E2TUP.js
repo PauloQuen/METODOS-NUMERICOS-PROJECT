@@ -1,0 +1,1 @@
+import{a,b,c,d,e,f}from"./chunk-XRUKA2C7.js";import"./chunk-OG55QIAO.js";import"./chunk-2NFLSA4Y.js";export{e as CAMPOS_TAYLOR,a as COLUMNAS_TAYLOR,c as EJEMPLOS_TAYLOR,d as EJERCICIOS_TAYLOR,b as TEORIA_TAYLOR,f as calcularTaylor};

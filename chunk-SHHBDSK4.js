@@ -1,0 +1,1 @@
+import{a as b,b as c,c as d,d as e,e as f,f as g}from"./chunk-7NLTP6ZM.js";import{e as a}from"./chunk-OG55QIAO.js";import"./chunk-2NFLSA4Y.js";export{f as CAMPOS_CIFRAS,b as COLUMNAS_CIFRAS,d as EJEMPLOS_CIFRAS,e as EJERCICIOS_CIFRAS,c as TEORIA_CIFRAS,g as calcularCifras,a as relativoTexto};
