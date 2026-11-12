@@ -60,24 +60,24 @@
         [id]="'ae-panel-' + ejercicio().id + '-solucion'"
         [attr.aria-labelledby]="'ae-btn-' + ejercicio().id + '-solucion'"
       >
-        <ng-template #desarrollo>
-        <app-bloque-ejemplo-datos
-          [ejemplo]="comoEjemplo()"
-          [filas]="filas()"
-          [columnas]="columnas()"
-          [filaFinal]="filaFinal()"
-          [funcion]="funcion()"
-          [rango]="rango()"
-          [dibujarMetodo]="dibujarMetodo()"
-          [leyenda]="leyenda()"
-          [tituloTabla]="tituloTabla()"
-        />
-        </ng-template>
-        @if (guia().length) {
-          <app-solucion-guiada-m3 [ejercicioId]="ejercicio().id" [pasos]="guia()" [desarrollo]="desarrollo" />
-        } @else {
-          <ng-container [ngTemplateOutlet]="desarrollo" />
-        }
+        <app-solucion-guiada
+          [ejercicioId]="ejercicio().id"
+          [pasos]="ejercicio().pasos"
+          [guia]="guia()"
+          [cuestionario]="cuestionario()"
+        >
+          <app-bloque-ejemplo-datos
+            [ejemplo]="comoEjemplo()"
+            [filas]="filas()"
+            [columnas]="columnas()"
+            [filaFinal]="filaFinal()"
+            [funcion]="funcion()"
+            [rango]="rango()"
+            [dibujarMetodo]="dibujarMetodo()"
+            [leyenda]="leyenda()"
+            [tituloTabla]="tituloTabla()"
+          />
+        </app-solucion-guiada>
       </div>
     }
 

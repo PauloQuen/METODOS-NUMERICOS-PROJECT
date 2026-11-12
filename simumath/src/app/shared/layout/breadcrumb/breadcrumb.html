@@ -1,4 +1,13 @@
 <nav class="breadcrumb" [class]="tonoClass()" [attr.aria-label]="'Ruta de navegación'">
+  <a
+    class="breadcrumb__volver"
+    [routerLink]="rutaVolver()"
+    [attr.aria-label]="'Volver a ' + textoVolver()"
+  >
+    <span aria-hidden="true">←</span>
+    Volver
+  </a>
+
   @for (tramo of tramos(); track $index) {
     @if ($index > 0) {
       <span class="breadcrumb__sep" aria-hidden="true">›</span>

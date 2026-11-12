@@ -78,6 +78,7 @@
 .teoria__acordeon-titulo {
   flex: 1;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .teoria__acordeon-flecha {
@@ -193,9 +194,10 @@
   white-space: pre-line;
   overflow-wrap: anywhere;
   color: var(--on-surface);
-  background: var(--surface-container);
-  border: 1px solid var(--outline-variant);
-  border-radius: var(--radius-lg);
+  background: var(--c-primario-suave);
+  border: 0;
+  border-left: 4px solid var(--c-primario);
+  border-radius: var(--r-sm);
 }
 
 /* ── Grillas y tarjetas ───────────────────────────────────────────── */
@@ -219,11 +221,11 @@
 }
 
 .tarjeta-m3__titulo--bueno {
-  color: #15803d;
+  color: var(--c-ok-texto);
 }
 
 .tarjeta-m3__titulo--malo {
-  color: #b91c1c;
+  color: var(--c-error-texto);
 }
 
 /* ── Pasos numerados ──────────────────────────────────────────────── */
@@ -307,11 +309,11 @@
 }
 
 .lista-m3--bueno li::marker {
-  color: #15803d;
+  color: var(--c-ok-texto);
 }
 
 .lista-m3--malo li::marker {
-  color: #b91c1c;
+  color: var(--c-error-texto);
 }
 
 /* ── Ajustes para pantallas angostas ──────────────────────────────── */

@@ -1,34 +1,29 @@
 .card {
-  background: var(--surface-container-lowest);
-  border: 1px solid var(--outline-variant);
-  align-items: center;
-  border-radius: var(--radius-lg);
+  background: var(--c-superficie);
+  border: 1px solid var(--c-borde-suave);
+  border-radius: var(--r-md);
+  box-shadow: var(--sombra-1);
   transition:
-    box-shadow var(--transition-smooth),
-    border-color var(--transition-smooth);
+    box-shadow var(--mov),
+    border-color var(--mov);
 
-  /* Elevación por defecto (nivel 1 del DESIGN.md) */
-  &--sm {
-    box-shadow: var(--shadow-sm);
-  }
-
-  /* Elevación para elementos interactivos (nivel 2 del DESIGN.md) */
+  /* Elevación para elementos interactivos (nivel 2 del DESIGN.md). */
   &--md {
-    border-color: color-mix(in srgb, var(--primary) 22%, var(--outline-variant));
-    box-shadow: var(--shadow-md);
+    border-color: color-mix(in srgb, var(--c-primario) 22%, var(--c-borde-suave));
+    box-shadow: var(--sombra-2);
   }
 
-  /* Padding semántico */
+  /* Padding semántico. */
   &--pad-sm {
-    padding: var(--space-sm);
+    padding: var(--e-2);
   }
   &--pad-md {
-    padding: var(--space-md);
+    padding: var(--e-4);
   }
   &--pad-lg {
-    padding: var(--space-lg);
+    padding: var(--e-5);
   }
   &--pad-xl {
-    padding: var(--space-xl);
+    padding: var(--e-7);
   }
 }

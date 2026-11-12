@@ -4,6 +4,7 @@ import { COLUMNAS_LU } from '../lu.config';
 import { LuService } from '../lu.service';
 import { dibujarLu } from '../lu.grafico';
 import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bloque-ejemplo';
+import { GraficoSistema } from '../../../../../../shared/domain/grafico-sistema/grafico-sistema';
 
 /**
  * Pestaña de EJEMPLOS de la factorización LU.
@@ -20,7 +21,7 @@ import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bl
 @Component({
   selector: 'app-lu-ejemplos',
   standalone: true,
-  imports: [BloqueEjemplo],
+  imports: [BloqueEjemplo, GraficoSistema],
   templateUrl: './lu-ejemplos.html',
   styleUrl: './lu-ejemplos.scss',
 })
@@ -64,13 +65,5 @@ export class LuEjemplos {
   /** El paso actual de un ejemplo. */
   pasoDe(indice: number): number {
     return this.pasos()[indice] ?? 0;
-  }
-  matricesDe(i: number) {
-    const estado = this.estados()[i];
-    return [
-      { titulo: 'L · triangular inferior', valores: estado.L ?? [] },
-      { titulo: 'U · triangular superior', valores: estado.U ?? [] },
-      { titulo: 'y · sustitución adelante', valores: (estado.y ?? []).map(v => [v]) },
-    ];
   }
 }

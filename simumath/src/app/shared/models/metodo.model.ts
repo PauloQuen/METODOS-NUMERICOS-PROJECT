@@ -1,4 +1,3 @@
-import type { EtapaPractica } from '../practica-guiada/modelos';
 import type {
   FormatoRespuesta,
   ValorCorrecto,
@@ -154,8 +153,6 @@ export interface Ejercicio extends Ejemplo, EjercicioBase {
  * delega la solución al `bloque-ejemplo`.
  */
 export interface EjercicioBase extends EjemploBase {
-  /** Etapas visuales opcionales del banco de los módulos 1 y 2. */
-  guia?: EtapaPractica[];
   /** Pista que se muestra junto al botón "Ver solución". */
   pista?: string;
   /** Cuestionario de comprensión (opcional). */

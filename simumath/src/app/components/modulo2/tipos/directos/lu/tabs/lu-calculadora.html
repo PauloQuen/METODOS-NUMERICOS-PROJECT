@@ -24,14 +24,17 @@
     @if (hayCalculo()) {
       <div class="calculadora__columna-derecha">
         <ui-card padding="lg">
-          <h3 class="seccion__titulo">Matrices del sistema</h3>
-          <div class="calculadora__matrices">
-            <app-matriz-vista titulo="Sistema aumentado [A | b]" [valores]="aumentada()" [aumentada]="true" />
-            @if(matrizL(); as L) { <app-matriz-vista titulo="L · triangular inferior" [valores]="L" /> }
-            @if(matrizU(); as U) { <app-matriz-vista titulo="U · triangular superior" [valores]="U" /> }
-            @if(vectorY(); as y) { <app-matriz-vista titulo="y · sustitución adelante" [valores]="vectorColumna(y)" /> }
-            @if(solucion(); as x) { <app-matriz-vista titulo="Vector solución x" [valores]="vectorColumna(x)" /> }
-          </div>
+          <h3 class="seccion__titulo">Gráfico</h3>
+          <app-grafico-sistema
+            [sistema]="sistema()"
+            [solucion]="solucion()"
+            [iteraciones]="filas()"
+            [pasoActual]="paso()"
+            [rango]="rango()"
+            [dibujarSistema]="dibujar"
+            [sistemasExtra]="extra()"
+            leyenda="Rectas del sistema y construcción de la solución por sustitución; durante la descomposición se dibuja también el sistema triangular U·x = y"
+          />
         </ui-card>
 
         <ui-card padding="lg">
@@ -40,7 +43,6 @@
             [total]="total()"
             [paso]="paso()"
             [texto]="textoDelPaso()"
-            [formatoMatricial]="true"
             etiquetaDePaso="Paso"
             (pasoCambiado)="alCambiarPaso($event)"
           />
@@ -54,7 +56,6 @@
       <h3 class="seccion__titulo">Pasos de la factorización</h3>
       <app-iteration-table
         [columns]="columnas"
-        [formatoMatricial]="true"
         [rows]="filas()"
         [highlightRowIndex]="filas().length - 1"
         highlightBadge="Solución hallada"

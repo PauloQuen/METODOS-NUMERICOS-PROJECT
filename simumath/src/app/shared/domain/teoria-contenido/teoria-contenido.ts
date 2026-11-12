@@ -1,4 +1,3 @@
-import { FormulaMatematica } from '../../practica-guiada/formula-matematica';
 import { Component, ViewEncapsulation, computed, input, signal } from '@angular/core';
 import { UiCard } from '../../ui/ui-card/ui-card';
 import type { RecursoTeoria, TeoriaPlantillaVista } from '../../models/metodo.model';
@@ -25,13 +24,12 @@ import type { RecursoTeoria, TeoriaPlantillaVista } from '../../models/metodo.mo
 @Component({
   selector: 'app-teoria-contenido',
   standalone: true,
-  imports: [FormulaMatematica, UiCard],
+  imports: [UiCard],
   templateUrl: './teoria-contenido.html',
   styleUrl: './teoria-contenido.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class TeoriaContenido {
-  readonly formatearFormulas = input(false);
   readonly teoria = input.required<TeoriaPlantillaVista>();
 
   /** Texto de la tercera idea (orden, error, precisión, etc.). */

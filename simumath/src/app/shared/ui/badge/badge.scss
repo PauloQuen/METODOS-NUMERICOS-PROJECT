@@ -1,38 +1,54 @@
 .badge {
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
   white-space: nowrap;
-  padding: 0.125rem var(--space-sm);
-  border-radius: var(--radius-full);
-  font-size: var(--text-label-sm);
-  font-weight: var(--weight-label-sm);
-  line-height: var(--line-label-sm);
+  padding: 2px var(--e-2);
+  border-radius: var(--r-full);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  line-height: 1.4;
 
-  /* Variantes de color */
+  /* Variantes de color. Los nombres se conservan para no tocar las
+     plantillas; "amber" ahora usa el acento teal de la paleta v2. */
   &--navy {
-    background: var(--primary);
-    color: var(--on-primary);
+    background: var(--c-primario);
+    color: var(--c-sobre-primario);
   }
+
   &--amber {
-    background: var(--secondary-container);
-    color: var(--on-secondary-container);
+    background: var(--c-acento-suave);
+    color: var(--c-acento-oscuro);
   }
-  /* Ámbar sólido: badges sobre cabeceras navy ("Intervalar", "Cuadrático") */
+
+  /* Sólido: badges sobre cabeceras índigo. */
   &--amber-solid {
-    background: var(--secondary);
-    color: var(--surface-bright);
+    background: var(--c-acento);
+    color: var(--c-sobre-primario);
   }
-  /* Teal: acento analítico (terciario del DESIGN.md) */
+
   &--teal {
-    background: var(--tertiary-container);
-    color: var(--surface-bright);
+    background: var(--c-acento);
+    color: var(--c-sobre-primario);
   }
+
   &--outline {
     background: var(--surface-container-low);
-    color: var(--on-surface-variant);
+    color: var(--c-texto-suave);
+    border: 1px solid var(--c-borde-suave);
   }
+
   &--error {
-    background: var(--error-container);
-    color: var(--on-error-container);
+    background: var(--c-error-fondo);
+    color: var(--c-error-texto);
+  }
+}
+
+/* Las etiquetas de módulo son largas: en pantallas angostas se permite
+   que ocupen dos líneas antes de desbordar la página. */
+@media (max-width: 480px) {
+  .badge {
+    white-space: normal;
+    text-align: center;
   }
 }

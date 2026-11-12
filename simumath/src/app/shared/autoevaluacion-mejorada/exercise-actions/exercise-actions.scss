@@ -51,7 +51,7 @@
 
 /* Estado presionado: mismo alto, pero se "hunde" un poco. */
 .boton--activo {
-  box-shadow: inset 0 2px 3px rgba(0, 32, 70, 0.18);
+  box-shadow: inset 0 2px 3px color-mix(in srgb, var(--c-texto) 18%, transparent);
 }
 
 .boton--secundario.boton--activo {

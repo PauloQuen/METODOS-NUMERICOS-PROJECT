@@ -1,0 +1,169 @@
+@if (total() > 0 && !completada()) {
+  <section class="guia" aria-label="Solución paso a paso">
+    <header class="guia__cabecera">
+      <div>
+        <p class="guia__eyebrow">Solución guiada</p>
+        <h4 class="guia__titulo">{{ titulo() }}</h4>
+      </div>
+      <span class="guia__contador">{{ indice() + 1 }} / {{ total() }}</span>
+    </header>
+
+    <div
+      class="guia__progreso"
+      role="progressbar"
+      [attr.aria-valuemin]="0"
+      [attr.aria-valuemax]="total()"
+      [attr.aria-valuenow]="indice() + 1"
+      [attr.aria-valuetext]="'Paso ' + (indice() + 1) + ' de ' + total()"
+    >
+      <span class="guia__progreso-barra" [style.width.%]="progreso()"></span>
+    </div>
+
+    <ol class="guia__etapas" aria-label="Etapas de la resolución">
+      @for (paso of guiaEfectiva(); track $index) {
+        <li
+          class="guia__etapa"
+          [class.guia__etapa--actual]="$index === indice()"
+          [class.guia__etapa--completada]="$index < indice()"
+          [attr.aria-current]="$index === indice() ? 'step' : null"
+        >
+          <span class="guia__etapa-numero" aria-hidden="true">
+            {{ $index < indice() ? '✓' : $index + 1 }}
+          </span>
+          <span class="guia__etapa-texto">
+            {{ paso.titulo || etiquetaPaso() + ' ' + ($index + 1) }}
+          </span>
+        </li>
+      }
+    </ol>
+
+    @if (pasoActual(); as paso) {
+      <article class="guia__paso" aria-live="polite">
+        @if (paso.titulo) {
+          <h5 class="guia__paso-titulo">{{ paso.titulo }}</h5>
+        }
+
+        @if (interpretarHtml()) {
+          <p class="guia__paso-texto" [innerHTML]="paso.explicacion"></p>
+        } @else {
+          <p class="guia__paso-texto">{{ paso.explicacion }}</p>
+        }
+
+        @if (preguntaActual(); as pregunta) {
+          <fieldset class="guia__quiz" [disabled]="aciertoActual()">
+            <legend class="guia__quiz-leyenda">Comprobación del paso</legend>
+            <p class="guia__quiz-enunciado">{{ pregunta.enunciado }}</p>
+
+            <div class="guia__quiz-opciones">
+              @for (opcion of opcionesActuales(); track opcion.id) {
+                <label
+                  class="guia__quiz-opcion"
+                  [class.guia__quiz-opcion--marcada]="seleccionActual() === opcion.id"
+                  [class.guia__quiz-opcion--correcta]="
+                    comprobadoActual() && opcion.id === pregunta.correcta
+                  "
+                  [class.guia__quiz-opcion--incorrecta]="
+                    comprobadoActual() &&
+                    seleccionActual() === opcion.id &&
+                    opcion.id !== pregunta.correcta
+                  "
+                >
+                  <input
+                    type="radio"
+                    [name]="'guia-' + ejercicioId() + '-' + indice()"
+                    [value]="opcion.id"
+                    [checked]="seleccionActual() === opcion.id"
+                    [disabled]="aciertoActual()"
+                    (change)="elegir(opcion.id)"
+                  />
+                  <span>{{ opcion.texto }}</span>
+                </label>
+              }
+            </div>
+          </fieldset>
+
+          @if (comprobadoActual()) {
+            <p
+              class="guia__quiz-feedback"
+              [class.guia__quiz-feedback--ok]="aciertoActual()"
+              [class.guia__quiz-feedback--mal]="!aciertoActual()"
+              role="status"
+            >
+              <strong>{{ aciertoActual() ? 'Correcto.' : 'Revisa el procedimiento.' }}</strong>
+              {{ pregunta.explicacion }}
+            </p>
+          }
+
+          @if (!aciertoActual()) {
+            <div class="guia__quiz-acciones">
+              <button
+                type="button"
+                class="guia__quiz-boton"
+                [disabled]="!seleccionActual()"
+                (click)="comprobarPaso()"
+              >
+                Comprobar paso
+              </button>
+              @if (!comprobadoActual()) {
+                <p class="guia__quiz-ayuda">
+                  Elige una opción y compruébala para continuar.
+                </p>
+              }
+            </div>
+          }
+        }
+      </article>
+    }
+
+    <div class="guia__acciones">
+      <button
+        type="button"
+        class="guia__boton guia__boton--secundario"
+        [disabled]="indice() === 0"
+        (click)="anterior()"
+      >
+        <span aria-hidden="true">←</span>
+        Anterior
+      </button>
+      <button
+        type="button"
+        class="guia__boton guia__boton--primario"
+        [disabled]="!!preguntaActual() && !aciertoActual()"
+        (click)="siguiente()"
+      >
+        {{ etiquetaSiguiente() }}
+        @if (!esUltimo()) {
+          <span aria-hidden="true">→</span>
+        }
+      </button>
+    </div>
+
+    <p class="solo-lectores" aria-live="polite">{{ anuncio() }}</p>
+  </section>
+} @else {
+  @if (total() > 0) {
+    <section class="guia guia--completada" aria-label="Solución guiada completada">
+      <div class="guia__final" role="status">
+        <span class="guia__final-icono" aria-hidden="true">✓</span>
+        <div>
+          <h4 class="guia__titulo">Recorrido completado</h4>
+          <p class="guia__final-texto">
+            Ya viste los {{ total() }} pasos y comprobaste la comprensión de cada etapa.
+            Ahora puedes contrastar el desarrollo completo, la tabla y el gráfico.
+          </p>
+          @if (conclusion()) {
+            <p class="guia__conclusion">{{ conclusion() }}</p>
+          }
+        </div>
+      </div>
+      <button type="button" class="guia__boton guia__boton--secundario" (click)="reiniciar()">
+        <span aria-hidden="true">↺</span>
+        Repasar desde el inicio
+      </button>
+    </section>
+  }
+
+  <div class="guia__desarrollo">
+    <ng-content />
+  </div>
+}

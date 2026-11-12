@@ -14,6 +14,8 @@ simumath/yarn.lock
 
 # Environment files
 simumath/.env
+simumath/.agents/
+simumath/.vscode
 
 # Angular CLI and build artefacts
 simumath/.angular-cli.json
@@ -26,3 +28,6 @@ simumath/.ng/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+simumath/PROMPT_modulo_metodos_numericos_ANGULAR.md
+simumath/skills-lock.json

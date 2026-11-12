@@ -1,6 +1,6 @@
 <div class="bloque-ejemplo">
   <ui-card>
-    <div class="bloque-ejemplo__grilla" [class.bloque-ejemplo__grilla--matrices]="!!sistema()">
+    <div class="bloque-ejemplo__grilla">
       <!-- Columna 1: texto -->
       <div class="bloque-ejemplo__texto">
         <div class="bloque-ejemplo__encabezado">
@@ -50,19 +50,11 @@
         <!-- Ecuación y parámetros -->
         <section class="bloque-ejemplo__seccion">
           <h4 class="bloque-ejemplo__subtitulo">Planteamiento</h4>
-          <app-formula-matematica [texto]="ejemplo().ecuacion" />
-          @if (sistema()) {
-            <div class="bloque-ejemplo__matrices">
-              <app-matriz-vista titulo="Sistema aumentado [A | b]" [valores]="aumentada()" [aumentada]="true" />
-              @for (matriz of matrices(); track $index) {
-                @if (matriz.valores.length) { <app-matriz-vista [titulo]="matriz.titulo" [valores]="matriz.valores" [aumentada]="matriz.aumentada ?? false" /> }
-              }
-            </div>
-          }
+          <p class="bloque-ejemplo__parrafo">{{ ejemplo().ecuacion }}</p>
           @if (ejemplo().parametros.length > 0) {
             <ul class="bloque-ejemplo__lista">
               @for (p of ejemplo().parametros; track p.etiqueta) {
-                <li><strong>{{ p.etiqueta }}:</strong> @if(sistema()) { <app-texto-matricial [texto]="p.valor" /> } @else { {{ p.valor }} }</li>
+                <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
               }
             </ul>
           }
@@ -81,7 +73,7 @@
             <p class="bloque-ejemplo__paso">
               <strong>{{ etiquetaPaso() }} {{ i + 1 }}</strong>
             </p>
-            @if(sistema()) { <app-texto-matricial [texto]="p" /> } @else { <p class="bloque-ejemplo__parrafo">{{ p }}</p> }
+            <p class="bloque-ejemplo__parrafo">{{ p }}</p>
           }
         </section>
 
@@ -112,7 +104,6 @@
             sin duplicarlo y sin que este componente tenga que saber
             qué es una matriz.
           -->
-          @if (!sistema()) {
           <ng-content select="[slot='grafico']">
             <app-grafico-metodo
               [funcion]="funcion()"
@@ -124,13 +115,11 @@
               [raiz]="raiz()"
             />
           </ng-content>
-          }
           <div class="bloque-ejemplo__pasos">
             <app-pasos-control
               [total]="filas().length"
               [paso]="pasoActual()"
               [texto]="textoPaso(pasoActual())"
-              [formatoMatricial]="!!sistema()"
               [etiquetaDePaso]="etiquetaPaso()"
               (pasoCambiado)="alCambiarPaso($event)"
             />
@@ -151,7 +140,6 @@
     <section class="bloque-ejemplo__tabla">
       <app-iteration-table
         [columns]="columnas()"
-        [formatoMatricial]="!!sistema()"
         [rows]="filas()"
         [highlightRowIndex]="filaFinal()"
         [highlightBadge]="highlightBadge()"

@@ -150,11 +150,11 @@
 }
 
 .tarjeta__titulo--bueno {
-  color: #15803d;
+  color: var(--c-ok-texto);
 }
 
 .tarjeta__titulo--malo {
-  color: #b91c1c;
+  color: var(--c-error-texto);
 }
 
 /* ── Pasos numerados ───────────────────────────────────────────────── */
@@ -237,9 +237,9 @@
 }
 
 .lista--bueno li::marker {
-  color: #15803d;
+  color: var(--c-ok-texto);
 }
 
 .lista--malo li::marker {
-  color: #b91c1c;
+  color: var(--c-error-texto);
 }

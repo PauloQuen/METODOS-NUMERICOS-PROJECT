@@ -1,9 +1,3 @@
-import { MatrizVista } from '../matriz-vista/matriz-vista';
-import { TextoMatricial } from '../matriz-vista/texto-matricial';
-import type { MatrizPractica } from '../../practica-guiada/modelos';
-import { NgTemplateOutlet } from '@angular/common';
-import { SolucionGuiada } from '../../practica-guiada/solucion-guiada';
-import { FormulaMatematica } from '../../practica-guiada/formula-matematica';
 import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { UiCard } from '../../ui/ui-card/ui-card';
 import { BloqueEjemplo } from '../bloque-ejemplo/bloque-ejemplo';
@@ -25,6 +19,7 @@ import {
 import { ExerciseActions } from '../../autoevaluacion-mejorada/exercise-actions/exercise-actions';
 import { QuizPanel } from '../../autoevaluacion-mejorada/quiz-panel/quiz-panel';
 import { AnswerCheckPanel } from '../../autoevaluacion-mejorada/answer-check-panel/answer-check-panel';
+import { SolucionGuiada } from '../../autoevaluacion-mejorada/solucion-guiada/solucion-guiada';
 
 /**
  * Bloque de ejercicio (Autoevaluación) — mismo modelo que el Módulo 3.
@@ -49,16 +44,20 @@ import { AnswerCheckPanel } from '../../autoevaluacion-mejorada/answer-check-pan
 @Component({
   selector: 'app-bloque-ejercicio',
   standalone: true,
-  imports: [MatrizVista, TextoMatricial, NgTemplateOutlet, SolucionGuiada, FormulaMatematica, UiCard, BloqueEjemplo, ExerciseActions, QuizPanel, AnswerCheckPanel],
+  imports: [
+    UiCard,
+    BloqueEjemplo,
+    ExerciseActions,
+    QuizPanel,
+    AnswerCheckPanel,
+    SolucionGuiada,
+  ],
   templateUrl: './bloque-ejercicio.html',
   styleUrl: './bloque-ejercicio.scss',
 })
 export class BloqueEjercicio {
   /** Ejercicio a resolver. */
   readonly ejercicio = input.required<EjercicioBase>();
-  readonly sistema = input<{ A: number[][]; b: number[] }>();
-  readonly matrices = input<MatrizPractica[]>([]);
-  readonly aumentada = computed(() => this.sistema()?.A.map((fila,i) => [...fila, this.sistema()!.b[i]]) ?? []);
 
   /** Filas calculadas de la solución. */
   readonly filas = input<Record<string, number | string>[]>([]);
@@ -112,8 +111,6 @@ export class BloqueEjercicio {
 
   readonly estadoActividad = computed(() => this.actividades.estadoDe(this.ejercicio().id));
   readonly panel = computed(() => this.estadoActividad().panel);
-
-  readonly guia = computed(() => this.ejercicio().guia ?? []);
 
   readonly cuestionario = computed(() => this.ejercicio().cuestionario ?? []);
   readonly resolucion = computed(() => this.ejercicio().resolucion);
@@ -203,7 +200,7 @@ export class BloqueEjercicio {
   }
 
   protected reintentarCuestionario(): void {
-    this.actividades.reintentar(this.ejercicio().id);
+    this.actividades.reintentar(this.ejercicio().id, this.cuestionario());
   }
 
   protected actualizarEntrada(entrada: string): void {

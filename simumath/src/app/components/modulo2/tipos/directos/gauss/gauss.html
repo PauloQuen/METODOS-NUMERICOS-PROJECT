@@ -15,8 +15,7 @@
           [routerLink]="['/modulo2/tipos/directos/gauss', p.ruta]"
           routerLinkActive="gauss__pestana--activa"
           [routerLinkActiveOptions]="{ exact: true }"
-          [attr.aria-current]="rutaActual() === p.ruta ? 'page' : null"
-        >
+         ariaCurrentWhenActive="page">
           <span class="material-symbols-outlined gauss__icono" aria-hidden="true">
             {{ p.icono }}
           </span>

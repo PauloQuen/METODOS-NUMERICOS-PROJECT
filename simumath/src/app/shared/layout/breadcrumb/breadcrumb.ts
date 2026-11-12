@@ -1,5 +1,5 @@
-import { Component, computed, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, computed, inject, input } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 
 /** Un tramo de la miga de pan: el texto y, si no es el último, dónde lleva. */
 export interface TramoBreadcrumb {
@@ -31,6 +31,8 @@ export interface TramoBreadcrumb {
   styleUrl: './breadcrumb.scss',
 })
 export class Breadcrumb {
+  private readonly router = inject(Router);
+
   /** Los tramos, de izquierda a derecha. El último es la página actual. */
   readonly tramos = input.required<TramoBreadcrumb[]>();
 
@@ -38,4 +40,28 @@ export class Breadcrumb {
   readonly tono = input<'navy' | 'claro'>('claro');
 
   readonly tonoClass = computed(() => (this.tono() === 'navy' ? 'breadcrumb--navy' : ''));
+
+  /**
+   * Destino del botón "Volver": el último tramo anterior con ruta.
+   * No se usa el historial del navegador porque puede llevar a una página
+   * ajena al módulo (por ejemplo, un resultado del buscador). Así el
+   * retroceso siempre sube un nivel de la jerarquía del portal.
+   */
+  private readonly tramosAnteriores = computed(() => {
+    const actual = this.router.url.split(/[?#]/)[0].replace(/\/$/, '');
+    return this.tramos().filter((tramo) => {
+      if (!tramo.ruta) return false;
+      if (tramo.ruta === actual) return false;
+      // En la portada de un módulo, "Volver" sube al portal y no a la
+      // misma portada (que redirigiría otra vez a /inicio).
+      if (actual.endsWith('/inicio') && tramo.ruta === actual.slice(0, -'/inicio'.length)) {
+        return false;
+      }
+      return true;
+    });
+  });
+
+  readonly rutaVolver = computed(() => this.tramosAnteriores().at(-1)?.ruta ?? '/home');
+
+  readonly textoVolver = computed(() => this.tramosAnteriores().at(-1)?.texto ?? 'el inicio');
 }

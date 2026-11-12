@@ -67,15 +67,15 @@
 }
 
 .resolucion__feedback--ok {
-  color: #15803d;
+  color: var(--c-ok-texto);
 }
 
 .resolucion__feedback--casi {
-  color: var(--on-secondary-container);
+  color: var(--c-aviso-texto);
 }
 
 .resolucion__feedback--mal {
-  color: var(--on-error-container);
+  color: var(--c-error-texto);
 }
 
 .resolucion__boton {

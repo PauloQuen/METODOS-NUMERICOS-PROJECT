@@ -1,14 +1,79 @@
 <section class="auto-mejorada">
   <div class="section-heading">
-    <h2 class="section-heading__title">Autoevaluación del módulo 1</h2>
-    <p class="section-heading__subtitle">Practica un ejercicio aleatorio de cada método, con cuatro preguntas por ejercicio y resolución visual guiada. El banco completo tiene 24 ejercicios por método.</p>
-    <button type="button" (click)="nuevaTanda()">Generar otra tanda</button>
+    <h2 class="section-heading__title">Autoevaluación</h2>
+    <p class="section-heading__subtitle">
+      Resolvé el cuestionario o verificá tu respuesta para desbloquear la solución.
+    </p>
   </div>
+
   <div class="auto-mejorada__list">
-    @for(g of ejercicios();track g.metodo) {
-      <section><h3>{{g.nombre}}</h3>
-        <app-bloque-ejercicio [ejercicio]="g.ejercicio" [mejorada]="true" moduloId="modulo1" [tipoId]="g.tipo" [metodoId]="g.metodo" [desbloqueoBase]="g.desbloqueo" />
-      </section>
+    @for (e of ejercicios; track e.id) {
+      <ui-card elevation="sm" class="ejercicio">
+        <div class="ejercicio__head">
+          <app-badge [text]="'Ejercicio ' + e.numero" variant="navy" />
+          <app-badge [text]="e.tema" [variant]="e.variante" />
+        </div>
+        <p class="ejercicio__texto" [innerHTML]="e.texto"></p>
+
+        <app-exercise-actions
+          [ejercicioId]="e.id"
+          [panel]="panelDe(e.id)"
+          [tieneCuestionario]="(e.cuestionario?.length ?? 0) > 0"
+          [tieneResolucion]="!!e.resolucion"
+          [puedeVerSolucion]="puedeVerSolucion(e.id)"
+          [textoBloqueado]="textoBloqueado(e.id)"
+          [mostrarRendirse]="mostrarRendirse(e.id)"
+          (alternarSolucion)="alternarSolucion(e.id)"
+          (alternarCuestionario)="alternarCuestionario(e.id)"
+          (alternarResolucion)="alternarResolucion(e.id)"
+          (rendirse)="rendirse(e.id)"
+        />
+
+        @if (e.cuestionario && estaAbierto(e.id, 'cuestionario')) {
+          <div class="auto-mejorada__panel">
+            <app-quiz-panel
+              [ejercicioId]="e.id"
+              [preguntas]="e.cuestionario"
+              [estado]="estadoDe(e.id)"
+              (responder)="responder(e.id, $event.preguntaId, $event.opcionId)"
+              (comprobar)="alComprobarCuestionario(e.id)"
+              (reintentar)="reintentar(e.id)"
+            />
+          </div>
+        }
+
+        @if (e.resolucion && estaAbierto(e.id, 'resolucion')) {
+          <div class="auto-mejorada__panel">
+            <app-answer-check-panel
+              [ejercicioId]="e.id"
+              [resolucion]="e.resolucion"
+              [estado]="estadoDe(e.id)"
+              [formato]="e.formatoRespuesta ?? 'escalar'"
+              (entradaChange)="actualizarEntrada(e.id, $event)"
+              (verificar)="alVerificarResolucion(e.id)"
+              (alternarRespuesta)="alternarRespuesta(e.id)"
+            />
+          </div>
+        }
+
+        @if (puedeVerSolucion(e.id) && estaAbierto(e.id, 'solucion')) {
+          <div
+            class="auto-mejorada__solucion"
+            role="region"
+            [id]="mostrarPanel(e.id, 'solucion')"
+            [attr.aria-labelledby]="'ae-btn-' + e.id + '-solucion'"
+          >
+            <app-solucion-guiada
+              [ejercicioId]="e.id"
+              [pasos]="pasosDe(e)"
+              [cuestionario]="e.cuestionario ?? []"
+              [interpretarHtml]="true"
+            >
+              <p [innerHTML]="e.solucion"></p>
+            </app-solucion-guiada>
+          </div>
+        }
+      </ui-card>
     }
   </div>
 </section>

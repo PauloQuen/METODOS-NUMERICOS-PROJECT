@@ -2,18 +2,15 @@
   <header class="lista-m3-tab__encabezado">
     <h2 class="lista-m3-tab__titulo">Autoevaluación</h2>
     <p class="lista-m3-tab__intro">
-      Banco de {{ banco.length }} ejercicios. Cada tanda combina tres problemas numéricos y tres
-      de aplicación, con cuatro preguntas aleatorias por ejercicio. Desbloquea la solución y
-      avanza paso a paso. Tu tanda y tu progreso se conservan al cambiar de pestaña.
+      Seis ejercicios: tres numéricos y tres de casuística. El quinto es especial: los datos no son
+      una recta y la solución muestra cómo detectarlo con r² y con la forma de los residuos.
     </p>
-    <button type="button" class="lista-m3-tab__nueva-tanda" (click)="nuevaTanda()">Generar otra tanda</button>
   </header>
 
   @for (ejercicio of ejercicios(); track ejercicio.id) {
     <section class="lista-m3-tab__bloque">
       <app-bloque-ejercicio-datos
         [ejercicio]="ejercicio"
-        [guia]="ejercicio.guia"
         [filas]="calculoDe($index).filas"
         [columnas]="columnas"
         [funcion]="funcionDe($index)"

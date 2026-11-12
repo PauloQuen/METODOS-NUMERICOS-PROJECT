@@ -1,46 +1,68 @@
 /* ==========================================================================
    Miga de pan — navegación jerárquica de una línea.
-   Dos tonos: sobre el hero navy (texto claro) y sobre el cuerpo (oscuro).
+   Dos tonos: sobre el hero índigo (texto claro) y sobre el cuerpo (oscuro).
    ========================================================================== */
 
 .breadcrumb {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--space-xs);
-  font-size: var(--text-label-sm, 0.8rem);
+  gap: var(--e-1);
+  font-size: var(--t-xs);
   font-weight: 500;
   line-height: 1.4;
-  color: var(--on-surface-variant);
+  color: var(--c-texto-suave);
+}
+
+.breadcrumb__volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 32px;
+  margin-right: var(--e-2);
+  padding: 0 var(--e-2);
+  border: 1px solid var(--c-borde-suave);
+  border-radius: var(--r-full);
+  background: var(--c-superficie);
+  color: var(--c-primario);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color var(--mov),
+    border-color var(--mov),
+    color var(--mov);
+
+  &:hover {
+    border-color: var(--c-primario);
+    background: var(--c-primario-suave);
+  }
 }
 
 .breadcrumb__sep {
-  color: var(--outline);
+  color: var(--c-borde);
 }
 
 .breadcrumb__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   color: inherit;
-  text-decoration: none;
-  transition: color 0.15s ease;
+  border-radius: var(--r-sm);
+  transition: color var(--mov);
 
   &:hover {
-    color: var(--primary);
+    color: var(--c-primario);
     text-decoration: underline;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-    border-radius: 3px;
+    text-underline-offset: 2px;
   }
 }
 
 .breadcrumb__actual {
-  color: var(--on-surface);
+  color: var(--c-texto);
   font-weight: 600;
 }
 
-/* Sobre el hero navy: todo claro, sin subrayados llamativos. */
+/* Sobre el hero índigo: todo claro, sin subrayados llamativos. */
 .breadcrumb--navy {
   color: var(--primary-fixed-dim);
 
@@ -50,15 +72,22 @@
 
   .breadcrumb__link {
     &:hover {
-      color: var(--surface-bright);
-    }
-
-    &:focus-visible {
-      outline-color: var(--surface-bright);
+      color: var(--c-sobre-primario);
     }
   }
 
   .breadcrumb__actual {
-    color: var(--surface-bright);
+    color: var(--c-sobre-primario);
+  }
+
+  .breadcrumb__volver {
+    border-color: color-mix(in srgb, var(--c-sobre-primario) 35%, transparent);
+    background: transparent;
+    color: var(--c-sobre-primario);
+
+    &:hover {
+      border-color: var(--c-sobre-primario);
+      background: color-mix(in srgb, var(--c-sobre-primario) 12%, transparent);
+    }
   }
 }

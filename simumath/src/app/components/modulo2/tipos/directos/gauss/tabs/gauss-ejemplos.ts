@@ -4,6 +4,7 @@ import { COLUMNAS_GAUSS } from '../gauss.config';
 import { GaussService } from '../gauss.service';
 import { dibujarGauss } from '../gauss.grafico';
 import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bloque-ejemplo';
+import { GraficoSistema } from '../../../../../../shared/domain/grafico-sistema/grafico-sistema';
 
 /**
  * Pestaña de EJEMPLOS de la eliminación gaussiana.
@@ -20,7 +21,7 @@ import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bl
 @Component({
   selector: 'app-gauss-ejemplos',
   standalone: true,
-  imports: [BloqueEjemplo],
+  imports: [BloqueEjemplo, GraficoSistema],
   templateUrl: './gauss-ejemplos.html',
   styleUrl: './gauss-ejemplos.scss',
 })

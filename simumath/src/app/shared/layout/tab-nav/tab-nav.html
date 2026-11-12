@@ -8,8 +8,8 @@
       class="tab-nav__tab"
       [class.tab-nav__tab--active]="isActive(tab.path)"
       [attr.data-path]="tab.path"
-      href="#"
-      (click)="onTabClick($event, tab.path)"
+      [routerLink]="[base(), tab.path]"
+      [attr.aria-current]="isActive(tab.path) ? 'page' : null"
     >
       {{ tab.label }}
     </a>

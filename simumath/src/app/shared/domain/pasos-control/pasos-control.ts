@@ -1,4 +1,3 @@
-import { TextoMatricial } from '../matriz-vista/texto-matricial';
 import {
   Component,
   OnDestroy,
@@ -29,12 +28,10 @@ import {
 @Component({
   selector: 'app-pasos-control',
   standalone: true,
-  imports: [TextoMatricial],
   templateUrl: './pasos-control.html',
   styleUrl: './pasos-control.scss',
 })
 export class PasosControl implements OnDestroy {
-  readonly formatoMatricial = input(false);
   /** Cuántas iteraciones hay en total. */
   readonly total = input(0);
 

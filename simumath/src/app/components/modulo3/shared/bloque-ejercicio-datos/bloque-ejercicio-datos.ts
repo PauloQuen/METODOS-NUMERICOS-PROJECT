@@ -1,6 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
-import { SolucionGuiadaM3 } from '../../autoevaluacion/solucion-guiada';
-import type { PasoGuiadoM3 } from '../../autoevaluacion/banco';
 import { Component, computed, inject, input } from '@angular/core';
 import { UiCard } from '../../../../shared/ui/ui-card/ui-card';
 import { BloqueEjemploDatos } from '../bloque-ejemplo-datos/bloque-ejemplo-datos';
@@ -18,6 +15,7 @@ import type { FormatoRespuesta } from '../../../../shared/autoevaluacion-mejorad
 import { ExerciseActions } from '../../../../shared/autoevaluacion-mejorada/exercise-actions/exercise-actions';
 import { QuizPanel } from '../../../../shared/autoevaluacion-mejorada/quiz-panel/quiz-panel';
 import { AnswerCheckPanel } from '../../../../shared/autoevaluacion-mejorada/answer-check-panel/answer-check-panel';
+import { SolucionGuiada, type PasoGuia } from '../../../../shared/autoevaluacion-mejorada/solucion-guiada/solucion-guiada';
 
 /**
  * Bloque de ejercicio del Módulo 3 (Autoevaluación).
@@ -52,7 +50,14 @@ import { AnswerCheckPanel } from '../../../../shared/autoevaluacion-mejorada/ans
 @Component({
   selector: 'app-bloque-ejercicio-datos',
   standalone: true,
-  imports: [NgTemplateOutlet, SolucionGuiadaM3, UiCard, BloqueEjemploDatos, ExerciseActions, QuizPanel, AnswerCheckPanel],
+  imports: [
+    UiCard,
+    BloqueEjemploDatos,
+    ExerciseActions,
+    QuizPanel,
+    AnswerCheckPanel,
+    SolucionGuiada,
+  ],
   templateUrl: './bloque-ejercicio-datos.html',
   styleUrl: './bloque-ejercicio-datos.scss',
 })
@@ -62,7 +67,9 @@ export class BloqueEjercicioDatos {
 
   /** Ejercicio a resolver. */
   readonly ejercicio = input.required<EjercicioModulo3>();
-  readonly guia = input<PasoGuiadoM3[]>([]);
+
+  /** Guía ampliada del banco: título y pregunta de comprobación por paso. */
+  readonly guia = input<readonly PasoGuia[]>([]);
 
   /** Filas calculadas de la solución. */
   readonly filas = input<Record<string, number | string>[]>([]);
@@ -203,7 +210,7 @@ export class BloqueEjercicioDatos {
   }
 
   protected reintentarCuestionario(): void {
-    this.actividades.reintentar(this.ejercicio().id);
+    this.actividades.reintentar(this.ejercicio().id, this.cuestionario());
   }
 
   protected actualizarEntrada(entrada: string): void {

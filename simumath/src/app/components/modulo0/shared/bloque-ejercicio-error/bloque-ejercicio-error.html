@@ -1,0 +1,92 @@
+<div class="bloque-ejercicio-error" [attr.id]="'ejercicio-' + ejercicio().id">
+  <ui-card>
+    <h3 class="bloque-ejercicio-error__titulo">{{ ejercicio().titulo }}</h3>
+
+    @if (esCasuistica() && ejercicio().enunciado) {
+      <section class="bloque-ejercicio-error__seccion">
+        <h4 class="bloque-ejercicio-error__subtitulo">Enunciado</h4>
+        <p class="bloque-ejercicio-error__parrafo">{{ ejercicio().enunciado }}</p>
+      </section>
+    }
+
+    <section class="bloque-ejercicio-error__seccion">
+      <h4 class="bloque-ejercicio-error__subtitulo">Planteamiento</h4>
+      <p class="bloque-ejercicio-error__parrafo">{{ ejercicio().planteamiento }}</p>
+
+      @if (ejercicio().parametros.length > 0) {
+        <ul class="bloque-ejercicio-error__lista">
+          @for (p of ejercicio().parametros; track p.etiqueta) {
+            <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
+          }
+        </ul>
+      }
+
+      @if (ejercicio().pista) {
+        <p class="bloque-ejercicio-error__pista">
+          <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
+          <span><strong>Pista:</strong> {{ ejercicio().pista }}</span>
+        </p>
+      }
+    </section>
+
+    @if (mejorada()) {
+      <app-exercise-actions
+        [ejercicioId]="ejercicio().id"
+        [panel]="panel()"
+        [tieneCuestionario]="tieneCuestionario()"
+        [tieneResolucion]="tieneResolucion()"
+        [puedeVerSolucion]="puedeVerSolucion()"
+        [textoBloqueado]="textoBloqueado()"
+        [mostrarRendirse]="mostrarRendirse()"
+        (alternarSolucion)="alternarSolucion()"
+        (alternarCuestionario)="alternarCuestionario()"
+        (alternarResolucion)="alternarResolucion()"
+        (rendirse)="rendirse()"
+      />
+
+      @if (panel() === 'cuestionario' && tieneCuestionario()) {
+        <div class="bloque-ejercicio-error__panel">
+          <app-quiz-panel
+            [ejercicioId]="ejercicio().id"
+            [preguntas]="cuestionario()"
+            [estado]="estadoActividad()"
+            (responder)="responder($event.preguntaId, $event.opcionId)"
+            (comprobar)="comprobarCuestionario()"
+            (reintentar)="reintentarCuestionario()"
+          />
+        </div>
+      }
+
+      @if (panel() === 'resolucion' && resolucionParaPanel(); as resolucionActual) {
+        <div class="bloque-ejercicio-error__panel">
+          <app-answer-check-panel
+            [ejercicioId]="ejercicio().id"
+            [resolucion]="resolucionActual"
+            [estado]="estadoActividad()"
+            [formato]="ejercicio().formatoRespuesta ?? 'escalar'"
+            (entradaChange)="actualizarEntrada($event)"
+            (verificar)="verificarResolucion()"
+            (alternarRespuesta)="alternarRespuesta()"
+          />
+        </div>
+      }
+
+      @if (panel() === 'solucion' && puedeVerSolucion()) {
+        <div
+          class="bloque-ejercicio-error__solucion"
+          role="region"
+          [id]="'ae-panel-' + ejercicio().id + '-solucion'"
+          [attr.aria-labelledby]="'ae-btn-' + ejercicio().id + '-solucion'"
+        >
+          <app-solucion-guiada
+            [ejercicioId]="ejercicio().id"
+            [pasos]="ejercicio().pasos"
+            [cuestionario]="cuestionario()"
+          >
+            <app-m0-bloque-ejemplo-error [ejemplo]="comoEjemplo()" [columnas]="columnas()" />
+          </app-solucion-guiada>
+        </div>
+      }
+    }
+  </ui-card>
+</div>

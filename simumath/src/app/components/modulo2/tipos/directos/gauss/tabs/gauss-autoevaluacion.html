@@ -2,17 +2,15 @@
   <header class="autoevaluacion__encabezado">
     <h2 class="autoevaluacion__titulo">Autoevaluación</h2>
     <p class="autoevaluacion__intro">
-      Banco de {{ banco.length }} ejercicios. Cada tanda combina tres problemas numéricos y tres
-      aplicaciones, con cuatro preguntas aleatorias por ejercicio. Desbloquea la solución y
-      sigue el desarrollo matemático visual. Tu progreso se conserva al cambiar de pestaña.
+      Tres sistemas para practicar eliminación gaussiana. Resolvé en papel,
+      respondé el <strong>Cuestionario</strong> y verificá tu vector solución antes de
+      ver el desarrollo.
     </p>
-    <button type="button" class="autoevaluacion__tanda" (click)="nuevaTanda()">Generar otra tanda</button>
   </header>
 
-  @for (ejercicio of ejercicios(); track ejercicio.id; let i = $index) {
+  @for (ejercicio of ejercicios; track ejercicio.id; let i = $index) {
     <app-bloque-ejercicio
       [ejercicio]="ejercicio"
-      [sistema]="estados()[i].sistema"
       [mejorada]="mejorada"
       moduloId="modulo2"
       tipoId="directos"
@@ -29,6 +27,16 @@
       tituloCriterio="Pivoteo y eliminación"
       (pasoCambiado)="alCambiarPaso(i, $event)"
     >
+      <app-grafico-sistema
+        slot="grafico"
+        [sistema]="estados()[i].sistema"
+        [solucion]="estados()[i].solucion"
+        [iteraciones]="estados()[i].filas"
+        [pasoActual]="pasoDe(i)"
+        [rango]="rangos()[i]"
+        [dibujarSistema]="dibujar"
+        leyenda="Rectas del sistema y construcción de la solución"
+      />
     </app-bloque-ejercicio>
   }
 </div>

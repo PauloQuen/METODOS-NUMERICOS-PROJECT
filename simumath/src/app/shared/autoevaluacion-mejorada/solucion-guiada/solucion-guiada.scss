@@ -1,0 +1,443 @@
+/* ==========================================================================
+   Solución guiada — un paso por vez, con progreso y navegación.
+   Usa los tokens del portal para no introducir una piel nueva.
+   ========================================================================== */
+
+.guia {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+  padding: var(--e-4);
+  border: 1px solid var(--c-borde-suave);
+  border-radius: var(--r-lg);
+  background:
+    linear-gradient(135deg, var(--c-primario-suave), transparent 58%),
+    var(--c-superficie);
+  animation: guia-entrar 180ms ease-out;
+}
+
+.guia--completada {
+  border-color: color-mix(in srgb, var(--c-acento) 40%, var(--c-borde-suave));
+}
+
+.guia__cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--e-3);
+}
+
+.guia__eyebrow {
+  margin: 0 0 var(--e-1);
+  color: var(--c-acento-oscuro);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guia__titulo {
+  margin: 0;
+  color: var(--c-texto);
+  font-family: var(--c-fuente);
+  font-size: var(--t-lg);
+  line-height: 1.3;
+}
+
+.guia__contador {
+  flex-shrink: 0;
+  padding: var(--e-1) var(--e-2);
+  border: 1px solid var(--c-borde-suave);
+  border-radius: var(--r-full);
+  background: var(--c-superficie);
+  color: var(--c-primario);
+  font-size: var(--t-xs);
+  font-weight: 700;
+}
+
+.guia__progreso {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--r-full);
+  background: var(--c-borde-suave);
+}
+
+.guia__progreso-barra {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--c-primario);
+  transition: width var(--mov);
+}
+
+.guia__etapas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guia__etapa {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-1);
+  min-height: 32px;
+  padding: var(--e-1) var(--e-2);
+  border: 1px solid var(--c-borde-suave);
+  border-radius: var(--r-full);
+  color: var(--c-texto-suave);
+  font-size: var(--t-xs);
+  line-height: 1.2;
+}
+
+.guia__etapa-numero {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 1px solid var(--c-borde);
+  border-radius: 50%;
+  background: var(--c-superficie);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.guia__etapa--actual {
+  border-color: var(--c-primario);
+  background: var(--c-superficie);
+  color: var(--c-primario);
+  font-weight: 700;
+}
+
+.guia__etapa--actual .guia__etapa-numero {
+  border-color: var(--c-primario);
+  background: var(--c-primario);
+  color: var(--c-sobre-primario);
+}
+
+.guia__etapa--completada {
+  border-color: color-mix(in srgb, var(--c-acento) 45%, var(--c-borde-suave));
+  color: var(--c-acento-oscuro);
+}
+
+.guia__etapa--completada .guia__etapa-numero {
+  border-color: var(--c-acento);
+  background: var(--c-acento);
+  color: var(--c-sobre-primario);
+}
+
+.guia__paso {
+  padding: var(--e-4);
+  border-left: 4px solid var(--c-primario);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  background: var(--c-superficie);
+  box-shadow: 0 1px 0 var(--c-borde-suave);
+}
+
+.guia__paso-titulo {
+  margin: 0 0 var(--e-2);
+  color: var(--c-texto);
+  font-family: var(--c-fuente);
+  font-size: var(--t-base);
+  line-height: 1.4;
+}
+
+.guia__paso-texto {
+  margin: 0;
+  color: var(--c-texto);
+  font-size: var(--t-base);
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+/* ── Minicuestionario del paso ─────────────────────────────────────── */
+.guia__quiz {
+  min-width: 0;
+  margin: var(--e-4) 0 0;
+  padding: var(--e-3);
+  border: 1px solid var(--c-borde-suave);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--c-primario-suave) 40%, var(--c-superficie));
+}
+
+.guia__quiz-leyenda {
+  padding: 0 var(--e-1);
+  color: var(--c-acento-oscuro);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.guia__quiz-enunciado {
+  margin: 0 0 var(--e-2);
+  color: var(--c-texto);
+  font-size: var(--t-base);
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.guia__quiz-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-1);
+}
+
+.guia__quiz-opcion {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-2);
+  min-height: 44px;
+  padding: var(--e-2);
+  border: 1px solid var(--c-borde-suave);
+  border-radius: var(--r-md);
+  background: var(--c-superficie);
+  color: var(--c-texto);
+  line-height: 1.5;
+  cursor: pointer;
+  transition:
+    background-color var(--mov),
+    border-color var(--mov);
+}
+
+.guia__quiz-opcion:hover {
+  border-color: var(--c-primario);
+  background: var(--c-primario-suave);
+}
+
+.guia__quiz-opcion input {
+  flex-shrink: 0;
+  margin: 0.2rem 0 0;
+  accent-color: var(--c-primario);
+}
+
+.guia__quiz-opcion:has(input:focus-visible) {
+  outline: 2px solid var(--c-primario);
+  outline-offset: 2px;
+}
+
+.guia__quiz-opcion--marcada {
+  border-color: var(--c-primario);
+  background: var(--c-primario-suave);
+}
+
+.guia__quiz-opcion--correcta,
+.guia__quiz-opcion--correcta:hover {
+  border-color: var(--c-ok-texto);
+  background: var(--c-ok-fondo);
+}
+
+.guia__quiz-opcion--incorrecta,
+.guia__quiz-opcion--incorrecta:hover {
+  border-color: var(--c-error-texto);
+  background: var(--c-error-fondo);
+}
+
+.guia__quiz-feedback {
+  margin: var(--e-2) 0 0;
+  padding: var(--e-2) var(--e-3);
+  border-left: 3px solid;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  font-size: var(--t-xs);
+  line-height: 1.6;
+}
+
+.guia__quiz-feedback--ok {
+  border-color: var(--c-ok-texto);
+  background: var(--c-ok-fondo);
+  color: var(--c-ok-texto);
+}
+
+.guia__quiz-feedback--mal {
+  border-color: var(--c-error-texto);
+  background: var(--c-error-fondo);
+  color: var(--c-error-texto);
+}
+
+.guia__quiz-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2);
+  margin-top: var(--e-2);
+}
+
+.guia__quiz-boton {
+  min-height: 40px;
+  padding: var(--e-2) var(--e-3);
+  border: 1px solid var(--c-primario);
+  border-radius: var(--r-md);
+  background: var(--c-superficie);
+  color: var(--c-primario);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.guia__quiz-boton:hover:not(:disabled) {
+  background: var(--c-primario-suave);
+}
+
+.guia__quiz-boton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.guia__quiz-boton:focus-visible {
+  outline: 2px solid var(--c-primario);
+  outline-offset: 3px;
+}
+
+.guia__quiz-ayuda {
+  margin: 0;
+  color: var(--c-texto-suave);
+  font-size: var(--t-xs);
+  line-height: 1.5;
+}
+
+.guia__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--e-2);
+}
+
+.guia__boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-2);
+  min-height: 44px;
+  padding: var(--e-2) var(--e-4);
+  border-radius: var(--r-md);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color var(--mov),
+    border-color var(--mov),
+    color var(--mov);
+}
+
+.guia__boton--primario {
+  border: 1px solid var(--c-primario);
+  background: var(--c-primario);
+  color: var(--c-sobre-primario);
+}
+
+.guia__boton--primario:hover {
+  border-color: var(--c-primario-hover);
+  background: var(--c-primario-hover);
+}
+
+.guia__boton--secundario {
+  border: 1px solid var(--c-borde);
+  background: var(--c-superficie);
+  color: var(--c-primario);
+}
+
+.guia__boton--secundario:hover:not(:disabled) {
+  border-color: var(--c-primario);
+  background: var(--c-primario-suave);
+}
+
+.guia__boton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.guia__boton:focus-visible {
+  outline: 2px solid var(--c-primario);
+  outline-offset: 3px;
+}
+
+.guia__final {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-3);
+}
+
+.guia__final-icono {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--c-acento);
+  color: var(--c-sobre-primario);
+  font-weight: 700;
+}
+
+.guia__final-texto,
+.guia__conclusion {
+  margin: var(--e-1) 0 0;
+  color: var(--c-texto-suave);
+  line-height: 1.65;
+}
+
+.guia__conclusion {
+  padding: var(--e-2) var(--e-3);
+  border-left: 3px solid var(--c-acento);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  background: var(--c-superficie);
+  color: var(--c-texto);
+}
+
+.guia__desarrollo {
+  min-width: 0;
+}
+
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes guia-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .guia {
+    padding: var(--e-3);
+  }
+
+  .guia__cabecera {
+    flex-direction: column;
+  }
+
+  .guia__acciones .guia__boton {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guia {
+    animation: none;
+  }
+
+  .guia__progreso-barra {
+    transition: none;
+  }
+}

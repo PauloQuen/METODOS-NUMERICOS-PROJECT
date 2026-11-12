@@ -1,0 +1,164 @@
+<div class="buscador" (focusout)="alPerderFoco($event)">
+  <div class="buscador__campo" [class.buscador__campo--abierto]="hayPanel()">
+    <span class="material-symbols-outlined buscador__icono" aria-hidden="true">search</span>
+
+    <input
+      #entrada
+      type="search"
+      class="buscador__entrada"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-haspopup="listbox"
+      [attr.aria-expanded]="hayPanel()"
+      aria-controls="busqueda-resultados"
+      [attr.aria-activedescendant]="opcionActivaId()"
+      aria-describedby="busqueda-ayuda"
+      aria-label="Buscar en el portal"
+      placeholder="Busca un método, concepto o ejercicio…"
+      autocomplete="off"
+      spellcheck="false"
+      [value]="consulta()"
+      (input)="alEscribir(entrada.value)"
+      (focus)="alEnfocar()"
+      (keydown)="alTeclear($event)"
+    />
+
+    @if (consulta()) {
+      <button type="button" class="buscador__limpiar" aria-label="Limpiar búsqueda" (click)="limpiar()">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    } @else {
+      <kbd class="buscador__atajo" aria-hidden="true">/</kbd>
+    }
+  </div>
+
+  <p id="busqueda-ayuda" class="solo-lectores">
+    Escribí para buscar en módulos, submódulos, métodos, pestañas, ejercicios y conceptos. Usá las
+    flechas arriba y abajo para recorrer los resultados, Enter para abrir y Escape para cerrar.
+    También podés enfocar el buscador con la tecla barra o con Control K.
+  </p>
+
+  <p class="solo-lectores" aria-live="polite">{{ anuncio() }}</p>
+
+  @if (hayPanel()) {
+    <div class="buscador__panel">
+      @if (buscando()) {
+        <p class="buscador__estado">
+          <span class="material-symbols-outlined buscador__estado-icono" aria-hidden="true"
+            >progress_activity</span
+          >
+          Preparando el índice de búsqueda…
+        </p>
+      } @else if (error()) {
+        <div class="buscador__estado buscador__estado--error" role="alert">
+          <span class="material-symbols-outlined" aria-hidden="true">error</span>
+          <p>{{ error() }}</p>
+        </div>
+      } @else if (totalResultados() === 0) {
+        <div class="buscador__vacio">
+          <p class="buscador__vacio-titulo">No encontramos «{{ consulta() }}».</p>
+          <p class="buscador__vacio-texto">
+            Probá con una palabra más corta, sin tildes, o con uno de estos temas:
+          </p>
+          <div class="buscador__chips">
+            @for (s of sugerencias(); track s) {
+              <button type="button" class="buscador__chip" (click)="usarSugerencia(s)">
+                {{ s }}
+              </button>
+            }
+          </div>
+        </div>
+      } @else {
+        <div
+          id="busqueda-resultados"
+          class="buscador__resultados"
+          role="listbox"
+          aria-label="Resultados de búsqueda"
+        >
+          @for (grupo of gruposConIndices(); track grupo.etiqueta) {
+            <div class="buscador__grupo" role="group" [attr.aria-label]="grupo.etiqueta">
+              <p class="buscador__grupo-titulo" role="presentation">
+                {{ grupo.etiqueta }}
+                <span class="buscador__grupo-cuenta">{{ grupo.resultados.length }}</span>
+              </p>
+
+              @for (item of grupo.resultados; track item.resultado.id) {
+                @if (item.resultado.ruta; as ruta) {
+                  <a
+                    class="buscador__resultado"
+                    [class.buscador__resultado--activo]="esActiva(item.indice)"
+                    role="option"
+                    [id]="'busqueda-op-' + item.indice"
+                    [attr.aria-selected]="esActiva(item.indice)"
+                    [routerLink]="ruta"
+                    tabindex="-1"
+                    (click)="elegir(item.resultado)"
+                    (mouseenter)="activo.set(item.indice)"
+                  >
+                    <span class="buscador__resultado-fila">
+                      <span class="buscador__resultado-titulo">{{ item.resultado.titulo }}</span>
+                      <span class="buscador__resultado-tipo">{{ grupo.etiqueta }}</span>
+                    </span>
+
+                    @if (item.resultado.fragmento; as f) {
+                      <span class="buscador__resultado-desc">
+                        {{ f.antes }}<mark>{{ f.coincidencia }}</mark>{{ f.despues }}
+                      </span>
+                    } @else if (item.resultado.descripcion) {
+                      <span class="buscador__resultado-desc">{{ item.resultado.descripcion }}</span>
+                    }
+
+                    <span class="buscador__resultado-ruta">{{ item.resultado.rutaTexto }}</span>
+                  </a>
+                } @else {
+                  <div
+                    class="buscador__resultado buscador__resultado--inactivo"
+                    role="option"
+                    aria-disabled="true"
+                    [id]="'busqueda-op-' + item.indice"
+                    [attr.aria-selected]="false"
+                  >
+                    <span class="buscador__resultado-fila">
+                      <span class="buscador__resultado-titulo">{{ item.resultado.titulo }}</span>
+                      <span class="buscador__resultado-tipo">En desarrollo</span>
+                    </span>
+                    <span class="buscador__resultado-desc">{{ item.resultado.descripcion }}</span>
+                    <span class="buscador__resultado-ruta">{{ item.resultado.rutaTexto }}</span>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <div class="buscador__pie" aria-hidden="true">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> recorrer</span>
+        <span><kbd>Enter</kbd> abrir</span>
+        <span><kbd>Esc</kbd> cerrar</span>
+      </div>
+    </div>
+  } @else if (consulta().trim().length < 2) {
+    <div class="buscador__sugerencias">
+      @if (recientes().length > 0) {
+        <div class="buscador__sugerencias-fila">
+          <span class="buscador__sugerencias-titulo">Recientes</span>
+          <div class="buscador__chips">
+            @for (r of recientes(); track r) {
+              <button type="button" class="buscador__chip" (click)="usarSugerencia(r)">{{ r }}</button>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="buscador__sugerencias-fila">
+        <span class="buscador__sugerencias-titulo">Sugerencias</span>
+        <div class="buscador__chips">
+          @for (s of sugerencias(); track s) {
+            <button type="button" class="buscador__chip" (click)="usarSugerencia(s)">{{ s }}</button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

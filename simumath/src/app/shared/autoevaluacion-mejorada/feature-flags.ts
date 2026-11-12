@@ -59,6 +59,7 @@ export function resolverFlag(
 export const FLAG_AUTOEVALUACION: FlagAutoevaluacionConfig = {
   global: false,
   modulos: {
+    modulo0: true,
     modulo1: true,
     modulo2: true,
     modulo3: true,

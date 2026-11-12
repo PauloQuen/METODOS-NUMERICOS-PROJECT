@@ -1,5 +1,5 @@
 <div class="cuestionario">
-  @for (pregunta of preguntas(); track pregunta.id; let i = $index) {
+  @for (pregunta of preguntasVisibles(); track pregunta.id; let i = $index) {
     <fieldset
       class="cuestionario__pregunta"
       [class.cuestionario__pregunta--ok]="estado().comprobado && esCorrecta(pregunta)"
@@ -8,7 +8,7 @@
       <legend class="cuestionario__enunciado">{{ i + 1 }}. {{ pregunta.enunciado }}</legend>
 
       <div class="cuestionario__opciones">
-        @for (opcion of pregunta.opciones; track opcion.id) {
+        @for (opcion of opcionesDe(pregunta); track opcion.id) {
           <label
             class="cuestionario__opcion"
             [class.cuestionario__opcion--marcada]="estado().respuestas[pregunta.id] === opcion.id"

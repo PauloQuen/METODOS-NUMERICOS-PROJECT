@@ -1,0 +1,14 @@
+<div class="lista-m3-tab">
+  <header class="lista-m3-tab__encabezado">
+    <h2 class="lista-m3-tab__titulo">{{ titulo() }}</h2>
+    @if (intro()) {
+      <p class="lista-m3-tab__intro">{{ intro() }}</p>
+    }
+  </header>
+
+  @for (ejemplo of ejemplos(); track ejemplo.id) {
+    <section class="lista-m3-tab__bloque">
+      <app-m0-bloque-ejemplo-error [ejemplo]="ejemplo" [columnas]="columnas()" />
+    </section>
+  }
+</div>

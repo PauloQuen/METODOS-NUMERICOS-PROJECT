@@ -1,0 +1,30 @@
+/* ==========================================================================
+   Módulo 0 — Layout común de sus pantallas.
+   Mismo patrón que el Módulo 3, con su propio namespace.
+   ========================================================================== */
+
+.modulo0 {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  &__content {
+    flex: 1;
+    width: 100%;
+    max-width: var(--layout-max);
+    margin: 0 auto;
+    padding: var(--space-xl) var(--gutter-lg) var(--space-xl);
+  }
+
+  /* La portada trae su propio hero y su propio centrado. */
+  &__content--libre {
+    max-width: none;
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .modulo0__content {
+    padding: var(--space-xl) var(--gutter-sm);
+  }
+}

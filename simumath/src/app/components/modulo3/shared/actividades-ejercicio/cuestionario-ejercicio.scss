@@ -51,14 +51,14 @@
 
 .cuestionario__opcion--correcta,
 .cuestionario__opcion--correcta:hover {
-  background: color-mix(in srgb, #15803d 8%, var(--surface-container-lowest));
-  border-color: #15803d;
+  background: var(--c-ok-fondo);
+  border-color: var(--c-ok-texto);
 }
 
 .cuestionario__opcion--incorrecta,
 .cuestionario__opcion--incorrecta:hover {
-  background: color-mix(in srgb, var(--error) 6%, var(--surface-container-lowest));
-  border-color: var(--error);
+  background: var(--c-error-fondo);
+  border-color: var(--c-error-texto);
 }
 
 .cuestionario__opcion:has(input:focus-visible) {
@@ -68,7 +68,7 @@
 
 .cuestionario__opcion input {
   margin: 0.2rem 0 0;
-  accent-color: var(--primary);
+  accent-color: var(--c-primario);
 }
 
 .cuestionario__opcion-texto {
@@ -87,15 +87,15 @@
 }
 
 .cuestionario__feedback--ok {
-  color: #15803d;
-  background: color-mix(in srgb, #15803d 8%, transparent);
-  border-color: #15803d;
+  color: var(--c-ok-texto);
+  background: var(--c-ok-fondo);
+  border-color: var(--c-ok-texto);
 }
 
 .cuestionario__feedback--mal {
-  color: var(--on-error-container);
-  background: color-mix(in srgb, var(--error) 6%, transparent);
-  border-color: var(--error);
+  color: var(--c-error-texto);
+  background: var(--c-error-fondo);
+  border-color: var(--c-error-texto);
 }
 
 .cuestionario__acciones {
@@ -163,5 +163,5 @@
 }
 
 .cuestionario__puntaje--ok {
-  color: #15803d;
+  color: var(--c-ok-texto);
 }

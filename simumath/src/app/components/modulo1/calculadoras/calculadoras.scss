@@ -131,8 +131,8 @@
     margin: 0 0 var(--space-md);
     padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-md);
-    border-inline-start: 3px solid var(--color-accent, currentColor);
-    background: var(--surface-container-low, rgb(0 0 0 / 4%));
+    border-inline-start: 3px solid var(--c-acento);
+    background: var(--surface-container-low);
     color: var(--on-surface);
     font-size: var(--text-body-sm);
     line-height: var(--line-body-md);

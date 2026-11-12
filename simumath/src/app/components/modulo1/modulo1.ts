@@ -141,7 +141,4 @@ export class Modulo1 {
     { texto: this.seccion().titulo },
   ]);
 
-  navigate(path: string): void {
-    void this.router.navigate(['modulo1', path]);
-  }
 }

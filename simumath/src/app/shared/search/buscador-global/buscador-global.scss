@@ -1,0 +1,416 @@
+/* ==========================================================================
+   Buscador global — protagonista de la portada.
+   Todos los valores salen de los tokens de src/styles.scss: no se inventan
+   colores, radios ni espaciados nuevos.
+   ========================================================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.buscador {
+  position: relative;
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Campo
+   -------------------------------------------------------------------------- */
+.buscador__campo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: 3.5rem;
+  padding: 0 var(--space-md) 0 var(--space-lg);
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color var(--transition-smooth),
+    box-shadow var(--transition-smooth);
+
+  &:hover {
+    border-color: var(--outline);
+  }
+
+  &:focus-within,
+  &--abierto {
+    border-color: var(--c-primario);
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--c-primario) 20%, transparent),
+      var(--sombra-2);
+  }
+}
+
+.buscador__icono {
+  flex: 0 0 auto;
+  font-size: 24px;
+  color: var(--primary);
+}
+
+.buscador__entrada {
+  flex: 1;
+  min-width: 0;
+  height: 3.4rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  line-height: var(--line-body-lg);
+
+  &::placeholder {
+    color: var(--on-surface-variant);
+  }
+
+  /* El navegador dibuja su propia "x" en type=search; el botón propio
+     ya cumple esa función y con mejor etiqueta accesible. */
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+.buscador__limpiar {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  color: var(--on-surface-variant);
+  transition: background var(--transition-smooth), color var(--transition-smooth);
+
+  &:hover {
+    background: var(--surface-container);
+    color: var(--primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
+}
+
+.buscador__atajo,
+.buscador__pie kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6rem;
+  height: 1.6rem;
+  padding: 0 0.35rem;
+  border: 1px solid var(--outline-variant);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-container-low);
+  color: var(--on-surface-variant);
+  font-family: var(--font-body);
+  font-size: var(--text-label-sm);
+  font-weight: var(--weight-label-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Panel de resultados
+   -------------------------------------------------------------------------- */
+.buscador__panel {
+  position: absolute;
+  top: calc(100% + var(--space-sm));
+  left: 0;
+  right: 0;
+  z-index: 50;
+  max-height: min(60vh, 34rem);
+  overflow-y: auto;
+  padding: var(--space-sm);
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.buscador__resultados {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.buscador__grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.buscador__grupo-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: var(--space-sm) var(--space-sm) var(--space-xs);
+  color: var(--secondary);
+  font-size: var(--text-label-sm);
+  font-weight: var(--weight-label-sm);
+  line-height: var(--line-label-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.buscador__grupo-cuenta {
+  min-width: 1.25rem;
+  padding: 0 0.35rem;
+  border-radius: var(--radius-full);
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+  text-align: center;
+  letter-spacing: 0;
+}
+
+.buscador__resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-sm) var(--space-md);
+  border-left: 3px solid transparent;
+  border-radius: var(--radius-md);
+  color: inherit;
+  transition: background var(--transition-smooth), border-color var(--transition-smooth);
+
+  &:hover,
+  &--activo {
+    background: var(--surface-container-low);
+    border-left-color: var(--primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+
+  &--inactivo {
+    opacity: 0.72;
+    cursor: not-allowed;
+  }
+}
+
+.buscador__resultado-fila {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.buscador__resultado-titulo {
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.buscador__resultado-tipo {
+  flex: 0 0 auto;
+  padding: 1px 0.45rem;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-full);
+  color: var(--on-surface-variant);
+  font-size: var(--text-label-sm);
+  font-weight: var(--weight-label-sm);
+  white-space: nowrap;
+}
+
+.buscador__resultado-desc {
+  color: var(--on-surface-variant);
+  font-size: var(--text-body-sm);
+  line-height: var(--line-body-md);
+}
+
+.buscador__resultado-ruta {
+  color: var(--tertiary);
+  font-size: var(--text-label-sm);
+  font-weight: var(--weight-label-sm);
+  line-height: var(--line-label-sm);
+}
+
+.buscador__resultado mark {
+  padding: 0 2px;
+  border-radius: 2px;
+  background: var(--c-acento-suave);
+  color: var(--on-secondary-fixed);
+}
+
+/* --------------------------------------------------------------------------
+   Estados
+   -------------------------------------------------------------------------- */
+.buscador__estado {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: var(--space-lg);
+  color: var(--on-surface-variant);
+  font-size: var(--text-body-md);
+}
+
+.buscador__estado-icono {
+  animation: girar 1s linear infinite;
+}
+
+.buscador__estado--error {
+  align-items: flex-start;
+  color: var(--on-error-container);
+  background: var(--error-container);
+  border-radius: var(--radius-md);
+
+  p {
+    margin: 0;
+  }
+}
+
+.buscador__vacio {
+  padding: var(--space-lg);
+}
+
+.buscador__vacio-titulo {
+  margin: 0 0 var(--space-xs);
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: var(--text-headline-sm);
+  font-weight: var(--weight-headline-sm);
+}
+
+.buscador__vacio-texto {
+  margin: 0 0 var(--space-md);
+  color: var(--on-surface-variant);
+  font-size: var(--text-body-md);
+}
+
+/* --------------------------------------------------------------------------
+   Sugerencias (estado inicial)
+   -------------------------------------------------------------------------- */
+.buscador__sugerencias {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.buscador__sugerencias-fila {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.buscador__sugerencias-titulo {
+  color: var(--on-surface-variant);
+  font-size: var(--text-label-sm);
+  font-weight: var(--weight-label-sm);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.buscador__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.buscador__chip {
+  min-height: 36px;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--c-borde-suave);
+  border-radius: var(--r-full);
+  background: var(--c-superficie);
+  color: var(--c-primario);
+  font-family: var(--c-fuente);
+  font-size: var(--t-xs);
+  line-height: var(--line-label-md);
+  transition:
+    background var(--transition-smooth),
+    border-color var(--transition-smooth);
+
+  &:hover {
+    background: var(--surface-container-low);
+    border-color: var(--primary-fixed-dim);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Pie con atajos
+   -------------------------------------------------------------------------- */
+.buscador__pie {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-top: var(--space-sm);
+  padding: var(--space-sm) var(--space-md) var(--space-xs);
+  border-top: 1px solid var(--outline-variant);
+  color: var(--on-surface-variant);
+  font-size: var(--text-label-sm);
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Utilidades
+   -------------------------------------------------------------------------- */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .buscador__campo {
+    padding-left: var(--space-md);
+  }
+
+  .buscador__panel {
+    max-height: min(64vh, 30rem);
+  }
+
+  .buscador__resultado-tipo {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .buscador__campo,
+  .buscador__resultado,
+  .buscador__chip,
+  .buscador__limpiar {
+    transition: none;
+  }
+
+  .buscador__estado-icono {
+    animation: none;
+  }
+}

@@ -4,9 +4,12 @@
     <p class="lista-m3-tab__intro">
       Banco de {{ banco.length }} ejercicios. Cada tanda combina tres problemas numéricos y tres
       de aplicación, con cuatro preguntas aleatorias por ejercicio. Desbloquea la solución y
-      avanza paso a paso. Tu tanda y tu progreso se conservan al cambiar de pestaña.
+      avanza paso a paso: cada etapa incluye una comprobación. Tu tanda y tu progreso se
+      conservan al cambiar de pestaña.
     </p>
-    <button type="button" class="lista-m3-tab__nueva-tanda" (click)="nuevaTanda()">Generar otra tanda</button>
+    <button type="button" class="lista-m3-tab__nueva-tanda" (click)="nuevaTanda()">
+      Generar otra tanda
+    </button>
   </header>
 
   @for (ejercicio of ejercicios(); track ejercicio.id) {

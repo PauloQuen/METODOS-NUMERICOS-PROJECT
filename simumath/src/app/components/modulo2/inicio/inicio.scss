@@ -13,7 +13,8 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-xl) var(--gutter-lg);
-  background: var(--surface-container-low);
+  background: var(--c-primario);
+  color: var(--c-sobre-primario);
   text-align: center;
 }
 
@@ -24,7 +25,7 @@
   font-size: var(--text-headline-lg);
   font-weight: var(--weight-headline-lg);
   line-height: var(--line-headline-lg);
-  color: var(--on-surface);
+  color: var(--c-sobre-primario);
 }
 
 .inicio__bajada {
@@ -32,19 +33,19 @@
   max-width: 62ch;
   font-size: var(--text-body-md);
   line-height: 1.7;
-  color: var(--on-surface-variant);
+  color: var(--primary-fixed-dim);
 
   code {
     padding: 0.1em 0.35em;
-    border-radius: 0.35rem;
-    background: var(--surface-container-high);
-    font-family: var(--font-mono, monospace);
+    border-radius: var(--r-sm);
+    background: color-mix(in srgb, var(--c-sobre-primario) 16%, transparent);
+    font-family: var(--c-fuente-mono);
     font-size: 0.95em;
+    color: var(--c-sobre-primario);
   }
 
   &--suave {
-    color: var(--on-surface-variant);
-    opacity: 0.85;
+    color: var(--primary-fixed-dim);
   }
 }
 
@@ -140,7 +141,7 @@
 
   &__enlace:hover {
     border-color: var(--primary);
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    box-shadow: var(--sombra-1);
     transform: translateY(-1px);
   }
 

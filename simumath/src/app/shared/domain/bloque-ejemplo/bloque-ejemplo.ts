@@ -1,7 +1,3 @@
-import { MatrizVista } from '../matriz-vista/matriz-vista';
-import { TextoMatricial } from '../matriz-vista/texto-matricial';
-import type { MatrizPractica } from '../../practica-guiada/modelos';
-import { FormulaMatematica } from '../../practica-guiada/formula-matematica';
 import { Component, computed, input, output, signal } from '@angular/core';
 import { IterationTable } from '../iteration-table/iteration-table';
 import { GraficoMetodo } from '../grafico-metodo/grafico-metodo';
@@ -37,7 +33,7 @@ import type { Columna, DibujarMetodo, EjemploBase } from '../../models/metodo.mo
 @Component({
   selector: 'app-bloque-ejemplo',
   standalone: true,
-  imports: [MatrizVista, TextoMatricial, FormulaMatematica, IterationTable, GraficoMetodo, PasosControl, UiCard],
+  imports: [IterationTable, GraficoMetodo, PasosControl, UiCard],
   templateUrl: './bloque-ejemplo.html',
   styleUrl: './bloque-ejemplo.scss',
 })
@@ -52,9 +48,6 @@ export class BloqueEjemplo {
    * componente y el mismo layout.
    */
   readonly ejemplo = input.required<EjemploBase>();
-  readonly sistema = input<{ A: number[][]; b: number[] }>();
-  readonly matrices = input<MatrizPractica[]>([]);
-  readonly aumentada = computed(() => this.sistema()?.A.map((fila,i) => [...fila, this.sistema()!.b[i]]) ?? []);
 
   /** Las filas ya calculadas por el algoritmo del método. */
   readonly filas = input<Record<string, number | string>[]>([]);

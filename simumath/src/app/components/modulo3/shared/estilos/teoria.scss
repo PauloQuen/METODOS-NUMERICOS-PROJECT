@@ -191,11 +191,11 @@
 }
 
 .tarjeta-m3__titulo--bueno {
-  color: #15803d;
+  color: var(--c-ok-texto);
 }
 
 .tarjeta-m3__titulo--malo {
-  color: #b91c1c;
+  color: var(--c-error-texto);
 }
 
 /* ── Pasos numerados ──────────────────────────────────────────────── */
@@ -278,9 +278,9 @@
 }
 
 .lista-m3--bueno li::marker {
-  color: #15803d;
+  color: var(--c-ok-texto);
 }
 
 .lista-m3--malo li::marker {
-  color: #b91c1c;
+  color: var(--c-error-texto);
 }

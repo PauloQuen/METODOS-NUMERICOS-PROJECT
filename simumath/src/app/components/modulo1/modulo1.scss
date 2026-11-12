@@ -80,4 +80,11 @@
   .modulo1__content {
     padding: var(--space-xl) var(--gutter-sm);
   }
+
+  /* En móvil el botón deja de flotar para no chocar con la miga. */
+  .modulo1__volver {
+    position: static;
+    order: -1;
+    align-self: flex-end;
+  }
 }

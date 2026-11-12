@@ -1,0 +1,21 @@
+<div class="lista-m3-tab">
+  <header class="lista-m3-tab__encabezado">
+    <h2 class="lista-m3-tab__titulo">{{ titulo() }}</h2>
+    @if (intro()) {
+      <p class="lista-m3-tab__intro">{{ intro() }}</p>
+    }
+  </header>
+
+  @for (ejercicio of ejercicios(); track ejercicio.id) {
+    <section class="lista-m3-tab__bloque">
+      <app-m0-bloque-ejercicio-error
+        [ejercicio]="ejercicio"
+        [columnas]="columnas()"
+        [tipoId]="tipoId()"
+        [metodoId]="metodoId()"
+        [mejorada]="mejorada()"
+        [desbloqueoBase]="desbloqueoBase()"
+      />
+    </section>
+  }
+</div>

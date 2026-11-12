@@ -1,6 +1,7 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, OnInit, computed, inject, input, output } from '@angular/core';
 import type { PreguntaCuestionarioM3 } from '../../modelos/modulo3.model';
-import type { EstadoActividadEjercicio } from './actividades-ejercicio.service';
+import { ActividadesEjercicioService, type EstadoActividadEjercicio } from './actividades-ejercicio.service';
+import { ordenarPorIds } from '../../../../shared/autoevaluacion-mejorada/barajar';
 
 /**
  * CUESTIONARIO DE COMPRENSIÓN de un ejercicio.
@@ -16,7 +17,9 @@ import type { EstadoActividadEjercicio } from './actividades-ejercicio.service';
   templateUrl: './cuestionario-ejercicio.html',
   styleUrl: './cuestionario-ejercicio.scss',
 })
-export class CuestionarioEjercicio {
+export class CuestionarioEjercicio implements OnInit {
+  private readonly actividades = inject(ActividadesEjercicioService);
+
   /** Id del ejercicio, para que los grupos de radios no se pisen. */
   readonly ejercicioId = input.required<string>();
 
@@ -29,6 +32,15 @@ export class CuestionarioEjercicio {
   readonly comprobar = output<void>();
 
   readonly reintentar = output<void>();
+
+  /** Baraja una vez por intento y conserva el orden mientras se responde. */
+  ngOnInit(): void {
+    this.actividades.prepararCuestionario(this.ejercicioId(), this.preguntas());
+  }
+
+  protected readonly preguntasVisibles = computed(() =>
+    ordenarPorIds(this.preguntas(), this.actividades.ordenPreguntasDe(this.ejercicioId())),
+  );
 
   protected readonly todasRespondidas = computed(() =>
     this.preguntas().every((p) => Boolean(this.estado().respuestas[p.id])),
@@ -52,6 +64,14 @@ export class CuestionarioEjercicio {
 
   protected nombreGrupo(preguntaId: string): string {
     return `ae-${this.ejercicioId()}-${preguntaId}`;
+  }
+
+  /** Opciones en el orden barajado, sin cambiar el id de la correcta. */
+  protected opcionesDe(pregunta: PreguntaCuestionarioM3) {
+    return ordenarPorIds(
+      pregunta.opciones,
+      this.actividades.ordenOpcionesDe(this.ejercicioId(), pregunta.id),
+    );
   }
 
   protected alResponder(preguntaId: string, opcionId: string): void {

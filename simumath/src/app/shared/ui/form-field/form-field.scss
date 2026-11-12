@@ -1,37 +1,38 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: var(--e-1);
 
   &__label {
-    font-size: var(--text-label-md);
-    font-weight: var(--weight-label-md);
-    line-height: var(--line-label-md);
-    color: var(--on-surface);
+    font-size: var(--t-xs);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--c-texto);
   }
 
   &__input {
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--outline-variant);
-    border-radius: var(--radius-md);
-    background: var(--surface-container-lowest);
-    color: var(--on-surface);
-    font-family: var(--font-body);
-    font-size: var(--text-body-md);
-    line-height: var(--line-body-md);
+    min-height: 44px;
+    padding: var(--e-2) var(--e-3);
+    border: 1px solid var(--c-borde);
+    border-radius: var(--r-sm);
+    background: var(--c-superficie);
+    color: var(--c-texto);
+    font-family: var(--c-fuente);
+    font-size: var(--t-base);
+    line-height: 1.5;
     transition:
-      border-color var(--transition-smooth),
-      box-shadow var(--transition-smooth);
+      border-color var(--mov),
+      box-shadow var(--mov);
 
     &::placeholder {
-      color: var(--on-surface-variant);
-      opacity: 0.7;
+      color: var(--c-texto-suave);
+      opacity: 0.8;
     }
 
     &:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+      border-color: var(--c-primario);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-primario) 18%, transparent);
     }
 
     /*
@@ -40,7 +41,8 @@
      * alumno ve la matriz como una matriz, no como un párrafo.
      */
     &--multilinea {
-      font-family: var(--font-mono, ui-monospace, 'Courier New', monospace);
+      min-height: auto;
+      font-family: var(--c-fuente-mono);
       line-height: 1.5;
       resize: vertical;
       white-space: pre;
@@ -48,8 +50,8 @@
   }
 
   &__hint {
-    font-size: var(--text-label-sm);
-    line-height: var(--line-label-sm);
-    color: var(--on-surface-variant);
+    font-size: var(--t-xs);
+    line-height: 1.4;
+    color: var(--c-texto-suave);
   }
 }

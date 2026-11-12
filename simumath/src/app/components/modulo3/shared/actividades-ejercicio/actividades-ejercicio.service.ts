@@ -4,6 +4,7 @@ import {
   type FormatoRespuesta,
   type ValorCorrecto,
 } from '../../../../shared/autoevaluacion-mejorada/respuesta.strategy';
+import { barajar } from '../../../../shared/autoevaluacion-mejorada/barajar';
 
 /** Lo mínimo que necesita la verificación; sirve para Módulos 1, 2 y 3. */
 export interface ResolucionParaVerificar {
@@ -39,6 +40,12 @@ export type VerificacionResolucion =
   | 'incorrecto'
   | 'invalido';
 
+/** Pregunta mínima para ordenar y mezclar; sirve para M0, M1, M2 y M3. */
+export interface PreguntaOrdenable {
+  id: string;
+  opciones: readonly { id: string }[];
+}
+
 /** Todo lo que se recuerda de un ejercicio mientras el alumno navega. */
 export interface EstadoActividadEjercicio {
   panel: PanelActividad;
@@ -46,20 +53,38 @@ export interface EstadoActividadEjercicio {
   respuestas: Record<string, string>;
   /** ¿Ya se presionó "Comprobar"? */
   comprobado: boolean;
+  /** Orden visible de las preguntas; se conserva para no saltar al responder. */
+  ordenPreguntas: string[];
+  /** Orden visible de las opciones por pregunta. */
+  ordenOpciones: Record<string, string[]>;
+  /** Respuestas del minicuestionario de la solución guiada. */
+  respuestasGuia: Record<string, string>;
+  /** ¿Ya se comprobó la pregunta de ese paso? */
+  comprobadasGuia: Record<string, boolean>;
+  /** Orden visible de las opciones de cada paso de la guía. */
+  ordenOpcionesGuia: Record<string, string[]>;
   /** Texto que escribió el alumno en "Tu resultado". */
   entrada: string;
   verificacion: VerificacionResolucion;
   /** ¿Se reveló la respuesta final? */
   mostrarRespuesta: boolean;
+  /** Paso actual de la solución guiada (0 = primero). */
+  pasoGuia: number;
 }
 
 const ESTADO_INICIAL: EstadoActividadEjercicio = {
   panel: null,
   respuestas: {},
   comprobado: false,
+  ordenPreguntas: [],
+  ordenOpciones: {},
+  respuestasGuia: {},
+  comprobadasGuia: {},
+  ordenOpcionesGuia: {},
   entrada: '',
   verificacion: 'sin-verificar',
   mostrarRespuesta: false,
+  pasoGuia: 0,
 };
 
 /** Tolerancia absoluta si el ejercicio no define otra. */
@@ -120,9 +145,129 @@ export class ActividadesEjercicioService {
     this.actualizar(id, { comprobado: true });
   }
 
+  /**
+   * Prepara el orden visible del cuestionario una sola vez.
+   *
+   * Baraja preguntas y opciones, y conserva ese orden en el estado para
+   * que responder no haga saltar la pregunta de lugar. Si el contenido
+   * cambia, completa únicamente lo que falta.
+   */
+  prepararCuestionario(id: string, preguntas: readonly PreguntaOrdenable[]): void {
+    const estado = this.estadoDe(id);
+    const ids = preguntas.map((pregunta) => pregunta.id);
+    const ordenCompleto =
+      estado.ordenPreguntas.length === ids.length &&
+      ids.every((preguntaId) => estado.ordenPreguntas.includes(preguntaId));
+
+    if (ordenCompleto) {
+      this.prepararOpciones(id, preguntas, estado.ordenOpciones);
+      return;
+    }
+
+    const ordenOpciones = { ...estado.ordenOpciones };
+    for (const pregunta of preguntas) {
+      if (!ordenOpciones[pregunta.id]) {
+        ordenOpciones[pregunta.id] = barajar(pregunta.opciones.map((opcion) => opcion.id));
+      }
+    }
+
+    this.actualizar(id, {
+      ordenPreguntas: barajar(ids),
+      ordenOpciones,
+    });
+  }
+
+  private prepararOpciones(
+    id: string,
+    preguntas: readonly PreguntaOrdenable[],
+    ordenOpciones: Record<string, string[]>,
+  ): void {
+    let cambios = false;
+    const siguiente = { ...ordenOpciones };
+    for (const pregunta of preguntas) {
+      const orden = siguiente[pregunta.id];
+      const ids = pregunta.opciones.map((opcion) => opcion.id);
+      if (!orden || orden.length !== ids.length) {
+        siguiente[pregunta.id] = barajar(ids);
+        cambios = true;
+      }
+    }
+    if (cambios) this.actualizar(id, { ordenOpciones: siguiente });
+  }
+
   /** Borra las respuestas y vuelve a habilitar el cuestionario. */
-  reintentar(id: string): void {
-    this.actualizar(id, { comprobado: false, respuestas: {} });
+  reintentar(id: string, preguntas: readonly PreguntaOrdenable[] = []): void {
+    const ordenPreguntas = barajar(preguntas.map((pregunta) => pregunta.id));
+    const ordenOpciones: Record<string, string[]> = {};
+    for (const pregunta of preguntas) {
+      ordenOpciones[pregunta.id] = barajar(pregunta.opciones.map((opcion) => opcion.id));
+    }
+    this.actualizar(id, {
+      comprobado: false,
+      respuestas: {},
+      ordenPreguntas,
+      ordenOpciones,
+    });
+  }
+
+  /** Orden actual de las preguntas; si todavía no se preparó, el original. */
+  ordenPreguntasDe(id: string): readonly string[] {
+    return this.estadoDe(id).ordenPreguntas;
+  }
+
+  /** Orden actual de las opciones de una pregunta. */
+  ordenOpcionesDe(id: string, preguntaId: string): readonly string[] {
+    return this.estadoDe(id).ordenOpciones[preguntaId] ?? [];
+  }
+
+  /** Prepara el orden de las opciones de una pregunta de la guía. */
+  prepararOpcionesGuia(id: string, clave: string, opciones: readonly { id: string }[]): void {
+    const estado = this.estadoDe(id);
+    const orden = estado.ordenOpcionesGuia[clave];
+    if (orden && orden.length === opciones.length) return;
+    this.actualizar(id, {
+      ordenOpcionesGuia: {
+        ...estado.ordenOpcionesGuia,
+        [clave]: barajar(opciones.map((opcion) => opcion.id)),
+      },
+    });
+  }
+
+  opcionesGuiaDe(id: string, clave: string): readonly string[] {
+    return this.estadoDe(id).ordenOpcionesGuia[clave] ?? [];
+  }
+
+  respuestaGuiaDe(id: string, clave: string): string {
+    return this.estadoDe(id).respuestasGuia[clave] ?? '';
+  }
+
+  guiaComprobadaDe(id: string, clave: string): boolean {
+    return this.estadoDe(id).comprobadasGuia[clave] ?? false;
+  }
+
+  responderGuia(id: string, clave: string, opcionId: string): void {
+    const estado = this.estadoDe(id);
+    this.actualizar(id, {
+      respuestasGuia: { ...estado.respuestasGuia, [clave]: opcionId },
+      comprobadasGuia: { ...estado.comprobadasGuia, [clave]: false },
+    });
+  }
+
+  comprobarGuia(id: string, clave: string): void {
+    const estado = this.estadoDe(id);
+    if (!estado.respuestasGuia[clave]) return;
+    this.actualizar(id, {
+      comprobadasGuia: { ...estado.comprobadasGuia, [clave]: true },
+    });
+  }
+
+  reiniciarGuia(id: string): void {
+    this.actualizar(id, {
+      pasoGuia: 0,
+      respuestasGuia: {},
+      comprobadasGuia: {},
+      ordenOpcionesGuia: {},
+    });
   }
 
   actualizarEntrada(id: string, entrada: string): void {
@@ -152,6 +297,20 @@ export class ActividadesEjercicioService {
 
   alternarRespuesta(id: string): void {
     this.actualizar(id, { mostrarRespuesta: !this.estadoDe(id).mostrarRespuesta });
+  }
+
+  /** Paso recordado de la solución guiada, para sobrevivir al cambio de pestaña. */
+  pasoGuiaDe(id: string): number {
+    return this.estadoDe(id).pasoGuia;
+  }
+
+  /** Paso actual del minicuestionario para una pregunta concreta. */
+  claveGuia(paso: number, preguntaId: string): string {
+    return `${paso}:${preguntaId}`;
+  }
+
+  guardarPasoGuia(id: string, paso: number): void {
+    this.actualizar(id, { pasoGuia: Math.max(0, paso) });
   }
 
   private actualizar(id: string, parcial: Partial<EstadoActividadEjercicio>): void {

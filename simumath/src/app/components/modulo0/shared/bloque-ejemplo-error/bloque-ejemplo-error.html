@@ -1,0 +1,96 @@
+<div class="bloque-error">
+  <ui-card>
+    <h3 class="bloque-error__titulo">{{ ejemplo().titulo }}</h3>
+
+    @if (esCasuistica() && ejemplo().enunciado) {
+      <section class="bloque-error__seccion">
+        <h4 class="bloque-error__subtitulo">Enunciado</h4>
+        <p class="bloque-error__parrafo">{{ ejemplo().enunciado }}</p>
+      </section>
+    }
+
+    @if (esCasuistica() && ejemplo().extraccion; as extraccion) {
+      <section class="bloque-error__seccion">
+        <h4 class="bloque-error__subtitulo">Extracción de datos</h4>
+        <p class="bloque-error__parrafo">{{ extraccion.busqueda }}</p>
+
+        <div class="bloque-error__tabla-scroll">
+          <table class="bloque-error__tabla-datos">
+            <thead>
+              <tr>
+                <th scope="col">Símbolo</th>
+                <th scope="col">Valor</th>
+                <th scope="col">¿Qué es?</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (d of extraccion.datos; track d.simbolo) {
+                <tr>
+                  <td>{{ d.simbolo }}</td>
+                  <td>{{ d.valor }}</td>
+                  <td>{{ d.queEs }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <p class="bloque-error__parrafo">{{ extraccion.formulacion }}</p>
+      </section>
+    }
+
+    <section class="bloque-error__seccion">
+      <h4 class="bloque-error__subtitulo">Planteamiento</h4>
+      <p class="bloque-error__parrafo">{{ ejemplo().planteamiento }}</p>
+
+      @if (ejemplo().parametros.length > 0) {
+        <ul class="bloque-error__lista">
+          @for (p of ejemplo().parametros; track p.etiqueta) {
+            <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="bloque-error__seccion">
+      <h4 class="bloque-error__subtitulo">Interpretación</h4>
+      <p class="bloque-error__parrafo">{{ ejemplo().interpretacion }}</p>
+    </section>
+
+    <section class="bloque-error__seccion">
+      <h4 class="bloque-error__subtitulo">Cuentas paso a paso</h4>
+
+      <ol class="bloque-error__pasos">
+        @for (paso of ejemplo().pasos; track $index; let i = $index) {
+          <li>
+            <span class="bloque-error__paso-numero" aria-hidden="true">{{ i + 1 }}</span>
+            <span class="bloque-error__parrafo">{{ paso }}</span>
+          </li>
+        }
+      </ol>
+    </section>
+
+    <section class="bloque-error__seccion">
+      <h4 class="bloque-error__subtitulo">Algoritmo aplicado</h4>
+      <p class="bloque-error__parrafo">{{ ejemplo().algoritmo }}</p>
+    </section>
+
+    <section class="bloque-error__seccion">
+      <h4 class="bloque-error__subtitulo">Criterio y tolerancia</h4>
+      <p class="bloque-error__parrafo">{{ ejemplo().criterio }}</p>
+    </section>
+
+    <section class="bloque-error__seccion">
+      <h4 class="bloque-error__subtitulo">Tabla de cuentas</h4>
+      <div class="bloque-error__tabla-scroll">
+        <app-iteration-table [columns]="columnas()" [rows]="filas()" />
+      </div>
+    </section>
+
+    @if (ejemplo().conclusion) {
+      <p class="bloque-error__conclusion">
+        <strong>Conclusión y respuesta.</strong> {{ ejemplo().conclusion }}
+      </p>
+    }
+  </ui-card>
+</div>

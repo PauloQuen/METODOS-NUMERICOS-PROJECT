@@ -1,72 +1,64 @@
 .table-wrap {
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  background: var(--surface-container-lowest);
+  border: 1px solid var(--c-borde-suave);
+  border-radius: var(--r-md);
+  background: var(--c-superficie);
 }
 
 .it-table {
   width: 100%;
+  min-width: max-content;
   border-collapse: collapse;
-  font-family: var(--font-display);
-  font-size: var(--text-body-md);
-  line-height: var(--line-body-md);
+  font-family: var(--c-fuente-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t-xs);
+  line-height: 1.5;
 
-  /* Header navy como en las maquetas */
+  /* Cabecera suave: el azul pleno se reserva para acciones. */
   thead {
-    background: var(--primary);
-    color: var(--surface-bright);
+    background: var(--c-primario-suave);
+    color: var(--c-texto);
 
     th {
-      padding: 0.75rem var(--space-md);
-      font-family: var(--font-body);
-      font-size: var(--text-label-lg);
-      font-weight: var(--weight-label-lg);
-      line-height: var(--line-label-lg);
+      padding: var(--e-3) var(--e-4);
+      font-family: var(--c-fuente);
+      font-size: var(--t-xs);
+      font-weight: 600;
+      line-height: 1.4;
       white-space: nowrap;
     }
   }
 
   tbody {
     tr {
-      border-bottom: 1px solid var(--surface-container-high);
-      color: var(--on-surface);
-      transition: background-color var(--transition-smooth);
+      border-bottom: 1px solid var(--c-borde-suave);
+      color: var(--c-texto);
+      transition: background-color var(--mov);
 
       &:last-child {
         border-bottom: none;
       }
 
       &:hover {
-        background: color-mix(
-          in srgb,
-          var(--surface-container-low) 65%,
-          transparent
-        );
+        background: var(--c-fondo);
       }
 
-      /* Fila que alcanza el criterio de convergencia */
+      /* Fila que alcanza el criterio de convergencia. */
       &--highlight {
-        background: color-mix(
-          in srgb,
-          var(--secondary-container) 22%,
-          transparent
-        );
+        background: var(--c-ok-fondo);
         font-weight: 600;
 
         &:hover {
-          background: color-mix(
-            in srgb,
-            var(--secondary-container) 30%,
-            transparent
-          );
+          background: var(--c-ok-fondo);
         }
       }
     }
   }
 
   &__cell {
-    padding: 0.625rem var(--space-md);
+    padding: var(--e-3) var(--e-4);
     white-space: nowrap;
   }
 
@@ -77,12 +69,12 @@
    * queda en una sola línea y los números en columna.
    */
   &__cell--mono {
-    font-family: var(--font-mono, ui-monospace, 'Courier New', monospace);
+    font-family: var(--c-fuente-mono);
     white-space: pre;
   }
 
   &__badge {
-    margin-left: var(--space-sm);
+    margin-left: var(--e-2);
   }
 }
 
@@ -90,9 +82,11 @@
 .cell--left {
   text-align: left;
 }
+
 .cell--right {
   text-align: right;
 }
+
 .cell--center {
   text-align: center;
 }

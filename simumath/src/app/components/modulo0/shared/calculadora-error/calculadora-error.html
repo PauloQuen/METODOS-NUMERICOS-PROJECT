@@ -1,0 +1,31 @@
+<div class="calc-m3">
+  <header class="calc-m3__encabezado">
+    <h2 class="calc-m3__titulo">{{ titulo() }}</h2>
+    @if (intro()) {
+      <p class="calc-m3__intro">{{ intro() }}</p>
+    }
+  </header>
+
+  <div class="calc-m3__grilla">
+    <app-panel-calculadora-datos
+      [campos]="campos()"
+      [(valores)]="valores"
+      [respuesta]="respuestaParaPanel()"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (respuesta(); as r) {
+      @if (r.exito && r.filas && r.filas.length > 0) {
+        <div class="calc-m3__columna-derecha">
+          <ui-card padding="lg">
+            <h3 class="calc-m3__titulo-seccion">Cómo se obtiene</h3>
+            <div class="calc-m0__tabla">
+              <app-iteration-table [columns]="columnasTabla()" [rows]="r.filas" />
+            </div>
+          </ui-card>
+        </div>
+      }
+    }
+  </div>
+</div>
