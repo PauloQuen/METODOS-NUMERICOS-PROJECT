@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { TEORIA_ELIMINACION_GAUSS } from '../eliminacion-gauss.contenido';
 import { COLUMNAS_GAUSS } from '../eliminacion-gauss.config';
 import { EliminacionGaussService, type GaussEstado } from '../eliminacion-gauss.service';
-import { BloqueEjemploSistema } from '../../../../shared/bloque-ejemplo-sistema/bloque-ejemplo-sistema';
 import { formatearNumero } from '../../../../shared/sistema';
 
 /**
@@ -15,7 +14,7 @@ import { formatearNumero } from '../../../../shared/sistema';
 @Component({
   selector: 'app-eliminacion-gauss-teoria',
   standalone: true,
-  imports: [BloqueEjemploSistema],
+  imports: [],
   templateUrl: './eliminacion-gauss-teoria.html',
   styleUrl: '../../../../shared/estilos/teoria.scss',
 })

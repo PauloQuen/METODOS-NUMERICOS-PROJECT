@@ -1,4 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { crearBancoRaices } from '../../../../autoevaluacion/bancos/crear-banco';
+import { SesionPracticaService } from '../../../../../../shared/practica-guiada/sesion-practica.service';
+import { Component, computed, inject } from '@angular/core';
 import { EJERCICIOS_CARDANO } from '../cardano.contenido';
 import { COLUMNAS_CARDANO } from '../cardano.config';
 import { CardanoService } from '../cardano.service';
@@ -15,10 +17,15 @@ import { dibujarCardano } from '../cardano.grafico';
   styleUrl: './cardano-autoevaluacion.scss',
 })
 export class CardanoAutoevaluacion {
-  readonly ejercicios = EJERCICIOS_CARDANO.map((e) => ({
+  private readonly sesion = inject(SesionPracticaService);
+  readonly banco = crearBancoRaices(EJERCICIOS_CARDANO.map((e) => ({
     ...e,
     ...(AUTOEVALUACION_CARDANO[e.id] ?? {}),
-  }));
+  })), 'cardano');
+  readonly ejercicios = this.sesion.tanda('modulo1/cardano', this.banco);
+  nuevaTanda(): void {
+    this.sesion.renovar('modulo1/cardano', this.banco);
+  }
 
   readonly mejorada = autoevaluacionMejoradaM1('polinomios', 'cardano');
   readonly desbloqueoBase = politicaDeMetodoM1('polinomios', 'cardano');
@@ -27,11 +34,11 @@ export class CardanoAutoevaluacion {
 
   private readonly servicio = inject(CardanoService);
 
-  protected readonly estados = signal(this.ejercicios.map((e) => this.servicio.calcularEjemplo(e)));
+  protected readonly estados = computed(() => this.ejercicios().map((e) => this.servicio.calcularEjemplo(e)));
 
-  protected readonly funciones = this.ejercicios.map((e) => this.servicio.funcionDeEjemplo(e));
+  protected readonly funciones = computed(() => this.ejercicios().map((e) => this.servicio.funcionDeEjemplo(e)));
 
   protected readonly rangos = computed(() =>
-    this.ejercicios.map((e, i) => this.servicio.rangoPara(this.estados()[i].raices)),
+    this.ejercicios().map((e, i) => this.servicio.rangoPara(this.estados()[i].raices)),
   );
 }

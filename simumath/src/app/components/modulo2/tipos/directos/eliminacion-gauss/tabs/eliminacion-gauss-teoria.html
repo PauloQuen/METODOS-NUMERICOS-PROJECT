@@ -153,30 +153,6 @@
   </section>
 
   <!-- 7. Ejemplo numérico -->
-  <section class="teoria-m2__seccion">
-    <h2 class="teoria-m2__titulo">Ejemplo numérico</h2>
-    <app-bloque-ejemplo-sistema
-      [ejemplo]="teoria.ejemploNormal"
-      [filas]="normal.filas"
-      [columnas]="columnas"
-      [solucion]="normal.x"
-      [bondad]="residuoDe(normal)"
-      etiquetaBondad="Residuo máximo"
-      tituloTabla="Operaciones de eliminación"
-    />
-  </section>
 
   <!-- 8. Ejemplo de casuística -->
-  <section class="teoria-m2__seccion">
-    <h2 class="teoria-m2__titulo">Ejemplo de casuística</h2>
-    <app-bloque-ejemplo-sistema
-      [ejemplo]="teoria.ejemploCasuistica"
-      [filas]="casuistica.filas"
-      [columnas]="columnas"
-      [solucion]="casuistica.x"
-      [bondad]="residuoDe(casuistica)"
-      etiquetaBondad="Residuo máximo"
-      tituloTabla="Operaciones de eliminación"
-    />
-  </section>
 </div>

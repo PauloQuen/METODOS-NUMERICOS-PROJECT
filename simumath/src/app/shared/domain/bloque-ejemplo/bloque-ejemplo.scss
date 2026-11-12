@@ -133,3 +133,8 @@
 .bloque-ejemplo__tabla {
   margin-top: 0.5rem;
 }
+
+.bloque-ejemplo__grilla--matrices { grid-template-columns: minmax(0, 1fr); }
+.bloque-ejemplo__grilla--matrices > * { min-width: 0; }
+.bloque-ejemplo__matrices { display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; padding: 1rem 0; align-items: flex-start; }
+.bloque-ejemplo__matrices > * { max-width: 100%; }

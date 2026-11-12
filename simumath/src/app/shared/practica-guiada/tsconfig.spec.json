@@ -1,0 +1,13 @@
+{
+  "extends": "../../../../tsconfig.spec.json",
+  "include": [
+    "./**/*.spec.ts",
+    "../../components/modulo1/**/*.spec.ts",
+    "../../components/modulo2/autoevaluacion/**/*.spec.ts",
+    "../../components/modulo2/tipos/directos/gauss/**/*.spec.ts",
+    "../../components/modulo2/tipos/directos/lu/**/*.spec.ts",
+    "../../components/modulo3/**/*.spec.ts",
+    "../autoevaluacion-mejorada/**/*.spec.ts",
+    "../../**/*.d.ts"
+  ]
+}

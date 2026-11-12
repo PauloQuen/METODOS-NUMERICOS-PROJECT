@@ -130,3 +130,5 @@
   color: var(--primary);
   word-break: break-word;
 }
+
+.bloque-sistema__grilla { grid-template-columns: minmax(0, 1fr); }

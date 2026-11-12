@@ -1,4 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { crearBancoRaices } from '../../../../autoevaluacion/bancos/crear-banco';
+import { SesionPracticaService } from '../../../../../../shared/practica-guiada/sesion-practica.service';
+import { Component, computed, inject } from '@angular/core';
 import { EJERCICIOS_BISECCION } from '../biseccion.contenido';
 import { COLUMNAS_BISECCION } from '../biseccion.config';
 import { BiseccionService, type BiseccionEstado } from '../biseccion.service';
@@ -7,21 +9,7 @@ import { BloqueEjercicio } from '../../../../../../shared/domain/bloque-ejercici
 import { autoevaluacionMejoradaM1, politicaDeMetodoM1 } from '../../../../autoevaluacion.config';
 import { AUTOEVALUACION_BISECCION } from '../biseccion.autoevaluacion';
 
-/**
- * PESTAÑA DE AUTOEVALUACIÓN de Bisección.
- *
- * ── Por qué el cálculo va por acá y no dentro del bloque ─────────────
- * `BloqueEjercicio` es genérico: sabe mostrar la solución, pero no sabe
- * qué método es ni qué datos tiene. Quien los conoce es el componente
- * del método, así que es este el que calcula y le pasa la tabla ya
- * lista. El bloque mantiene su estado de "mostrar/ocultar solución"
- * por ejercicio, así que el alumno puede revelar uno y dejarlo abierto.
- *
- * ── Por qué se calcula una sola vez ──────────────────────────────────
- * Igual que en Ejemplos: el array es fijo. Si se calculara en cada
- * lectura del template, con 3 ejercicios serían 3 corridas del
- * algoritmo por ciclo de detección de cambios.
- */
+/** Autoevaluación con banco aleatorio y recorrido matemático visual. */
 @Component({
   selector: 'app-biseccion-autoevaluacion',
   standalone: true,
@@ -32,11 +20,16 @@ import { AUTOEVALUACION_BISECCION } from '../biseccion.autoevaluacion';
 export class BiseccionAutoevaluacion {
   private readonly servicio = inject(BiseccionService);
 
-  /** Los tres ejercicios: dos numéricos y uno de casuística. */
-  readonly ejercicios = EJERCICIOS_BISECCION.map((e) => ({
+  /** Banco completo y tanda conservada durante la sesión. */
+  private readonly sesion = inject(SesionPracticaService);
+  readonly banco = crearBancoRaices(EJERCICIOS_BISECCION.map((e) => ({
     ...e,
     ...(AUTOEVALUACION_BISECCION[e.id] ?? {}),
-  }));
+  })), 'biseccion');
+  readonly ejercicios = this.sesion.tanda('modulo1/biseccion', this.banco);
+  nuevaTanda(): void {
+    this.sesion.renovar('modulo1/biseccion', this.banco);
+  }
 
   readonly mejorada = autoevaluacionMejoradaM1('cerrados', 'biseccion');
   readonly desbloqueoBase = politicaDeMetodoM1('cerrados', 'biseccion');
@@ -44,21 +37,19 @@ export class BiseccionAutoevaluacion {
   readonly columnas = COLUMNAS_BISECCION;
   readonly dibujar = dibujarBiseccion;
 
-  /** El cálculo de cada ejercicio, hecho una vez al construir. */
-  protected readonly calculos: BiseccionEstado[] = this.ejercicios.map((e) =>
-    this.servicio.calcularEjemplo(e),
-  );
+  /** Los cálculos se actualizan únicamente cuando cambia la tanda. */
+  protected readonly calculos = computed(() => this.ejercicios().map(e => this.servicio.calcularEjemplo(e)));
 
 
   protected calculoDe(indice: number): BiseccionEstado {
-    return this.calculos[indice];
+    return this.calculos()[indice];
   }
 
   protected funcionDe(indice: number): (x: number) => number {
-    return this.servicio.funcionDeEjemplo(this.ejercicios[indice]);
+    return this.servicio.funcionDeEjemplo(this.ejercicios()[indice]);
   }
 
   protected rangoDe(indice: number): { min: number; max: number } {
-    return this.servicio.rangoPara(this.ejercicios[indice].calculo);
+    return this.servicio.rangoPara(this.ejercicios()[indice].calculo);
   }
 }

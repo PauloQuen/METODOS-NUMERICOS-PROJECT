@@ -4,7 +4,6 @@ import {
   MatricesEspecialesService,
   type GaussSeidelEstado,
 } from '../matrices-especiales.service';
-import { BloqueEjemploSistema } from '../../../../shared/bloque-ejemplo-sistema/bloque-ejemplo-sistema';
 import { crearDibujoConvergencia, rangoConvergencia, rangoError } from '../../../../shared/grafico-convergencia';
 import { formatearNumero } from '../../../../shared/sistema';
 import type { DibujarMetodo } from '../../../../../../shared/models/metodo.model';
@@ -17,7 +16,7 @@ import type { DibujarMetodo } from '../../../../../../shared/models/metodo.model
 @Component({
   selector: 'app-matrices-especiales-teoria',
   standalone: true,
-  imports: [BloqueEjemploSistema],
+  imports: [],
   templateUrl: './matrices-especiales-teoria.html',
   styleUrl: '../../../../shared/estilos/teoria.scss',
 })

@@ -14,11 +14,12 @@
 
     <section class="bloque-ejercicio__seccion">
       <h4 class="bloque-ejercicio__subtitulo">Planteamiento</h4>
-      <p class="bloque-ejercicio__parrafo">{{ ejercicio().ecuacion }}</p>
+      <app-formula-matematica [texto]="ejercicio().ecuacion" />
+      @if (sistema()) { <app-matriz-vista titulo="Sistema aumentado [A | b]" [valores]="aumentada()" [aumentada]="true" /> }
       @if (ejercicio().parametros.length > 0) {
         <ul class="bloque-ejercicio__lista">
           @for (p of ejercicio().parametros; track p.etiqueta) {
-            <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
+            <li><strong>{{ p.etiqueta }}:</strong> @if(sistema()) { <app-texto-matricial [texto]="p.valor" /> } @else { {{ p.valor }} }</li>
           }
         </ul>
       }
@@ -76,8 +77,14 @@
           [id]="'ae-panel-' + ejercicio().id + '-solucion'"
           [attr.aria-labelledby]="'ae-btn-' + ejercicio().id + '-solucion'"
         >
+          <ng-template #desarrolloCompleto>
+            @if (guia().length && !filas().length) {
+              <p class="bloque-ejercicio__parrafo">{{ ejercicio().conclusion }}</p>
+            } @else {
           <app-bloque-ejemplo
             [ejemplo]="convertirAEjemplo()"
+            [sistema]="sistema()"
+            [matrices]="matrices()"
             [filas]="filas()"
             [columnas]="columnas()"
             [filaFinal]="filaFinal()"
@@ -94,6 +101,13 @@
           >
             <ng-content select="[slot='grafico']"></ng-content>
           </app-bloque-ejemplo>
+            }
+          </ng-template>
+          @if (guia().length) {
+            <app-solucion-guiada [ejercicioId]="ejercicio().id" [etapas]="guia()" [desarrollo]="desarrolloCompleto" />
+          } @else {
+            <ng-container [ngTemplateOutlet]="desarrolloCompleto" />
+          }
         </div>
       }
     } @else {
@@ -107,6 +121,8 @@
         <div class="bloque-ejercicio__solucion">
           <app-bloque-ejemplo
             [ejemplo]="convertirAEjemplo()"
+            [sistema]="sistema()"
+            [matrices]="matrices()"
             [filas]="filas()"
             [columnas]="columnas()"
             [filaFinal]="filaFinal()"

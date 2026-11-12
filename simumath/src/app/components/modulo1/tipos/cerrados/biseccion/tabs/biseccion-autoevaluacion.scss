@@ -34,3 +34,5 @@
   padding-bottom: 0;
   border-bottom: none;
 }
+.autoevaluacion__tanda { align-self: flex-start; padding: .75rem 1rem; border: 1px solid var(--outline-variant); border-radius: 8px; font: inherit; color: var(--on-surface); background: var(--surface); cursor: pointer; }
+.autoevaluacion__tanda:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }

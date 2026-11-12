@@ -1,6 +1,7 @@
+import { MatrizVista } from '../../../../shared/domain/matriz-vista/matriz-vista';
+import { TextoMatricial } from '../../../../shared/domain/matriz-vista/texto-matricial';
 import { Component, computed, input, signal } from '@angular/core';
 import { IterationTable } from '../../../../shared/domain/iteration-table/iteration-table';
-import { GraficoMetodo } from '../../../../shared/domain/grafico-metodo/grafico-metodo';
 import { PasosControl } from '../../../../shared/domain/pasos-control/pasos-control';
 import { UiCard } from '../../../../shared/ui/ui-card/ui-card';
 import type { Columna, DibujarMetodo } from '../../../../shared/models/metodo.model';
@@ -19,7 +20,7 @@ import { formatearNumero, formatearVector, matrizAumentada } from '../sistema';
 @Component({
   selector: 'app-bloque-ejemplo-sistema',
   standalone: true,
-  imports: [IterationTable, GraficoMetodo, PasosControl, UiCard],
+  imports: [IterationTable, MatrizVista, TextoMatricial, PasosControl, UiCard],
   templateUrl: './bloque-ejemplo-sistema.html',
   styleUrl: './bloque-ejemplo-sistema.scss',
 })
