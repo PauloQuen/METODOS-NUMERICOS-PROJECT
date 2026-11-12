@@ -1,12 +1,4 @@
-import {
-  Component,
-  OnDestroy,
-  computed,
-  effect,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { Component, OnDestroy, computed, effect, input, output, signal } from "@angular/core";
 
 /**
  * Botones para recorrer las iteraciones de un método paso a paso.
@@ -26,12 +18,13 @@ import {
  * cuando ya no hay nada más que mostrar.
  */
 @Component({
-  selector: 'app-pasos-control',
+  selector: "app-pasos-control",
   standalone: true,
-  templateUrl: './pasos-control.html',
-  styleUrl: './pasos-control.scss',
+  templateUrl: "./pasos-control.html",
+  styleUrl: "./pasos-control.scss",
 })
 export class PasosControl implements OnDestroy {
+  readonly formatoMatricial = input<boolean>(false);
   /** Cuántas iteraciones hay en total. */
   readonly total = input(0);
 
@@ -39,7 +32,7 @@ export class PasosControl implements OnDestroy {
   readonly paso = input(0);
 
   /** Texto de la iteración actual, para leerla mientras avanza. */
-  readonly texto = input('');
+  readonly texto = input("");
 
   /**
    * Cómo se llama a una "unidad" del método: "Iteración" para los que
@@ -47,7 +40,7 @@ export class PasosControl implements OnDestroy {
    * cuenta iteraciones. Con eso sale "Paso 3 de 6" en vez de
    * "Iteración 3 de 6", sin que este componente sepa de qué método es.
    */
-  readonly etiquetaDePaso = input('Iteración');
+  readonly etiquetaDePaso = input("Iteración");
 
   /** Emite el nuevo índice cuando el alumno cambia de paso. */
   readonly pasoCambiado = output<number>();
@@ -92,10 +85,10 @@ export class PasosControl implements OnDestroy {
   private readonly etiquetaBaja = computed(() => this.etiquetaDePaso().toLowerCase());
 
   readonly ariaGrupo = computed(() => `Controles de ${this.etiquetaBaja()}`);
-  readonly ariaInicio = computed(() => 'Ir al inicio');
+  readonly ariaInicio = computed(() => "Ir al inicio");
   readonly ariaAnterior = computed(() => `${this.etiquetaDePaso()} anterior`);
   readonly ariaSiguiente = computed(() => `${this.etiquetaDePaso()} siguiente`);
-  readonly ariaFinal = computed(() => 'Ir al final');
+  readonly ariaFinal = computed(() => "Ir al final");
 
   /**
    * Si el padre cambia el total (por ejemplo, el alumno apretó "Calcular"
@@ -139,9 +132,7 @@ export class PasosControl implements OnDestroy {
 
     this.reproduciendo.set(true);
     this.reproduccionCambiada.emit(true);
-    this.temporizador.set(
-      setInterval(() => this.avanzarEnReproduccion(), this.velocidad()),
-    );
+    this.temporizador.set(setInterval(() => this.avanzarEnReproduccion(), this.velocidad()));
   }
 
   private avanzarEnReproduccion(): void {
@@ -187,5 +178,5 @@ export class PasosControl implements OnDestroy {
  */
 function plural(etiqueta: string): string {
   const baja = etiqueta.toLowerCase();
-  return baja.endsWith('ón') ? `${baja.slice(0, -2)}ones` : `${baja}s`;
+  return baja.endsWith("ón") ? `${baja.slice(0, -2)}ones` : `${baja}s`;
 }
