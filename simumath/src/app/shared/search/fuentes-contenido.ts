@@ -216,6 +216,21 @@ export const FUENTES_CONTENIDO: readonly FuenteContenido[] = [
     },
   },
 
+  {
+    clave: 'modulo2/iterativos/jacobi',
+    cargar: async () => {
+      const m = await import('../../components/modulo2/tipos/iterativos/shared/iterativo.contenido');
+      return contenidoDe(m.teoriaIterativa('jacobi'), m.crearBancoIterativo('jacobi'));
+    },
+  },
+  {
+    clave: 'modulo2/iterativos/gaussSeidel',
+    cargar: async () => {
+      const m = await import('../../components/modulo2/tipos/iterativos/shared/iterativo.contenido');
+      return contenidoDe(m.teoriaIterativa('gauss-seidel'), m.crearBancoIterativo('gauss-seidel'));
+    },
+  },
+
   /* ── Módulo 3 ─────────────────────────────────────────────────── */
   {
     clave: 'modulo3/interpolacion/lagrange',

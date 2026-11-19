@@ -161,6 +161,17 @@ export const routes: Routes = [
           import("./components/modulo2/tipos/directos/lu/lu.routes").then((m) => m.LU_ROUTES),
       },
 
+      {
+        path: "tipos/iterativos/jacobi",
+        loadChildren: () => import("./components/modulo2/tipos/iterativos/jacobi/jacobi.routes")
+          .then((m) => m.JACOBI_ROUTES),
+      },
+      {
+        path: "tipos/iterativos/gauss-seidel",
+        loadChildren: () => import("./components/modulo2/tipos/iterativos/gauss-seidel/gauss-seidel.routes")
+          .then((m) => m.GAUSS_SEIDEL_ROUTES),
+      },
+
       // Pantalla B: la lista de métodos de una familia. Un solo
       // componente para las dos familias, ver tipo-metodos.ts.
       {

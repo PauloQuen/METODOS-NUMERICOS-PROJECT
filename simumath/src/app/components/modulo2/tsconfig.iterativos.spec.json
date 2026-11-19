@@ -1,0 +1,4 @@
+{
+  "extends": "../../../../tsconfig.spec.json",
+  "include": ["./registro-modulo2.spec.ts", "./tipos/iterativos/shared/*.spec.ts", "../../**/*.d.ts"]
+}

@@ -1,0 +1,100 @@
+<section class="calculadora-iterativa">
+  <header>
+    <h2>Calculadora de {{ servicio.config.nombre }}</h2>
+    <p>Introduce A, b y el vector inicial. Cada barrida se realiza sin redondear las cuentas internas.
+      Para validar la aproximación se comprueban el cambio escalado y el residuo relativo.</p>
+    <button type="button" class="boton secundario" (click)="probarDivergencia()">Probar un caso no convergente</button>
+  </header>
+  <div class="grilla">
+    <div class="columna">
+      <app-calculadora-shell [campos]="campos" [(valores)]="servicio.valores" (calcular)="calcular($event)" (limpiar)="limpiar()" />
+      @if (servicio.datos()) {
+        <ui-card><h3>Datos del último cálculo</h3>
+          <app-grupo-matrices [matrices]="matricesOriginales()" />
+          <p>δ = ‖x nuevo − x anterior‖∞ / max(1, ‖x nuevo‖∞).</p>
+          <p>η = ‖Ax − b‖∞ / ‖b‖∞. Si b = 0, se divide por ‖A‖∞. Ambas medidas deben ser menores o iguales que la tolerancia.</p>
+        </ui-card>
+      }
+    </div>
+    <div class="columna">
+      @if (servicio.resultado(); as r) {
+        <ui-card>
+          <section [class.aviso]="!r.convergio" [attr.role]="r.estado === 'entrada-invalida' ? 'alert' : 'status'">
+            <h3>{{ r.estado === 'entrada-invalida' ? 'Revisa los datos' : r.convergio ? 'Aproximación validada' : 'Criterio de convergencia no alcanzado' }}</h3>
+            <p>{{ r.mensaje }}</p>
+            @if (r.aproximacion; as x) {
+              <p class="vector-final"><strong>{{ r.convergio ? 'x ≈' : 'Última aproximación:' }}</strong> {{ vector(x) }}</p>
+              <dl class="metricas">
+                <div><dt>Iteraciones</dt><dd>{{ r.iteraciones }}</dd></div>
+                <div><dt>Cambio escalado δ</dt><dd>{{ numero(ultima()!.cambioRelativo) }}</dd></div>
+                <div><dt>Residuo relativo η</dt><dd>{{ numero(ultima()!.residuoRelativo) }}</dd></div>
+                <div><dt>Residuo absoluto ‖Ax − b‖∞</dt><dd>{{ numero(ultima()!.residuo) }}</dd></div>
+              </dl>
+            }
+          </section>
+          @if (r.inicial) {
+            <p class="dominancia">{{ r.diagonalDominante ? 'A es estrictamente diagonalmente dominante por filas: satisface una condición suficiente de convergencia.' : 'A no es estrictamente diagonalmente dominante por filas. Esto no prueba que diverja: revisa la evolución y los criterios de parada.' }}</p>
+          }
+        </ui-card>
+        @if (r.inicial) {
+          <ui-card>
+            <app-grafico-iterativo [resultado]="r" [comparacion]="servicio.comparacion()" [paso]="servicio.paso()"
+              [tolerancia]="servicio.datos()!.tol!" [nombre]="servicio.config.nombre" [otroNombre]="servicio.otroNombre" />
+            <button type="button" class="boton" (click)="servicio.comparar()">Comparar ambos métodos</button>
+            @if (servicio.comparacion(); as otro) {
+              <p>Mismos A, b, vector inicial, tolerancia y límite de iteraciones.</p>
+              <div class="tabla-scroll"><table class="comparacion">
+                <caption>Comparación entre Jacobi y Gauss-Seidel</caption>
+                <thead><tr><th>Método</th><th>Iteraciones</th><th>Residuo relativo</th><th>Estado</th></tr></thead>
+                <tbody>
+                  <tr><th>{{ servicio.config.nombre }}</th><td>{{ r.iteraciones }}</td><td>{{ numero(ultima()!.residuoRelativo) }}</td><td>{{ r.convergio ? 'Cumple tolerancia' : 'No validado' }}</td></tr>
+                  <tr><th>{{ servicio.otroNombre }}</th><td>{{ otro.iteraciones }}</td><td>{{ finalDe(otro) ? numero(finalDe(otro)!.residuoRelativo) : '—' }}</td><td>{{ otro.convergio ? 'Cumple tolerancia' : 'No validado' }}</td></tr>
+                </tbody>
+              </table></div>
+              <p>El método más rápido depende del sistema; esta comparación no es una garantía general.</p>
+            }
+          </ui-card>
+        }
+      } @else {
+        <ui-card>
+          <h3>Observa cómo se aproxima la solución</h3>
+          <p>Pulsa Calcular para ver el historial, la curva del residuo y los despejes de cada barrida.
+            Puedes recorrer los estados y comparar Jacobi con Gauss-Seidel usando exactamente los mismos datos.</p>
+        </ui-card>
+      }
+    </div>
+  </div>
+
+  @if (servicio.estados().length) {
+    <ui-card>
+      <h3>Recorrer las iteraciones</h3>
+      <app-pasos-control [total]="servicio.estados().length" [paso]="servicio.paso()" [texto]="textoPaso()"
+        etiquetaDePaso="Estado" (pasoCambiado)="cambiarPaso($event)" />
+      @if (servicio.estados().length > 1) {
+        <label class="selector">Ir a la iteración {{ servicio.actual()!.k }}
+          <input type="range" min="0" [max]="servicio.estados().length - 1" [value]="servicio.paso()"
+            (input)="cambiarPaso(+$any($event.target).value)" aria-label="Seleccionar iteración" />
+        </label>
+      }
+      <app-grupo-matrices [matrices]="matricesPaso()" etiqueta="Vectores de la iteración seleccionada" />
+      @if (cuentas().length) {
+        <h4>{{ servicio.metodo === 'jacobi' ? 'Solo se usa el vector anterior' : 'Se usan los valores nuevos ya disponibles' }}</h4>
+        <div class="despejes">@for (cuenta of cuentas(); track $index) {
+          <div><small>{{ cuenta.etiqueta }}</small><app-formula-matematica [texto]="cuenta.expresion!" /></div>
+        }</div>
+      }
+    </ui-card>
+    <ui-card>
+      <h3>Historial de iteraciones</h3>
+      <p>k = 0 es el vector inicial. Se muestran los estados {{ inicioPagina() + 1 }} a {{ finalPagina() }} de {{ servicio.filas().length }}.</p>
+      <app-iteration-table [columns]="columnas()" [rows]="filasPagina()"
+        [highlightRowIndex]="servicio.resultado()!.convergio ? servicio.filas().length - 1 - inicioPagina() : undefined" highlightBadge="Cumple tolerancia" />
+      @if (servicio.filas().length > tamanoPagina) {
+        <nav class="paginacion" aria-label="Páginas del historial">
+          <button type="button" class="boton secundario" [disabled]="pagina() === 0" (click)="pagina.set(pagina() - 1)">Filas anteriores</button>
+          <button type="button" class="boton secundario" [disabled]="finalPagina() >= servicio.filas().length" (click)="pagina.set(pagina() + 1)">Filas siguientes</button>
+        </nav>
+      }
+    </ui-card>
+  }
+</section>
