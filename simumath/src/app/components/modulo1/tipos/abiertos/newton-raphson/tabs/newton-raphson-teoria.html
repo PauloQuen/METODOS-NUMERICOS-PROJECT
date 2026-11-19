@@ -1,9 +1,150 @@
-<app-teoria-contenido
-  [teoria]="teoria"
-  [terceraTexto]="teoria.ordenConvergencia"
-  terceraTitulo="Orden de convergencia"
-  terceraIcono="speed"
-  tituloMetodo="El algoritmo"
-  tituloCriterios="Criterios de parada"
-  tituloRecomendaciones="Recomendaciones"
-/>
+<article class="teoria">
+  <header class="introduccion">
+    <div>
+      <p class="etiqueta">La idea del método</p>
+      <h2>Método de Newton-Raphson</h2>
+      <p>Parte de una sola semilla: trazas la tangente en ese punto y donde corta al eje x está la siguiente aproximación.</p>
+    </div>
+    <div class="formula">
+      <strong>xₙ₊₁ = xₙ − f(xₙ) / f′(xₙ)</strong>
+      <span>Pendiente de la tangente: f′(x₀) = f(x₀) / b</span>
+      <small>¡sigue la tangente!</small>
+    </div>
+  </header>
+
+  <section aria-labelledby="demo-titulo">
+    <h2 id="demo-titulo">Pruébalo paso a paso</h2>
+    <p class="subtitulo">f(x) = x³ − x − 2, semilla x₀ = 2,4. Cada paso traza una tangente roja hasta el eje.</p>
+    <div class="tarjeta demo">
+      <div class="controles">
+        <span class="insignia">Newton-Raphson · demostración</span>
+        <div class="acciones">
+          <label for="newton-teoria-tolerancia">Tolerancia |Δx|</label>
+          <select id="newton-teoria-tolerancia" [value]="tolerancia()" (change)="cambiarTolerancia($event)">
+            <option value="0.01">0,01</option>
+            <option value="0.001">0,001</option>
+            <option value="0.000001">0,000001</option>
+          </select>
+          <button type="button" (click)="siguiente()" [disabled]="terminado()">Siguiente paso</button>
+          <button type="button" class="secundario" (click)="reiniciar()">Reiniciar</button>
+        </div>
+      </div>
+      <svg class="grafica" viewBox="0 0 600 300" role="img" aria-labelledby="grafica-titulo grafica-descripcion">
+        <title id="grafica-titulo">Newton-Raphson de x³ − x − 2</title>
+        <desc id="grafica-descripcion">Tangentes sucesivas desde la semilla x₀ = 2,4 hasta el eje x. La última tangente se resalta en rojo.</desc>
+        <line class="eje" x1="34" x2="586" [attr.y1]="py(0)" [attr.y2]="py(0)" />
+        <path class="curva" [attr.d]="curva" />
+        @if (!filas().length) {
+          <circle class="semilla" [attr.cx]="px(semilla)" [attr.cy]="py(funcion(semilla))" r="5" />
+          <text class="rotulo" [attr.x]="px(semilla) + 8" [attr.y]="py(funcion(semilla)) + 4">x₀</text>
+        }
+        @for (fila of filas(); track fila.n; let ultima = $last) {
+          <g [class.actual]="ultima">
+            <line class="tangente" [attr.x1]="px(fila.x)" [attr.y1]="py(fila.fx)"
+              [attr.x2]="px(fila.xn)" [attr.y2]="py(0)" />
+            <line class="anclaje" [attr.x1]="px(fila.x)" [attr.y1]="py(0)"
+              [attr.x2]="px(fila.x)" [attr.y2]="py(fila.fx)" />
+            <circle class="punto" [attr.cx]="px(fila.x)" [attr.cy]="py(fila.fx)" r="4" />
+            <circle class="punto" [attr.cx]="px(fila.xn)" [attr.cy]="py(0)" r="5" />
+          </g>
+        }
+        <text class="rotulo" x="582" y="30" text-anchor="end">y = f(x)</text>
+      </svg>
+      <dl class="indicadores">
+        <div><dt>Iteración</dt><dd>{{ filas().length }}</dd></div>
+        <div><dt>Aproximación xₙ₊₁</dt><dd>{{ actual() ? formato(actual()!.xn) : '—' }}</dd></div>
+        <div><dt>Desplazamiento |Δx|</dt><dd>{{ actual() ? formatoDelta(actual()!.delta) : '—' }}</dd></div>
+        <div><dt>f′(xₙ)</dt><dd>{{ actual() ? formato(actual()!.fpx, 3) : '—' }}</dd></div>
+      </dl>
+      <p class="mensaje" [class.completado]="terminado()" role="status">{{ mensaje() }}</p>
+      @if (filas().length) {
+        <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de Newton-Raphson">
+          <table>
+            <caption>Iteraciones, tangente y desplazamiento</caption>
+            <thead><tr>
+              <th scope="col">n</th>
+              <th scope="col">x<sub>n</sub></th>
+              <th scope="col">f(x<sub>n</sub>)</th>
+              <th scope="col">x<sub>n+1</sub></th>
+              <th scope="col">|Δx|</th>
+            </tr></thead>
+            <tbody>
+              @for (fila of filas(); track fila.n) {
+                <tr [class.ultima]="fila.n === filas().length">
+                  <th scope="row">{{ fila.n }}</th>
+                  <td>{{ formato(fila.x) }}</td>
+                  <td>{{ formato(fila.fx) }}</td>
+                  <td>{{ formato(fila.xn) }}</td>
+                  <td>{{ formatoDelta(fila.delta) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="convergencia-titulo">
+    <h2 id="convergencia-titulo">Antes de empezar: ¿converge?</h2>
+    <div class="convergencia">
+      <div class="tarjeta">
+        <h3>Criterios de convergencia</h3>
+        <ol>
+          <li>Verifica que f′(x) y f″(x) existan y no sean nulas.</li>
+          <li>Comprueba que existe una raíz: f(a)·f(b) &lt; 0.</li>
+          <li>Fija la cota de error: 10⁻ᵏ (tolerancia absoluta) o un error porcentual (relativa).</li>
+        </ol>
+      </div>
+      <div class="tarjeta">
+        <h3>Cifras significativas (Scarborough)</h3>
+        <p>Para garantizar n cifras significativas:</p>
+        <p class="ecuacion">ε = (0,5 × 10²⁻ⁿ) %</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="pasos-titulo">
+    <h2 id="pasos-titulo">Los pasos</h2>
+    <p class="subtitulo">Siete pasos; del 2 al 7 se repiten hasta cumplir el criterio de parada.</p>
+    <ol class="pasos">
+      @for (paso of pasos; track $index) {
+        <li [class]="'paso-' + paso[0]">
+          <span class="numero" aria-hidden="true">{{ $index + 1 }}</span>
+          <div><h3>{{ paso[1] }}</h3><p>{{ paso[2] }}</p></div>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <section aria-labelledby="parada-titulo">
+    <h2 id="parada-titulo">Criterios de parada</h2>
+    <p class="subtitulo">Solo uno es el recomendado por defecto; los demás sirven, pero con cuidado.</p>
+    @for (criterio of criterios; track $index) {
+      <details [class.criterio-principal]="$index === 0" [open]="$index === 0">
+        <summary>{{ criterio[0] }} <span class="chip" [class]="'chip chip-' + criterio[2]">{{ criterio[1] }}</span></summary>
+        <p>{{ criterio[3] }}</p>
+      </details>
+    }
+  </section>
+
+  <section aria-labelledby="balance-titulo">
+    <h2 id="balance-titulo">Ventajas y limitaciones</h2>
+    <div class="balance">
+      <div class="tarjeta ventajas"><h3>✓ Ventajas</h3><ul>
+        @for (ventaja of ventajas; track $index) { <li>{{ ventaja }}</li> }
+      </ul></div>
+      <div class="tarjeta limitaciones"><h3>! Limitaciones</h3><ul>
+        @for (limitacion of limitaciones; track $index) { <li>{{ limitacion }}</li> }
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="tarjeta consejos" aria-labelledby="consejos-titulo">
+    <h2 id="consejos-titulo">Recomendaciones</h2>
+    <ol>
+      @for (recomendacion of recomendaciones; track $index) { <li>{{ recomendacion }}</li> }
+    </ol>
+  </section>
+</article>
