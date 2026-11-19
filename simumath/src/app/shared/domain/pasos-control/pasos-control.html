@@ -61,6 +61,7 @@
   </div>
 
   @if (texto()) {
-    <p class="pasos__texto">{{ texto() }}</p>
+    @if (formatoMatricial()) { <app-texto-matricial class="pasos__texto" [texto]="texto()" /> }
+    @else { <p class="pasos__texto">{{ texto() }}</p> }
   }
 </div>

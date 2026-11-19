@@ -1,4 +1,5 @@
 import { Component, OnDestroy, computed, effect, input, output, signal } from "@angular/core";
+import { TextoMatricial } from '../matriz-vista/texto-matricial';
 
 /**
  * Botones para recorrer las iteraciones de un método paso a paso.
@@ -20,6 +21,7 @@ import { Component, OnDestroy, computed, effect, input, output, signal } from "@
 @Component({
   selector: "app-pasos-control",
   standalone: true,
+  imports: [TextoMatricial],
   templateUrl: "./pasos-control.html",
   styleUrl: "./pasos-control.scss",
 })

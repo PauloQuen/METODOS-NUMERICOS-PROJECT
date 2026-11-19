@@ -1,6 +1,7 @@
 import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { UiCard } from '../../ui/ui-card/ui-card';
 import { BloqueEjemplo } from '../bloque-ejemplo/bloque-ejemplo';
+import { ParametrosMatriciales } from '../matriz-vista/parametros-matriciales';
 import type {
   Columna,
   DibujarMetodo,
@@ -47,6 +48,7 @@ import { SolucionGuiada } from '../../autoevaluacion-mejorada/solucion-guiada/so
   imports: [
     UiCard,
     BloqueEjemplo,
+    ParametrosMatriciales,
     ExerciseActions,
     QuizPanel,
     AnswerCheckPanel,
@@ -95,6 +97,7 @@ export class BloqueEjercicio {
 
   /** Contexto para la clave del gate (no se mezcla entre métodos). */
   readonly moduloId = input('modulo1');
+  readonly formatoMatricial = computed(() => this.moduloId() === 'modulo2');
   readonly tipoId = input('');
   readonly metodoId = input('');
 

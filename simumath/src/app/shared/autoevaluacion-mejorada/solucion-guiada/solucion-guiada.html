@@ -45,6 +45,8 @@
 
         @if (interpretarHtml()) {
           <p class="guia__paso-texto" [innerHTML]="paso.explicacion"></p>
+        } @else if (formatoMatricial()) {
+          <app-texto-matricial class="guia__paso-texto" [texto]="paso.explicacion" />
         } @else {
           <p class="guia__paso-texto">{{ paso.explicacion }}</p>
         }

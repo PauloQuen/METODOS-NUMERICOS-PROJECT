@@ -1,4 +1,4 @@
-import { MatrizVista } from '../domain/matriz-vista/matriz-vista';
+import { GrupoMatrices } from '../domain/matriz-vista/grupo-matrices';
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, input, signal, type TemplateRef } from '@angular/core';
 import { FormulaMatematica } from './formula-matematica';
@@ -6,7 +6,7 @@ import type { EtapaPractica } from './modelos';
 import { numeroTexto } from './modelos';
 import { SesionPracticaService } from './sesion-practica.service';
 @Component({
-  selector:'app-solucion-guiada',standalone:true,imports:[NgTemplateOutlet,FormulaMatematica,MatrizVista],
+  selector:'app-solucion-guiada',standalone:true,imports:[NgTemplateOutlet,FormulaMatematica,GrupoMatrices],
   templateUrl:'./solucion-guiada.html',styleUrl:'./solucion-guiada.scss',
 })
 export class SolucionGuiada {

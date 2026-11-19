@@ -10,6 +10,16 @@
   grid-template-columns: 1fr 1fr;
 }
 
+.bloque-ejemplo__grilla--matrices {
+  grid-template-columns: minmax(0, 3fr) minmax(16rem, 2fr);
+}
+
+@media (max-width: 1100px) {
+  .bloque-ejemplo__grilla--matrices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 920px) {
   .bloque-ejemplo__grilla {
     grid-template-columns: 1fr;

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input } f
 import { ActividadesEjercicioService } from '../../../components/modulo3/shared/actividades-ejercicio/actividades-ejercicio.service';
 import type { PreguntaCuestionarioAuto } from '../../models/metodo.model';
 import { ordenarPorIds } from '../barajar';
+import { TextoMatricial } from '../../domain/matriz-vista/texto-matricial';
 
 /**
  * Un paso de la solución guiada.
@@ -40,6 +41,7 @@ export interface PasoGuia {
 @Component({
   selector: 'app-solucion-guiada',
   standalone: true,
+  imports: [TextoMatricial],
   templateUrl: './solucion-guiada.html',
   styleUrl: './solucion-guiada.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,6 +72,7 @@ export class SolucionGuiada implements OnInit {
 
   /** Si los pasos vienen con HTML ya redactado (autoevaluación transversal). */
   readonly interpretarHtml = input(false);
+  readonly formatoMatricial = input(false);
 
   /**
    * Guía efectiva. Si el método no define una guía, se usan sus pasos y

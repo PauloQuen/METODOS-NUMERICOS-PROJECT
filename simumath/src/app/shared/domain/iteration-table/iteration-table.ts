@@ -1,5 +1,6 @@
 import { Component, input } from "@angular/core";
 import { Badge } from "../../ui/badge/badge";
+import { TextoMatricial } from '../matriz-vista/texto-matricial';
 
 export interface IterationColumn {
   /** Clave de la fila a mostrar. */
@@ -24,7 +25,7 @@ export interface IterationColumn {
 @Component({
   selector: "app-iteration-table",
   standalone: true,
-  imports: [Badge],
+  imports: [Badge, TextoMatricial],
   templateUrl: "./iteration-table.html",
   styleUrl: "./iteration-table.scss",
 })
