@@ -1,5 +1,8 @@
 import { Component, computed, signal } from '@angular/core';
 import { newtonRaphson } from '../newton-raphson.algoritmo';
+import { DemoIteracion, ResumenIteracion } from '../../shared/demo-iteracion';
+import { graficaDemo } from '../../shared/demo-grafica';
+import { DemoEjes } from '../../shared/demo-ejes';
 
 interface FilaDemo {
   n: number;
@@ -14,18 +17,19 @@ interface FilaDemo {
 @Component({
   selector: 'app-newton-raphson-teoria',
   standalone: true,
+  imports: [DemoIteracion, DemoEjes],
   templateUrl: './newton-raphson-teoria.html',
   styleUrl: './newton-raphson-teoria.scss',
 })
 export class NewtonRaphsonTeoria {
   readonly tolerancia = signal(0.001);
   readonly paso = signal(0);
-  readonly semilla = 2.4;
-  readonly funcion = (x: number) => x ** 3 - x - 2;
+  readonly semilla = signal(2.4);
+  readonly funcion = (x: number) => x ** 3 + x - 2;
 
   readonly resultado = computed(() => newtonRaphson({
     f: this.funcion,
-    x0: this.semilla,
+    x0: this.semilla(),
     tol: this.tolerancia(),
     maxIter: 30,
     criterio: 'absoluto',
@@ -36,7 +40,7 @@ export class NewtonRaphsonTeoria {
   // reconstruye a partir de la semilla y de la fila anterior.
   readonly filas = computed<FilaDemo[]>(() => {
     const filas: FilaDemo[] = [];
-    let anterior = this.semilla;
+    let anterior = this.semilla();
     for (const fila of this.resultado().filas.slice(0, this.paso())) {
       filas.push({
         n: fila.n,
@@ -54,17 +58,44 @@ export class NewtonRaphsonTeoria {
   readonly actual = computed(() => this.filas().at(-1));
   readonly terminado = computed(() => this.paso() >= this.resultado().filas.length);
 
-  px(x: number): number { return 34 + (x - 0.6) / 2.2 * 552; }
-  py(y: number): number { return 274 - (y + 4) / 20 * 260; }
+  readonly grafica = computed(() => graficaDemo(
+    [this.semilla(), ...this.filas().map(f => f.xn)], this.funcion));
+  px(x: number): number { return this.grafica().px(x); }
+  py(y: number): number { return this.grafica().py(y); }
 
-  readonly curva = Array.from({ length: 161 }, (_, i) => {
-    const x = 0.6 + 2.2 * i / 160;
-    return `${i ? 'L' : 'M'}${this.px(x)},${this.py(this.funcion(x))}`;
-  }).join(' ');
+  cambiarSemilla(event: Event): void {
+    const valor = Number((event.target as HTMLInputElement).value);
+    if (!Number.isFinite(valor)) return;
+    this.semilla.set(Math.max(-4, Math.min(4, valor)));
+    this.reiniciar();
+  }
+
+  readonly resumen = computed<ResumenIteracion>(() => {
+    const f = this.actual();
+    const valores = [this.semilla(), ...this.filas().map(fila => fila.xn)];
+    const raiz = 1; // Raíz real de x³ + x − 2.
+    return {
+      n: this.filas().length,
+      tendencia: f ? (Math.abs(f.xn - raiz) < Math.abs(f.x - raiz) ? 'se acerca' : 'se aleja') : null,
+      indicadores: [
+        { etiqueta: 'Aproximación xₙ₊₁', valor: f ? this.formato(f.xn) : '—' },
+        { etiqueta: 'Desplazamiento |Δx|', valor: f ? this.formatoDelta(f.delta) : '—' },
+        { etiqueta: 'Derivada f′(xₙ)', valor: f ? this.formato(f.fpx) : '—' },
+      ],
+      pasos: f ? [
+        `Partimos de xₙ = ${this.formato(f.x)} y evaluamos f(xₙ) = ${this.formato(f.fx)}.`,
+        `Trazamos la tangente con pendiente f′(xₙ) = ${this.formato(f.fpx)}.`,
+        `Su corte con el eje x es xₙ₊₁ = ${this.formato(f.xn)}; este será el punto de partida siguiente.`,
+      ] : [`Elige una semilla. Partimos de x₀ = ${this.formato(this.semilla())} y trazaremos su tangente.`],
+      secuencia: valores.map((v, n) => ({ n, valor: this.formato(v) })).slice(-6),
+      mensaje: this.mensaje(),
+      estado: this.terminado() ? (this.resultado().convergio ? 'exito' : 'error') : f ? 'activo' : 'inicio',
+    };
+  });
 
   readonly mensaje = computed(() => {
     const fila = this.actual();
-    if (!fila) return 'Pulsa «Siguiente paso» para empezar.';
+    if (!fila) return this.terminado() ? this.resultado().mensaje ?? 'No se puede avanzar desde esta semilla.' : 'Pulsa «Siguiente paso» para empezar.';
     if (this.terminado()) {
       const resultado = this.resultado();
       if (resultado.convergio) {

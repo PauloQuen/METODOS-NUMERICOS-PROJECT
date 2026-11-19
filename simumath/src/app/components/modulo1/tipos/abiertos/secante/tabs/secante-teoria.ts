@@ -1,5 +1,8 @@
 import { Component, computed, signal } from '@angular/core';
 import { ejecutarSecante } from '../secante.algoritmo';
+import { DemoIteracion, ResumenIteracion } from '../../shared/demo-iteracion';
+import { graficaDemo } from '../../shared/demo-grafica';
+import { DemoEjes } from '../../shared/demo-ejes';
 
 interface FilaDemo {
   n: number;
@@ -24,20 +27,21 @@ interface ParInicial {
 @Component({
   selector: 'app-secante-teoria',
   standalone: true,
+  imports: [DemoIteracion, DemoEjes],
   templateUrl: './secante-teoria.html',
   styleUrl: './secante-teoria.scss',
 })
 export class SecanteTeoria {
   readonly tolerancia = signal(0.001);
   readonly paso = signal(0);
-  readonly semilla0 = 2.4;
-  readonly semilla1 = 2;
-  readonly funcion = (x: number) => x ** 3 - x - 2;
+  readonly semilla0 = signal(2.4);
+  readonly semilla1 = signal(2);
+  readonly funcion = (x: number) => x ** 3 + x - 2;
 
   readonly resultado = computed(() => ejecutarSecante({
     f: this.funcion,
-    x0: this.semilla0,
-    x1: this.semilla1,
+    x0: this.semilla0(),
+    x1: this.semilla1(),
     tol: this.tolerancia(),
     maxIter: 30,
     criterio: 'absoluto',
@@ -48,7 +52,7 @@ export class SecanteTeoria {
   // ventana) para dibujar la secante y los dos triángulos semejantes.
   readonly filas = computed<FilaDemo[]>(() => {
     const filas: FilaDemo[] = [];
-    let anterior = this.semilla0;
+    let anterior = this.semilla0();
     for (const fila of this.resultado().filas.slice(0, this.paso())) {
       const f0 = this.funcion(anterior);
       const f1 = this.funcion(fila.xPrev);
@@ -79,18 +83,45 @@ export class SecanteTeoria {
     return fila
       ? { x0: fila.x0, y0: fila.f0, x1: fila.x1, y1: fila.f1, xn: fila.xn }
       : {
-          x0: this.semilla0, y0: this.funcion(this.semilla0),
-          x1: this.semilla1, y1: this.funcion(this.semilla1), xn: null,
+          x0: this.semilla0(), y0: this.funcion(this.semilla0()),
+          x1: this.semilla1(), y1: this.funcion(this.semilla1()), xn: null,
         };
   });
 
-  px(x: number): number { return 34 + (x - 0.6) / 2.2 * 552; }
-  py(y: number): number { return 274 - (y + 4) / 20 * 260; }
+  readonly grafica = computed(() => graficaDemo(
+    [this.semilla0(), this.semilla1(), ...this.filas().map(f => f.xn)], this.funcion));
+  px(x: number): number { return this.grafica().px(x); }
+  py(y: number): number { return this.grafica().py(y); }
 
-  readonly curva = Array.from({ length: 161 }, (_, i) => {
-    const x = 0.6 + 2.2 * i / 160;
-    return `${i ? 'L' : 'M'}${this.px(x)},${this.py(this.funcion(x))}`;
-  }).join(' ');
+  cambiarSemilla(event: Event, indice: number): void {
+    const valor = Number((event.target as HTMLInputElement).value);
+    if (!Number.isFinite(valor)) return;
+    (indice === 0 ? this.semilla0 : this.semilla1).set(Math.max(-4, Math.min(4, valor)));
+    this.reiniciar();
+  }
+
+  readonly resumen = computed<ResumenIteracion>(() => {
+    const f = this.actual();
+    const valores = [this.semilla0(), this.semilla1(), ...this.filas().map(fila => fila.xn)];
+    const raiz = 1; // Raíz real de x³ + x − 2.
+    return {
+      n: this.filas().length,
+      tendencia: f ? (Math.abs(f.xn - raiz) < Math.abs(f.x1 - raiz) ? 'se acerca' : 'se aleja') : null,
+      indicadores: [
+        { etiqueta: 'Aproximación xₙ₊₁', valor: f ? this.formato(f.xn) : '—' },
+        { etiqueta: 'Desplazamiento |Δx|', valor: f ? this.formatoDelta(f.delta) : '—' },
+        { etiqueta: 'Pendiente secante', valor: f ? this.formato(f.pendiente) : '—' },
+      ],
+      pasos: f ? [
+        `Unimos los puntos con abscisas ${this.formato(f.x0)} y ${this.formato(f.x1)} sobre la curva.`,
+        `La secante tiene pendiente ${this.formato(f.pendiente)}. Los triángulos verde y rojo son semejantes.`,
+        `La recta corta el eje en ${this.formato(f.xn)}. Avanzamos la pareja a ${this.formato(f.x1)} y ${this.formato(f.xn)}.`,
+      ] : [`Elige dos semillas distintas: x₀ = ${this.formato(this.semilla0())} y x₁ = ${this.formato(this.semilla1())}.`],
+      secuencia: valores.map((v, n) => ({ n, valor: this.formato(v) })).slice(-6),
+      mensaje: this.mensaje(),
+      estado: this.terminado() ? (this.resultado().convergio ? 'exito' : 'error') : f ? 'activo' : 'inicio',
+    };
+  });
 
   puntosVerde(fila: FilaDemo): string {
     return `${this.px(fila.x1)},${this.py(fila.f1)} ${this.px(fila.x0)},${this.py(fila.f1)} ${this.px(fila.x0)},${this.py(fila.f0)}`;

@@ -1,4 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
+import { DemoIteracion, ResumenIteracion } from '../../shared/demo-iteracion';
 
 interface Despeje {
   etiqueta: string;
@@ -52,6 +53,7 @@ interface PuntoRaiz {
 @Component({
   selector: 'app-punto-fijo-teoria',
   standalone: true,
+  imports: [DemoIteracion],
   templateUrl: './punto-fijo-teoria.html',
   styleUrl: './punto-fijo-teoria.scss',
 })
@@ -189,8 +191,8 @@ export class PuntoFijoTeoria {
       titulo: `Iteración ${k}`,
       tendencia,
       pasos: [
-        `Partimos de x${this.sub(k - 1)} = ${this.formato(r.x)} sobre la diagonal.`,
-        `Subimos hasta la curva: g(x${this.sub(k - 1)}) = ${this.formato(r.gx)}.`,
+        `Partimos de x${this.sub(k - 1)} = ${this.formato(r.x)} sobre ${k === 1 ? 'el eje x' : 'la diagonal'}.`,
+        `Nos desplazamos verticalmente hasta la curva: g(x${this.sub(k - 1)}) = ${this.formato(r.gx)}.`,
         `Cruzamos a la diagonal: ese valor es el nuevo x${this.sub(k)}. Nos movimos |Δx| = ${this.formatoDelta(r.dx)}.`,
       ],
       nota: '',
@@ -205,6 +207,24 @@ export class PuntoFijoTeoria {
       n: inicio + i,
       valor: v.toFixed(4).replace('.', ','),
     }));
+  });
+
+  readonly resumen = computed<ResumenIteracion>(() => {
+    const fila = this.filas().at(-1);
+    const descripcion = this.descripcion();
+    return {
+      n: this.filas().length,
+      tendencia: descripcion.tendencia,
+      pasos: fila ? descripcion.pasos : [descripcion.nota],
+      indicadores: [
+        { etiqueta: 'Aproximación xₙ₊₁', valor: fila ? this.formato(fila.gx) : '—' },
+        { etiqueta: 'Desplazamiento |Δx|', valor: fila ? this.formatoDelta(fila.dx) : '—' },
+        { etiqueta: 'Residuo |g(xₙ₊₁) − xₙ₊₁|', valor: fila ? this.formatoDelta(Math.abs(this.actual().g(fila.gx) - fila.gx)) : '—' },
+      ],
+      secuencia: this.secuencia(),
+      mensaje: this.mensaje(),
+      estado: this.terminado() ? (this.estado().fallido ? 'error' : 'exito') : fila ? 'activo' : 'inicio',
+    };
   });
 
   px(v: number): number {

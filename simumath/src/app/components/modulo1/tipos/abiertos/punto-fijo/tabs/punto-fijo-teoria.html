@@ -14,7 +14,7 @@
 
   <section aria-labelledby="idea-titulo">
     <h2 id="idea-titulo">La idea en tres tiempos</h2>
-    <p class="subtitulo">Ejemplo de todo el boceto: resolver x² − 4x + 2 = 0 (raíces 0,586 y 3,414).</p>
+    <p class="subtitulo">Ejemplo: Resolver x² − 4x + 2 = 0 (raíces 0,586 y 3,414).</p>
     <div class="flujo">
       <div class="tarjeta">
         <h3>1 · La ecuación</h3>
@@ -131,29 +131,7 @@
             <text class="mano etiqueta-g" [attr.x]="eg.x" [attr.y]="eg.y">g(x)</text>
           }
         </svg>
-        <div>
-          <div class="panel" aria-live="polite">
-            <p class="panel-titulo">
-              {{ descripcion().titulo }}
-              @if (descripcion().tendencia; as tendencia) {
-                <span class="chip" [class.chip-ok]="tendencia === 'se acerca'" [class.chip-error]="tendencia === 'se aleja'">{{ tendencia }}</span>
-              }
-            </p>
-            @if (descripcion().pasos.length) {
-              <ol>
-                @for (linea of descripcion().pasos; track $index) { <li>{{ linea }}</li> }
-              </ol>
-            } @else {
-              <p class="panel-nota">{{ descripcion().nota }}</p>
-            }
-            @if (secuencia().length) {
-              <div class="secuencia">
-                @for (s of secuencia(); track s.n) { <span>{{ 'x' + sub(s.n) + ' = ' + s.valor }}</span> }
-              </div>
-            }
-          </div>
-          <p class="mensaje" [class.completado]="terminado() && !estado().fallido" [class.fallido]="estado().fallido" role="status">{{ mensaje() }}</p>
-        </div>
+        <app-demo-iteracion [datos]="resumen()" />
       </div>
       @if (filas().length) {
         <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>

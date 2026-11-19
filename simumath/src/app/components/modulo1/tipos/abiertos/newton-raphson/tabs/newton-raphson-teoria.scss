@@ -16,6 +16,8 @@ p, li { color: var(--c-texto-suave); }
 .controles, .acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); align-items: center; }
 .controles { justify-content: space-between; }
 .acciones label { font-size: var(--t-xs); color: var(--c-texto-suave); }
+input[type="range"] { accent-color: var(--c-primario); width: 130px; max-width: 100%; }
+input:focus-visible { outline: 3px solid var(--c-acento); outline-offset: 3px; }
 .insignia { display: inline-block; padding: var(--e-1) var(--e-3); color: var(--c-acento-oscuro); background: var(--c-acento-suave); border-radius: var(--r-full); font-size: var(--t-xs); font-weight: 600; }
 button, select { font: inherit; min-height: 44px; border: 1px solid var(--c-primario); border-radius: var(--r-sm); padding: var(--e-2) var(--e-3); }
 button { background: var(--c-primario); color: var(--c-sobre-primario); cursor: pointer; font-weight: 600; }
