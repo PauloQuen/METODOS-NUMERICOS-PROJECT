@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { reglaFalsa } from '../regla-falsa.algoritmo';
+import { PASOS_REGLA_FALSA } from '../regla-falsa-pasos';
 
 @Component({
   selector: 'app-regla-falsa-teoria',
@@ -92,15 +93,7 @@ export class ReglaFalsaTeoria {
     const mitad = this.funcion(fila.a) * fila.fc < 0 ? '[a, c]' : '[c, b]';
     return `Paso ${fila.n}: f(c) = ${this.formato(fila.fc)}. Conservamos ${mitad} en la siguiente iteración.${fila.delta === undefined ? ' Aún no hay una aproximación anterior para comparar.' : ''}`;
   });
-  readonly pasos = [
-    ['Verifica las condiciones', 'Comprueba la continuidad en [a, b]. Si un extremo es raíz, termina; en otro caso exige f(a) · f(b) < 0.'],
-    ['Calcula c', 'Une (a, f(a)) con (b, f(b)). Su cruce con el eje x es c = b − f(b)·(b − a)/(f(b) − f(a)).'],
-    ['Evalúa la nueva aproximación', 'Calcula f(c). Si f(c) = 0, c es una raíz y el proceso termina.'],
-    ['Comprueba la tolerancia', 'Desde la segunda iteración, compara |cₙ − cₙ₋₁| con la tolerancia absoluta. Es un indicador a posteriori, no una garantía del error real.'],
-    ['Conserva el intervalo izquierdo', 'Si f(a) y f(c) tienen signos opuestos, sustituye b por c y f(b) por f(c).'],
-    ['O conserva el intervalo derecho', 'En caso contrario, sustituye a por c y f(a) por f(c). Solo se conserva uno de los dos intervalos.'],
-    ['Construye la siguiente cuerda', 'Repite desde el paso 2 con los extremos actualizados. Un extremo puede permanecer fijo; establece un máximo de iteraciones.'],
-  ];
+  readonly pasos = PASOS_REGLA_FALSA;
 
   px(x: number): number { return 40 + (x - 0.8) / 1.4 * 540; }
   py(y: number): number { return 270 - (y + 3) / 9.6 * 250; }

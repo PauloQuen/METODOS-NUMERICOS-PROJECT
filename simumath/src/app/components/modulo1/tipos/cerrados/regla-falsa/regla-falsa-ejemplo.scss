@@ -1,0 +1,10 @@
+.contexto { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-4); align-items: start; }
+.contexto h3 { margin-bottom: var(--e-2); }
+.extraccion { display: grid; gap: var(--e-3); min-width: 0; }
+.extraccion td:last-child { white-space: normal; min-width: 14rem; }
+.acciones span { font-size: var(--t-xs); color: var(--c-texto-suave); }
+.aplicado { margin-top: var(--e-4); }
+.teoria > section, .demo { min-width: 0; }
+@media (max-width: 720px) {
+  .contexto { grid-template-columns: minmax(0, 1fr); }
+}
