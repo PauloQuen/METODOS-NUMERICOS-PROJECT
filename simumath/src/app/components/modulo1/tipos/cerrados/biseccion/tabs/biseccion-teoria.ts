@@ -1,82 +1,60 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { TEORIA_BISECCION } from '../biseccion.contenido';
-import { COLUMNAS_BISECCION, DATOS_POR_DEFECTO } from '../biseccion.config';
-import { BiseccionService } from '../biseccion.service';
-import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bloque-ejemplo';
-import { TeoriaContenido } from '../../../../../../shared/domain/teoria-contenido/teoria-contenido';
-import { dibujarBiseccion } from '../biseccion.grafico';
+import { Component, computed, signal } from '@angular/core';
+import { biseccion } from '../biseccion.algoritmo';
+import {
+  CONVERGENCIA_BISECCION,
+  CRITERIOS_PARADA_BISECCION,
+  PASOS_ALGORITMO_BISECCION,
+} from '../biseccion-explicacion';
 
-/**
- * PESTAÑA DE TEORÍA de Bisección.
- *
- * ── La estructura que pide el enunciado ──────────────────────────────
- *   1. Concepto          qué se está haciendo y por qué
- *   2. Fundamento        el teorema en el que se apoya
- *   3. Cuándo falla      los tres casos en que no funciona
- *   4. Orden de convergencia  qué tan rápido llega
- *   5. La tarjeta del algoritmo: fórmula, pasos, criterios, ventajas
- *   6. Un ejemplo numérico resuelto
- *   7. Un ejemplo de casuística
- *
- * ── El ejemplo se calcula, no se copia ───────────────────────────────
- * La tabla, el gráfico y la conclusión del ejemplo salen de correr el
- * algoritmo. Si el motor cambia, esta pantalla cambia con él. No hay
- * números escritos a mano acá.
- */
+/** Fundamentos, convergencia, algoritmo y recomendaciones de Bisección. */
 @Component({
   selector: 'app-biseccion-teoria',
   standalone: true,
-  imports: [BloqueEjemplo, TeoriaContenido],
   templateUrl: './biseccion-teoria.html',
   styleUrl: './biseccion-teoria.scss',
 })
 export class BiseccionTeoria {
-  /** La teoría completa, con las 4 secciones y la tarjeta del algoritmo. */
-  readonly teoria = TEORIA_BISECCION;
+  readonly tolerancia = signal(0.001);
+  readonly paso = signal(0);
+  readonly funcion = (x: number) => x ** 3 - x - 2;
+  readonly resultado = computed(() => biseccion({
+    f: this.funcion, a: 1, b: 2, tol: this.tolerancia(), maxIter: 100,
+  }));
+  readonly filas = computed(() => this.resultado().filas.slice(0, this.paso()));
+  readonly actual = computed(() => this.filas().at(-1));
+  readonly terminado = computed(() => this.paso() >= this.resultado().filas.length);
+  // Gráfica, indicadores y tabla describen el mismo intervalo evaluado.
+  readonly intervalo = computed(() => {
+    const fila = this.actual();
+    return { a: fila?.a ?? 1, b: fila?.b ?? 2 };
+  });
+  readonly curva = Array.from({ length: 121 }, (_, i) => {
+    const x = 0.8 + 1.4 * i / 120;
+    return `${i ? 'L' : 'M'}${this.px(x)},${this.py(this.funcion(x))}`;
+  }).join(' ');
+  readonly mensaje = computed(() => {
+    const fila = this.actual();
+    if (!fila) return 'Pulsa «Siguiente paso» para calcular el primer punto medio.';
+    if (this.terminado()) return `Criterio cumplido: raíz ≈ ${this.formato(fila.c)}. La cota de error es ${this.formato(fila.error)}.`;
+    const mitad = this.funcion(fila.a) * fila.fc < 0 ? '[a, c]' : '[c, b]';
+    return `Paso ${fila.n}: f(c) = ${this.formato(fila.fc)}. En el siguiente paso conservamos ${mitad}, donde hay cambio de signo.`;
+  });
 
-  /** Las columnas de la tabla de iteraciones. */
-  readonly columnas = COLUMNAS_BISECCION;
+  readonly pasos = PASOS_ALGORITMO_BISECCION;
+  readonly criterios = CRITERIOS_PARADA_BISECCION;
+  readonly convergencia = CONVERGENCIA_BISECCION;
 
-  /** Cómo dibuja bisección sobre el gráfico genérico. */
-  readonly dibujar = dibujarBiseccion;
-
-  private readonly servicio = inject(BiseccionService);
-
-  /**
-   * El ejemplo numérico ya calculado.
-   *
-   * Se calcula una vez al construir el componente y se guarda, porque
-   * `computed` no debería tener efectos: si el template lo leyera y
-   * escribiera en el servicio, se entraría en bucle.
-   */
-  readonly ejemploNumerico = signal(this.servicio.calcularEjemplo(TEORIA_BISECCION.ejemploNormal));
-
-  readonly ejemploCasuistica = signal(
-    this.servicio.calcularEjemplo(TEORIA_BISECCION.ejemploCasuistica),
-  );
-
-  /** La función del ejemplo numérico, ya parseada, para el gráfico. */
-  protected readonly funcionNumerico = this.servicio.funcionDeEjemplo(
-    TEORIA_BISECCION.ejemploNormal,
-  );
-
-  protected readonly funcionCasuistica = this.servicio.funcionDeEjemplo(
-    TEORIA_BISECCION.ejemploCasuistica,
-  );
-
-  /** El rango del eje X del ejemplo numérico, ajustado a su intervalo. */
-  protected readonly rangoNumerico = computed(() =>
-    this.servicio.rangoPara(DATOS_POR_DEFECTO),
-  );
-
-  protected readonly rangoCasuistica = computed(() =>
-    this.servicio.rangoPara(TEORIA_BISECCION.ejemploCasuistica.calculo),
-  );
-
-  /** Qué sección de la teoría se está expandiendo (acordeón). */
-  protected readonly abierta = signal<'fundamento' | 'falla' | 'orden' | null>(null);
-
-  protected alternar(que: 'fundamento' | 'falla' | 'orden'): void {
-    this.abierta.update((actual) => (actual === que ? null : que));
+  px(x: number): number { return 40 + (x - 0.8) / 1.4 * 540; }
+  py(y: number): number { return 270 - (y + 3) / 9.6 * 250; }
+  formato(x: number): string {
+    return x.toLocaleString('es-PE', { maximumFractionDigits: 8 });
+  }
+  siguiente(): void {
+    if (!this.terminado()) this.paso.update((paso) => paso + 1);
+  }
+  reiniciar(): void { this.paso.set(0); }
+  cambiarTolerancia(event: Event): void {
+    this.tolerancia.set(Number((event.target as HTMLSelectElement).value));
+    this.reiniciar();
   }
 }

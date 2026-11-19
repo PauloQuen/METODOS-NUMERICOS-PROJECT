@@ -1,37 +1,207 @@
-<app-teoria-contenido
-  [teoria]="teoria"
-  [terceraTexto]="teoria.ordenConvergencia"
-  terceraTitulo="Orden de convergencia"
-  terceraIcono="speed"
-  tituloMetodo="El algoritmo"
-  tituloCriterios="Criterios de parada"
-  tituloRecomendaciones="Recomendaciones"
->
-  <section class="teoria-m3__seccion">
-    <h2 class="teoria-m3__titulo">Ejemplo numérico resuelto</h2>
-    <app-bloque-ejemplo
-      [ejemplo]="teoria.ejemploNormal"
-      [columnas]="columnas"
-      [filas]="ejemploNumerico().filas"
-      [filaFinal]="ejemploNumerico().filaFinal"
-      [funcion]="funcionNumerico"
-      [rango]="rangoNumerico()"
-      [dibujarMetodo]="dibujar"
-      [raiz]="ejemploNumerico().raiz"
-    />
+<article class="teoria">
+  <header class="introduccion">
+    <div>
+      <p class="etiqueta">La idea del método</p>
+      <h2>Método de la regla falsa</h2>
+      <p>Como la bisección, encierra la raíz en un intervalo; pero en vez de partirlo por la mitad,
+        traza una recta entre los dos extremos y toma donde corta al eje x.</p>
+    </div>
+    <div class="formula">
+      <strong>c = b − f(b)·(b − a) / (f(b) − f(a))</strong>
+      <span>El corte con el eje x de la recta que une (a, f(a)) y (b, f(b)).</span>
+      <small>Usa los valores de f, no solo el signo.</small>
+    </div>
+  </header>
+
+  <section aria-labelledby="demo-titulo">
+    <h2 id="demo-titulo">Pruébalo paso a paso</h2>
+    <p class="subtitulo">f(x) = x³ − x − 2 en [1, 2]. Cada paso traza una cuerda entre los extremos;
+      observa los puntos c, el cambio absoluto y el extremo que permanece fijo.</p>
+    <div class="tarjeta demo">
+      <div class="controles">
+        <span class="insignia">Regla Falsa · demostración</span>
+        <div class="acciones">
+          <label for="rf-tolerancia">Tolerancia absoluta</label>
+          <select id="rf-tolerancia" [value]="tolerancia()" (change)="cambiarTolerancia($event)">
+            <option value="0.01">0,01</option>
+            <option value="0.001">0,001</option>
+            <option value="0.000001">0,000001</option>
+          </select>
+          <button type="button" (click)="siguiente()" [disabled]="terminado()">Siguiente paso</button>
+          <button type="button" class="secundario" (click)="reiniciar()">Reiniciar</button>
+        </div>
+      </div>
+
+      <svg class="grafica" viewBox="0 0 600 300" role="img" aria-labelledby="grafica-titulo grafica-descripcion">
+        <title id="grafica-titulo">Regla Falsa de x³ − x − 2</title>
+        <desc id="grafica-descripcion">Curva y cuerdas construidas en el intervalo actual.
+          @if (actual(); as fila) { c = {{ formato(fila.c) }} y f(c) = {{ formato(fila.fc) }}. }</desc>
+        @for (x of [1, 1.5, 2]; track x) {
+          <line class="rejilla" [attr.x1]="px(x)" [attr.x2]="px(x)" y1="20" y2="270" />
+          <text [attr.x]="px(x)" y="290" text-anchor="middle">{{ formato(x) }}</text>
+        }
+        <line class="eje" x1="40" x2="580" [attr.y1]="py(0)" [attr.y2]="py(0)" />
+        <text x="20" [attr.y]="py(0) + 4">0</text>
+        <text x="580" y="290">x</text>
+        <path class="curva" [attr.d]="curva" />
+
+        @for (fila of filas(); track fila.n) {
+          <line class="cuerda" [class.cuerda-actual]="fila.n === paso()"
+            [attr.x1]="px(fila.a)" [attr.y1]="py(funcion(fila.a))"
+            [attr.x2]="px(fila.b)" [attr.y2]="py(funcion(fila.b))" />
+        }
+
+        @if (actual(); as fila) {
+          <line class="anclaje-linea" [attr.x1]="px(fila.a)" [attr.x2]="px(fila.a)"
+            [attr.y1]="py(0)" [attr.y2]="py(funcion(fila.a))" />
+          <line class="anclaje-linea" [attr.x1]="px(fila.b)" [attr.x2]="px(fila.b)"
+            [attr.y1]="py(0)" [attr.y2]="py(funcion(fila.b))" />
+          <circle class="anclaje" [attr.cx]="px(fila.a)" [attr.cy]="py(funcion(fila.a))" r="5" />
+          <circle class="anclaje" [attr.cx]="px(fila.b)" [attr.cy]="py(funcion(fila.b))" r="5" />
+          <circle class="anclaje" [attr.cx]="px(fila.a)" [attr.cy]="py(0)" r="6" />
+          <circle class="anclaje" [attr.cx]="px(fila.b)" [attr.cy]="py(0)" r="6" />
+          <text class="rotulo" [attr.x]="px(fila.a) - 8" [attr.y]="py(0) - 8" text-anchor="end">a</text>
+          <text class="rotulo" [attr.x]="px(fila.b) + 8" [attr.y]="py(0) - 8">b</text>
+          <line class="punto-linea" [attr.x1]="px(fila.c)" [attr.x2]="px(fila.c)"
+            [attr.y1]="py(0)" [attr.y2]="py(fila.fc)" />
+          <circle class="punto" [attr.cx]="px(fila.c)" [attr.cy]="py(fila.fc)" r="5" />
+          <circle class="punto" [attr.cx]="px(fila.c)" [attr.cy]="py(0)" r="6" />
+          <text class="rotulo-c" [attr.x]="px(fila.c) + 10" [attr.y]="py(0) - 8">c</text>
+        }
+      </svg>
+
+      <dl class="indicadores">
+        <div><dt>Iteración</dt><dd>{{ paso() }}</dd></div>
+        <div><dt>Aproximación c</dt><dd>{{ formato(actual()?.c) }}</dd></div>
+        <div><dt>Error absoluto |Δc|</dt><dd>{{ formato(errorAbsoluto()) }}</dd></div>
+        <div><dt>Extremo fijo</dt><dd>{{ extremoFijo() ? extremoFijo() + ' (sin cambiar)' : '—' }}</dd></div>
+      </dl>
+
+      <div class="grafica-error">
+        <h3>Error absoluto por iteración</h3>
+        <svg viewBox="0 0 600 130" role="img" aria-label="Error absoluto representado con barras por iteración">
+          <line x1="30" x2="590" y1="112" y2="112" class="eje-error" />
+          @for (marca of [0, 0.25, 0.5, 0.75, 1]; track $index) {
+            <line [attr.x1]="30 + marca * 560" [attr.x2]="30 + marca * 560" y1="30" y2="112" class="rejilla-error" />
+          }
+          @for (division of [30, 50.5, 71, 91.5, 112]; track $index) {
+            <line x1="30" x2="590" [attr.y1]="division" [attr.y2]="division" class="rejilla-error" />
+          }
+          @for (item of erroresPorIteracion(); track item.n; let indice = $index) {
+            <rect
+              [attr.x]="xError(indice, erroresPorIteracion().length) - anchoError(erroresPorIteracion().length) / 2"
+              [attr.y]="yError(item.error)"
+              [attr.width]="anchoError(erroresPorIteracion().length)"
+              [attr.height]="alturaError(item.error)"
+              class="barra-error" />
+            <text [attr.x]="xError(indice, erroresPorIteracion().length)" y="124" text-anchor="middle">{{ item.n }}</text>
+          }
+          <line x1="30" x2="590" [attr.y1]="yTolerancia()" [attr.y2]="yTolerancia()" class="tolerancia-error" />
+          <text x="590" [attr.y]="yTolerancia() - 5" text-anchor="end" class="etiqueta-tolerancia">tolerancia</text>
+        </svg>
+        <p class="cap">La primera iteración no tiene comparación anterior. Cada rectángulo representa |cₙ − cₙ₋₁|; la barra termina bajo la línea punteada cuando cumple la tolerancia.</p>
+      </div>
+
+      <p class="mensaje" [class.completado]="terminado() && resultado().convergio" role="status">{{ mensaje() }}</p>
+
+      @if (filas().length) {
+        <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de regla falsa">
+          <table>
+            <caption>Intervalo, corte de la cuerda y cambio absoluto</caption>
+            <thead><tr><th scope="col">n</th><th scope="col">a</th><th scope="col">b</th><th scope="col">c</th><th scope="col">f(c)</th><th scope="col">|cₙ − cₙ₋₁|</th></tr></thead>
+            <tbody>
+              @for (fila of filas(); track fila.n) {
+                <tr [class.ultima]="fila.n === paso()">
+                  <th scope="row">{{ fila.n }}</th><td>{{ formato(fila.a) }}</td><td>{{ formato(fila.b) }}</td>
+                  <td>{{ formato(fila.c) }}</td><td>{{ formato(fila.fc) }}</td>
+                  <td>{{ formato(fila.delta) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
   </section>
 
-  <section class="teoria-m3__seccion">
-    <h2 class="teoria-m3__titulo">Ejemplo desde una casuística real</h2>
-    <app-bloque-ejemplo
-      [ejemplo]="teoria.ejemploCasuistica"
-      [columnas]="columnas"
-      [filas]="ejemploCasuistica().filas"
-      [filaFinal]="ejemploCasuistica().filaFinal"
-      [funcion]="funcionCasuistica"
-      [rango]="rangoCasuistica()"
-      [dibujarMetodo]="dibujar"
-      [raiz]="ejemploCasuistica().raiz"
-    />
+  <section aria-labelledby="derivacion-titulo">
+    <h2 id="derivacion-titulo">De dónde sale la fórmula</h2>
+    <p class="subtitulo">Los dos triángulos comparten el ángulo de la recta, por lo que sus lados son proporcionales.</p>
+    <div class="card derivacion">
+      <svg viewBox="0 0 460 230" role="img" aria-label="Triángulos semejantes utilizados para deducir la fórmula">
+        <polygon points="60,190 400,190 400,30" class="triangulo-grande" />
+        <polygon points="166,140 400,140 400,30" class="triangulo-pequeno" />
+        <line x1="20" x2="440" y1="140" y2="140" class="eje" />
+        <circle cx="60" cy="190" r="4" class="punto-grande" /><circle cx="400" cy="30" r="4" class="punto-pequeno" /><circle cx="166" cy="140" r="5" class="punto-c" />
+        <text x="60" y="210" text-anchor="middle">a</text><text x="400" y="210" text-anchor="middle">b</text>
+        <text x="166" y="130" text-anchor="middle" class="rotulo-c">c</text>
+        <text x="230" y="208" text-anchor="middle">b − a</text><text x="283" y="158" text-anchor="middle">b − c</text>
+        <text x="410" y="170">f(b) − f(a)</text><text x="410" y="88">f(b)</text>
+      </svg>
+      <div>
+        <div class="ecuacion">(b − c) / (b − a) = f(b) / (f(b) − f(a))</div>
+        <p>Al despejar c se obtiene la fórmula de arriba. El triángulo verde es proporcional al triángulo rojo.</p>
+      </div>
+    </div>
   </section>
-</app-teoria-contenido>
+
+  <section aria-labelledby="pasos-titulo">
+    <h2 id="pasos-titulo">Los pasos</h2>
+    <p class="subtitulo">Del paso 2 al 7 se repite hasta cumplir el criterio de parada o alcanzar el máximo.</p>
+    <ol class="pasos">
+      @for (paso of pasos; track $index) {
+        <li><span class="numero" aria-hidden="true">{{ $index + 1 }}</span><div><h3>{{ paso[0] }}</h3><p>{{ paso[1] }}</p></div></li>
+      }
+    </ol>
+  </section>
+
+  <section aria-labelledby="parada-titulo">
+    <h2 id="parada-titulo">¿Cuándo se detiene?</h2>
+    <p class="subtitulo">El ancho del intervalo puede engañar porque un extremo permanece fijo.</p>
+    <details class="criterio-principal" open>
+      <summary>Cambio absoluto entre aproximaciones <span class="insignia">Por defecto</span></summary>
+      <p>Compara el corte actual con el anterior: |cₙ − cₙ₋₁|.
+        Se detiene cuando esa cantidad es menor o igual a la tolerancia. La primera iteración no tiene comparación anterior.</p>
+    </details>
+    <details>
+      <summary>Ancho del intervalo (b − a)</summary>
+      <p>En Bisección sí puede servir como garantía, pero en Regla Falsa un extremo puede quedarse fijo.
+        Cuando el intervalo deja de reducirse, el ancho no mide el avance ni garantiza el error de c.</p>
+    </details>
+    <details>
+      <summary>Residuo |f(c)|</summary>
+      <p>Es sensible a la escala de la función. Multiplicar f por una constante puede cambiar el residuo
+        sin cambiar la raíz. Por eso no sustituye el cambio absoluto entre aproximaciones.</p>
+    </details>
+  </section>
+
+  <section aria-labelledby="balance-titulo">
+    <h2 id="balance-titulo">Ventajas y limitaciones</h2>
+    <div class="balance">
+      <div class="tarjeta ventajas"><h3>Ventajas</h3><ul>
+        <li>Encierra la raíz si f es continua y presenta cambio de signo.</li>
+        <li>No necesita derivadas.</li>
+        <li>Aprovecha los valores de f y puede avanzar mejor que la bisección.</li>
+        <li>Converge con una red de seguridad alrededor de la raíz.</li>
+      </ul></div>
+      <div class="tarjeta limitaciones"><h3>Limitaciones</h3><ul>
+        <li>Un extremo puede quedarse fijo muchas iteraciones.</li>
+        <li>El intervalo puede no tender a cero.</li>
+        <li>Puede ser lenta con funciones muy curvas o extremos desfavorables.</li>
+        <li>No detecta necesariamente raíces dobles sin cambio de signo.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="tarjeta consejos" aria-labelledby="consejos-titulo">
+    <h2 id="consejos-titulo">Recomendaciones</h2>
+    <ol>
+      <li>Elige el intervalo más angosto posible que contenga la raíz.</li>
+      <li>Comprueba la continuidad y f(a) · f(b) &lt; 0 antes de empezar.</li>
+      <li>Usa el cambio absoluto entre cortes, no el ancho del intervalo.</li>
+      <li>Si un extremo lleva muchas iteraciones fijo, considera Bisección o una variante modificada.</li>
+      <li>Establece un máximo de iteraciones y verifica el residuo como comprobación adicional.</li>
+    </ol>
+  </section>
+</article>

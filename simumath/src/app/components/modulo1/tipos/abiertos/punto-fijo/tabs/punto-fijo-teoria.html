@@ -1,37 +1,218 @@
-<app-teoria-contenido
-  [teoria]="teoria"
-  [terceraTexto]="teoria.ordenConvergencia"
-  terceraTitulo="Orden de convergencia"
-  terceraIcono="speed"
-  tituloMetodo="El algoritmo"
-  tituloCriterios="Criterios de parada"
-  tituloRecomendaciones="Recomendaciones"
->
-  <section class="teoria-m3__seccion">
-    <h2 class="teoria-m3__titulo">Ejemplo numérico resuelto</h2>
-    <app-bloque-ejemplo
-      [ejemplo]="teoria.ejemploNormal"
-      [columnas]="columnas"
-      [filas]="ejemploNumerico().filas"
-      [filaFinal]="ejemploNumerico().filaFinal"
-      [funcion]="funcionNumerico"
-      [rango]="rangoNumerico()"
-      [dibujarMetodo]="dibujar"
-      [raiz]="ejemploNumerico().raiz"
-    />
+<article class="teoria">
+  <header class="introduccion">
+    <div>
+      <p class="etiqueta">La idea del método</p>
+      <h2>Método de punto fijo</h2>
+      <p>Reescribes la ecuación como x = g(x) y repites: lo que sale de cada paso es lo que entra en el siguiente.</p>
+    </div>
+    <div class="formula">
+      <strong>xₙ₊₁ = g(xₙ)</strong>
+      <span>x₁ = g(x₀), x₂ = g(x₁), x₃ = g(x₂)…</span>
+      <small class="nota">sube a la curva, rebota en la diagonal</small>
+    </div>
+  </header>
+
+  <section aria-labelledby="idea-titulo">
+    <h2 id="idea-titulo">La idea en tres tiempos</h2>
+    <p class="subtitulo">Ejemplo: Resolver x² − 4x + 2 = 0 (raíces 0,586 y 3,414).</p>
+    <div class="flujo">
+      <div class="tarjeta">
+        <h3>1 · La ecuación</h3>
+        <p class="ecuacion">x² − 4x + 2 = 0</p>
+      </div>
+      <p class="flecha">despejar<br>una x ➜</p>
+      <div class="tarjeta">
+        <h3>2 · Transformada</h3>
+        <p class="ecuacion">x = (x² + 2) / 4 = g(x)</p>
+      </div>
+      <p class="flecha">igualar y buscar<br>la intersección ➜</p>
+      <div class="tarjeta">
+        <h3>3 · Dos curvas</h3>
+        <p class="ecuacion">y = g(x) y y = x</p>
+        <p class="aclaracion">La raíz es donde se cruzan.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="teoria-m3__seccion">
-    <h2 class="teoria-m3__titulo">Ejemplo desde una casuística real</h2>
-    <app-bloque-ejemplo
-      [ejemplo]="teoria.ejemploCasuistica"
-      [columnas]="columnas"
-      [filas]="ejemploCasuistica().filas"
-      [filaFinal]="ejemploCasuistica().filaFinal"
-      [funcion]="funcionCasuistica"
-      [rango]="rangoCasuistica()"
-      [dibujarMetodo]="dibujar"
-      [raiz]="ejemploCasuistica().raiz"
-    />
+  <section aria-labelledby="eleccion-titulo">
+    <h2 id="eleccion-titulo">Elección de g(x)</h2>
+    <p class="subtitulo">Una misma ecuación admite muchos despejes. Estos cuatro son los del demo, en el mismo orden.</p>
+    <div class="cuatro">
+      @for (op of despejes; track $index) {
+        <div class="tarjeta opcion">
+          <h3>{{ op.titulo }}</h3>
+          <p>{{ op.como }}</p>
+          <p class="ecuacion">{{ op.formula }}</p>
+        </div>
+      }
+    </div>
   </section>
-</app-teoria-contenido>
+
+  <section aria-labelledby="demo-titulo">
+    <h2 id="demo-titulo">Pruébalo paso a paso</h2>
+    <p class="subtitulo">Elige un despeje y una semilla. Cada paso sube hasta la curva g(x) y cruza horizontalmente hasta la diagonal y = x: ahí cae el siguiente x.</p>
+    <div class="tarjeta demo">
+      <div class="controles">
+        <div class="segmentos" role="group" aria-label="Despeje de la ecuación">
+          @for (op of despejes; track $index) {
+            <button type="button" [attr.aria-pressed]="despeje() === $index" (click)="elegirDespeje($index)">{{ op.etiqueta }}</button>
+          }
+        </div>
+        <div class="acciones">
+          <label for="pf-semilla">Semilla x₀ = <output id="pf-semilla-valor">{{ semillaTexto() }}</output></label>
+          <input id="pf-semilla" type="range" [min]="rangoSemilla().min" [max]="rangoSemilla().max" step="0.1" [value]="semilla()" (input)="cambiarSemilla($event)" aria-describedby="pf-dominio" />
+          <label for="pf-tolerancia">Tolerancia |Δx|</label>
+          <select id="pf-tolerancia" [value]="tolerancia()" (change)="cambiarTolerancia($event)">
+            <option value="0.01">0,01</option>
+            <option value="0.001">0,001</option>
+            <option value="0.000001">0,000001</option>
+          </select>
+          <button type="button" (click)="siguiente()" [disabled]="terminado()">Siguiente paso</button>
+          <button type="button" class="secundario" (click)="reiniciar()">Reiniciar</button>
+        </div>
+      </div>
+      <p id="pf-dominio" class="panel-nota">{{ rangoSemilla().ayuda }}</p>
+      <div class="caso">
+        <span class="chip caso-chip" [class.chip-ok]="caso().tipo === 'ok'" [class.chip-error]="caso().tipo === 'error'">
+          g′ en la raíz ≈ {{ formato(actual().gp, 2) }} · {{ caso().texto }}
+        </span>
+      </div>
+      <div class="dg">
+        <svg class="grafica" viewBox="0 0 600 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Gráfica de iteraciones de punto fijo: telaraña contra la diagonal">
+          <defs>
+            <marker id="pf-flecha" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M0 0L10 5L0 10z" fill="var(--color-metodo)" />
+            </marker>
+            <clipPath id="pf-recorte"><rect [attr.x]="L" [attr.y]="T" [attr.width]="R - L" [attr.height]="B - T" /></clipPath>
+          </defs>
+          @for (v of marcas(); track v) {
+            <line class="rejilla" [attr.x1]="px(v)" [attr.x2]="px(v)" [attr.y1]="T" [attr.y2]="B" />
+            <line class="rejilla" [attr.x1]="L" [attr.x2]="R" [attr.y1]="py(v)" [attr.y2]="py(v)" />
+            <line class="marca" [attr.x1]="px(v)" [attr.x2]="px(v)" [attr.y1]="py(0) - 3" [attr.y2]="py(0) + 3" />
+            <text [attr.x]="px(v)" [attr.y]="B + 24" text-anchor="middle">{{ formatoDelta(v) }}</text>
+            <text [attr.x]="L - 8" [attr.y]="py(v) + 4" text-anchor="end">{{ formatoDelta(v) }}</text>
+          }
+          <line class="eje" [attr.x1]="L" [attr.x2]="R" [attr.y1]="py(0)" [attr.y2]="py(0)" />
+          <line class="eje" [attr.x1]="px(0)" [attr.x2]="px(0)" [attr.y1]="B" [attr.y2]="T" />
+          <text [attr.x]="R + 16" [attr.y]="py(0) + 4">x</text>
+          <text [attr.x]="px(0) + 8" y="14">y</text>
+          <g clip-path="url(#pf-recorte)">
+            <line class="diagonal" [attr.x1]="L" [attr.y1]="B" [attr.x2]="R" [attr.y2]="T" />
+            <path class="curva" [attr.d]="curva()" />
+            @for (f of filas(); track f.n) {
+              <line class="proyeccion" [attr.x1]="px(f.gx)" [attr.y1]="py(f.gx)" [attr.x2]="px(f.gx)" [attr.y2]="py(0)" />
+            }
+            <line class="proyeccion" [attr.x1]="px(estado().x0)" [attr.y1]="py(estado().x0)" [attr.x2]="px(estado().x0)" [attr.y2]="py(0)" />
+            @for (s of segmentos(); track $index) {
+              <line class="telarana" [attr.x1]="s.x1" [attr.y1]="s.y1" [attr.x2]="s.x2" [attr.y2]="s.y2"
+                [attr.stroke-width]="s.ancho" [attr.opacity]="s.opacidad"
+                [attr.marker-end]="s.flecha ? 'url(#pf-flecha)' : null" />
+            }
+            @for (r of puntosRaices(); track $index) {
+              <circle [attr.cx]="r.x" [attr.cy]="r.y" r="7" [class.atractor]="r.atractor" [class.repulsor]="!r.atractor" />
+            }
+            <circle class="semilla-punto" [attr.cx]="px(estado().x0)" [attr.cy]="py(0)" r="5" />
+            @if (filas().length) {
+              <circle class="punto-actual" [attr.cx]="px(estado().x)" [attr.cy]="py(estado().x)" r="6" />
+            }
+          </g>
+          @for (l of etiquetasX(); track l.n) {
+            <text class="mano" [class.semilla-texto]="l.n === 0"
+              [attr.x]="px(l.x)" [attr.y]="py(0) + 18" text-anchor="middle">{{ 'x' + sub(l.n) }}</text>
+          }
+          @for (r of puntosRaices(); track $index) {
+            @if (r.atractor) {
+              <text class="mano atractor-texto"
+                [attr.x]="r.x + 10" [attr.y]="r.y + ($index ? 22 : -12)">raíz</text>
+            }
+          }
+          <text class="mano tenue" [attr.x]="R - 60" [attr.y]="T + 12">y = x</text>
+          @if (etiquetaG(); as eg) {
+            <text class="mano etiqueta-g" [attr.x]="eg.x" [attr.y]="eg.y">g(x)</text>
+          }
+        </svg>
+        <app-demo-iteracion [datos]="resumen()" />
+      </div>
+      @if (filas().length) {
+        <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de punto fijo">
+          <table>
+            <caption>Iteraciones de la telaraña</caption>
+            <thead><tr>
+              <th scope="col">n</th>
+              <th scope="col">x<sub>n</sub></th>
+              <th scope="col">g(x<sub>n</sub>) = x<sub>n+1</sub></th>
+              <th scope="col">|Δx|</th>
+            </tr></thead>
+            <tbody>
+              @for (f of filas(); track f.n) {
+                <tr [class.ultima]="f.n === filas().length - 1">
+                  <th scope="row">{{ f.n }}</th>
+                  <td>{{ formato(f.x) }}</td>
+                  <td>{{ formato(f.gx) }}</td>
+                  <td>{{ formatoDelta(f.dx) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="convergencia-titulo">
+    <h2 id="convergencia-titulo">Criterios de convergencia</h2>
+    <p class="subtitulo">Los valores xₙ₊₁ y xₙ deben acercarse a un punto. Para saberlo antes de iterar, analiza rango y dominio de g y mira |g′(x)| &lt; 1 cerca de la raíz.</p>
+    <div class="cuatro">
+      @for (caso of casos; track $index) {
+        <div class="tarjeta caso" [class.caso-ok]="caso[1] === 'ok'" [class.caso-error]="caso[1] === 'error'">
+          <h3>{{ caso[0] }}</h3>
+          <p>{{ caso[2] }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="pasos-titulo">
+    <h2 id="pasos-titulo">Los pasos</h2>
+    <p class="subtitulo">Siete pasos; del 2 al 6 se repiten hasta cumplir el criterio de parada.</p>
+    <ol class="pasos">
+      @for (paso of pasos; track $index) {
+        <li [class]="'paso-' + paso[0]">
+          <span class="numero" aria-hidden="true">{{ $index + 1 }}</span>
+          <div><h3>{{ paso[1] }}</h3><p>{{ paso[2] }}</p></div>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <section aria-labelledby="parada-titulo">
+    <h2 id="parada-titulo">Criterios de parada</h2>
+    <p class="subtitulo">Uno es el recomendado por defecto; los demás sirven, pero con cuidado.</p>
+    @for (criterio of criterios; track $index) {
+      <details [class.criterio-principal]="$index === 0" [open]="$index === 0">
+        <summary>{{ criterio[1] }} <span class="chip" [class]="'chip chip-' + criterio[0]">{{ criterio[2] }}</span></summary>
+        <p>{{ criterio[3] }}</p>
+      </details>
+    }
+  </section>
+
+  <section aria-labelledby="balance-titulo">
+    <h2 id="balance-titulo">Ventajas y limitaciones</h2>
+    <div class="dos">
+      <div class="tarjeta ventajas"><h3>✓ Ventajas</h3><ul>
+        @for (ventaja of ventajas; track $index) { <li>{{ ventaja }}</li> }
+      </ul></div>
+      <div class="tarjeta limitaciones"><h3>! Limitaciones</h3><ul>
+        @for (limitacion of limitaciones; track $index) { <li>{{ limitacion }}</li> }
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="tarjeta consejos" aria-labelledby="consejos-titulo">
+    <h2 id="consejos-titulo">Recomendaciones</h2>
+    <ol>
+      @for (recomendacion of recomendaciones; track $index) { <li>{{ recomendacion }}</li> }
+    </ol>
+  </section>
+</article>

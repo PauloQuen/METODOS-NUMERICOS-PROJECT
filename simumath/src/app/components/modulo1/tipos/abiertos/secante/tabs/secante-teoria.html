@@ -1,37 +1,205 @@
-<app-teoria-contenido
-  [teoria]="teoria"
-  [terceraTexto]="teoria.ordenConvergencia"
-  terceraTitulo="Orden de convergencia"
-  terceraIcono="speed"
-  tituloMetodo="El algoritmo"
-  tituloCriterios="Criterios de parada"
-  tituloRecomendaciones="Recomendaciones"
->
-  <section class="teoria-m3__seccion">
-    <h2 class="teoria-m3__titulo">Ejemplo numérico resuelto</h2>
-    <app-bloque-ejemplo
-      [ejemplo]="teoria.ejemploNormal"
-      [columnas]="columnas"
-      [filas]="ejemploNumerico().filas"
-      [filaFinal]="ejemploNumerico().filaFinal"
-      [funcion]="funcionNumerico"
-      [rango]="rangoNumerico()"
-      [dibujarMetodo]="dibujar"
-      [raiz]="ejemploNumerico().raiz"
-    />
+<article class="teoria">
+  <header class="introduccion">
+    <div>
+      <p class="etiqueta">La idea del método</p>
+      <h2>Método de la secante</h2>
+    </div>
+    <div class="formula">
+      <strong>xₙ₊₁ = xₙ − f(xₙ)·(xₙ₋₁ − xₙ) / (f(xₙ₋₁) − f(xₙ))</strong>
+      <span>Nace de la semejanza de triángulos</span>
+      <small>no usa derivadas</small>
+    </div>
+  </header>
+
+  <aside class="diferencia" aria-label="Diferencia clave con Newton-Raphson">
+    <div class="diferencia-numero" aria-hidden="true">
+      <strong>2</strong>
+      <span>semillas</span>
+    </div>
+    <div class="diferencia-texto">
+      <p class="etiqueta">Diferencia clave con Newton-Raphson</p>
+      <h3>Dos semillas en lugar de una</h3>
+      <p>Newton parte de <strong>una sola</strong> semilla y necesita la derivada. La secante necesita <strong>dos</strong> puntos, <span class="semilla">x₀</span> y <span class="semilla">x₁</span>, y con la recta que los une reemplaza a f′(x). Por eso ambas importan y conviene que estén cerca de la raíz.</p>
+    </div>
+    <div class="diferencia-puntos" aria-hidden="true">
+      <span class="punto-semilla">x₀</span>
+      <span class="union"></span>
+      <span class="punto-semilla">x₁</span>
+    </div>
+  </aside>
+
+  <section aria-labelledby="demo-titulo">
+    <h2 id="demo-titulo">Pruébalo paso a paso</h2>
+    <p class="subtitulo">f(x) = x³ + x − 2. Elige dos semillas. Cada paso une los dos últimos puntos con una recta y la prolonga hasta el eje. El triángulo verde y el rojo son semejantes: de ahí sale la fórmula.</p>
+    <div class="tarjeta demo">
+      <div class="controles">
+        <span class="insignia">Secante · 2 semillas</span>
+        <div class="acciones">
+          <label for="secante-semilla0">Semilla x₀ = {{ formatoDelta(semilla0()) }}</label>
+          <input id="secante-semilla0" type="range" min="-4" max="4" step="0.1" [value]="semilla0()" (input)="cambiarSemilla($event, 0)" />
+          <label for="secante-semilla1">Semilla x₁ = {{ formatoDelta(semilla1()) }}</label>
+          <input id="secante-semilla1" type="range" min="-4" max="4" step="0.1" [value]="semilla1()" (input)="cambiarSemilla($event, 1)" />
+          <label for="secante-teoria-tolerancia">Tolerancia |Δx|</label>
+          <select id="secante-teoria-tolerancia" [value]="tolerancia()" (change)="cambiarTolerancia($event)">
+            <option value="0.01">0,01</option>
+            <option value="0.001">0,001</option>
+            <option value="0.000001">0,000001</option>
+          </select>
+          <button type="button" (click)="siguiente()" [disabled]="terminado()">Siguiente paso</button>
+          <button type="button" class="secundario" (click)="reiniciar()">Reiniciar</button>
+        </div>
+      </div>
+      <svg class="grafica" viewBox="0 0 600 300" role="img" aria-labelledby="grafica-titulo grafica-descripcion">
+        <title id="grafica-titulo">Método de la secante para x³ + x − 2</title>
+        <desc id="grafica-descripcion">Recta secante entre los dos últimos puntos, prolongada hasta el eje x. Los triángulos verde y rojo son semejantes.</desc>
+        <defs>
+          <clipPath id="secante-clip"><rect x="48" y="20" width="502" height="230" /></clipPath>
+        </defs>
+        <g app-demo-ejes [escala]="grafica()" />
+        <g clip-path="url(#secante-clip)">
+          <path class="curva" [attr.d]="grafica().curva" />
+          @if (parInicial(); as par) {
+            <line class="proyeccion" [attr.x1]="px(par.x0)" [attr.y1]="py(0)" [attr.x2]="px(par.x0)" [attr.y2]="py(par.y0)" />
+            <line class="proyeccion" [attr.x1]="px(par.x1)" [attr.y1]="py(0)" [attr.x2]="px(par.x1)" [attr.y2]="py(par.y1)" />
+          }
+          @for (fila of filas().slice(0, -1); track fila.n) {
+            <line class="secante-anterior" [attr.x1]="px(fila.x0)" [attr.y1]="py(fila.f0)"
+              [attr.x2]="px(fila.xn)" [attr.y2]="py(0)" />
+          }
+          @if (actual(); as fila) {
+            <polygon class="triangulo-verde" [attr.points]="puntosVerde(fila)" />
+            <polygon class="triangulo-rojo" [attr.points]="puntosRojo(fila)" />
+            <line class="secante" [attr.x1]="px(fila.x0)" [attr.y1]="py(fila.f0)"
+              [attr.x2]="px(fila.xn)" [attr.y2]="py(0)" />
+            <circle class="punto-inicial" [attr.cx]="px(fila.x0)" [attr.cy]="py(fila.f0)" r="6" />
+            <circle class="punto-actual" [attr.cx]="px(fila.x1)" [attr.cy]="py(fila.f1)" r="5" />
+            <circle class="punto-raiz" [attr.cx]="px(fila.xn)" [attr.cy]="py(0)" r="6" />
+          } @else {
+            <line class="secante-inicial" [attr.x1]="px(semilla0())" [attr.y1]="py(funcion(semilla0()))"
+              [attr.x2]="px(semilla1())" [attr.y2]="py(funcion(semilla1()))" />
+            <circle class="punto-inicial" [attr.cx]="px(semilla0())" [attr.cy]="py(funcion(semilla0()))" r="6" />
+            <circle class="punto-actual" [attr.cx]="px(semilla1())" [attr.cy]="py(funcion(semilla1()))" r="5" />
+          }
+        </g>
+        @if (parInicial(); as par) {
+          <text class="rotulo eje" [attr.x]="px(par.x0)" [attr.y]="py(0) + 20" text-anchor="middle">x₀</text>
+          <text class="rotulo eje" [attr.x]="px(par.x1)" [attr.y]="py(0) + 20" text-anchor="middle">x₁</text>
+          @if (par.xn !== null) {
+            <text class="rotulo raiz" [attr.x]="px(par.xn!)" [attr.y]="py(0) + 20" text-anchor="middle">x₂</text>
+          }
+        }
+        @if (actual(); as fila) {
+          <text class="nota verde" x="44" y="34">triángulo verde ~ triángulo rojo</text>
+          @if (terminado() && resultado().convergio) {
+            <text class="rotulo raiz" [attr.x]="px(fila.xn)" [attr.y]="py(0) + 38" text-anchor="middle">¡raíz!</text>
+          }
+        } @else {
+          <text class="nota" x="44" y="34">dos semillas, sin derivadas</text>
+        }
+      </svg>
+      <app-demo-iteracion [datos]="resumen()" />
+      @if (filas().length) {
+        <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de la secante">
+          <table>
+            <caption>Iteraciones, secante y desplazamiento</caption>
+            <thead><tr>
+              <th scope="col">n</th>
+              <th scope="col">x<sub>n</sub></th>
+              <th scope="col">f(x<sub>n</sub>)</th>
+              <th scope="col">x<sub>n+1</sub></th>
+              <th scope="col">|Δx|</th>
+            </tr></thead>
+            <tbody>
+              @for (fila of filas(); track fila.n) {
+                <tr [class.ultima]="fila.n === filas().length">
+                  <th scope="row">{{ fila.n }}</th>
+                  <td>{{ formato(fila.x1) }}</td>
+                  <td>{{ formato(fila.f1) }}</td>
+                  <td>{{ formato(fila.xn) }}</td>
+                  <td>{{ formatoDelta(fila.delta) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
   </section>
 
-  <section class="teoria-m3__seccion">
-    <h2 class="teoria-m3__titulo">Ejemplo desde una casuística real</h2>
-    <app-bloque-ejemplo
-      [ejemplo]="teoria.ejemploCasuistica"
-      [columnas]="columnas"
-      [filas]="ejemploCasuistica().filas"
-      [filaFinal]="ejemploCasuistica().filaFinal"
-      [funcion]="funcionCasuistica"
-      [rango]="rangoCasuistica()"
-      [dibujarMetodo]="dibujar"
-      [raiz]="ejemploCasuistica().raiz"
-    />
+  <section aria-labelledby="origen-titulo">
+    <h2 id="origen-titulo">De dónde sale la fórmula</h2>
+    <p class="subtitulo">Los dos triángulos comparten el ángulo de la recta, por lo que sus lados son proporcionales.</p>
+    <div class="tarjeta derivacion">
+      <svg viewBox="0 0 500 180" role="img" aria-label="Triángulos semejantes utilizados para deducir la fórmula de la secante">
+        <line x1="400" y1="140" x2="400" y2="30" class="proyeccion" />
+        <line x1="220" y1="140" x2="220" y2="96" class="proyeccion" />
+        <polygon points="220,96 400,96 400,30" class="triangulo-verde" />
+        <polygon points="100,140 220,140 220,96" class="triangulo-rojo" />
+        <line x1="20" x2="440" y1="140" y2="140" class="eje" />
+        <line x1="400" y1="30" x2="100" y2="140" class="linea-secante" />
+        <circle cx="400" cy="30" r="5" class="punto-inicial" />
+        <circle cx="220" cy="96" r="5" class="punto-actual" />
+        <circle cx="100" cy="140" r="5" class="punto-raiz" />
+        <text x="400" y="160" text-anchor="middle" class="rotulo-x0">x₀</text>
+        <text x="220" y="160" text-anchor="middle" class="rotulo-x1">x₁</text>
+        <text x="100" y="160" text-anchor="middle" class="rotulo-x2">x₂</text>
+        <text x="160" y="132" text-anchor="middle" class="medida">x₁ − x₂</text>
+        <text x="310" y="88" text-anchor="middle" class="medida">x₀ − x₁</text>
+        <text x="228" y="122" class="medida">f(x₁)</text>
+        <text x="410" y="64" class="medida">f(x₀) − f(x₁)</text>
+      </svg>
+      <div>
+        <div class="ecuacion">(x₁ − x₂) / (x₀ − x₁) = f(x₁) / (f(x₀) − f(x₁))</div>
+        <p>Al despejar x₂ se obtiene la fórmula del método. El triángulo verde (entre x₀ y x₁) es proporcional al rojo (de x₁ hasta el corte x₂).</p>
+      </div>
+    </div>
+    <div class="tarjeta nota-convergencia">
+      <h3>Criterios de convergencia</h3>
+      <p>Los mismos que Newton, solo que ahora se evalúa el tramo |xₙ₊₁ − xₙ| &lt; ε, o el error porcentual |xₙ₊₁ − xₙ| / xₙ₊₁ × 100 %.</p>
+    </div>
   </section>
-</app-teoria-contenido>
+
+  <section aria-labelledby="pasos-titulo">
+    <h2 id="pasos-titulo">Los pasos</h2>
+    <p class="subtitulo">Siete pasos; del 2 al 7 se repiten hasta cumplir el criterio de parada.</p>
+    <ol class="pasos">
+      @for (paso of pasos; track $index) {
+        <li [class]="'paso-' + paso[0]">
+          <span class="numero" aria-hidden="true">{{ $index + 1 }}</span>
+          <div><h3>{{ paso[1] }}</h3><p>{{ paso[2] }}</p></div>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <section aria-labelledby="parada-titulo">
+    <h2 id="parada-titulo">Criterios de parada</h2>
+    <p class="subtitulo">Solo uno es el recomendado por defecto; los demás sirven, pero con cuidado.</p>
+    @for (criterio of criterios; track $index) {
+      <details [class.criterio-principal]="$index === 0" [open]="$index === 0">
+        <summary>{{ criterio[0] }} <span class="chip" [class]="'chip chip-' + criterio[2]">{{ criterio[1] }}</span></summary>
+        <p>{{ criterio[3] }}</p>
+      </details>
+    }
+  </section>
+
+  <section aria-labelledby="balance-titulo">
+    <h2 id="balance-titulo">Ventajas y limitaciones</h2>
+    <div class="balance">
+      <div class="tarjeta ventajas"><h3>✓ Ventajas</h3><ul>
+        @for (ventaja of ventajas; track $index) { <li>{{ ventaja }}</li> }
+      </ul></div>
+      <div class="tarjeta limitaciones"><h3>! Limitaciones</h3><ul>
+        @for (limitacion of limitaciones; track $index) { <li>{{ limitacion }}</li> }
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="tarjeta consejos" aria-labelledby="consejos-titulo">
+    <h2 id="consejos-titulo">Recomendaciones</h2>
+    <ol>
+      @for (recomendacion of recomendaciones; track $index) { <li>{{ recomendacion }}</li> }
+    </ol>
+  </section>
+</article>

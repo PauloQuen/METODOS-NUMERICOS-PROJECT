@@ -1,0 +1,125 @@
+<article class="teoria">
+  <header>
+    <p class="etiqueta">Ejemplo resuelto · Regla falsa</p>
+    <h2>{{ ejemplo().titulo }}</h2>
+  </header>
+  @if (ejemplo().tipo === 'casuistica') {
+    @if (ejemplo().enunciado) {
+      <section><h3>Enunciado</h3><p>{{ ejemplo().enunciado }}</p></section>
+    }
+    @if (ejemplo().extraccion; as extraccion) {
+      <section class="extraccion">
+        <h3>Extracción de datos</h3><p>{{ extraccion.busqueda }}</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Datos del enunciado">
+          <table><thead><tr><th>Símbolo</th><th>Valor</th><th>¿Qué es?</th></tr></thead>
+            <tbody>@for (dato of extraccion.datos; track dato.simbolo) {
+              <tr><th scope="row">{{ dato.simbolo }}</th><td>{{ dato.valor }}</td><td>{{ dato.queEs }}</td></tr>
+            }</tbody>
+          </table>
+        </div>
+        <p>{{ extraccion.formulacion }}</p>
+      </section>
+    }
+  }
+  <div class="contexto">
+    <section class="tarjeta"><h3>Planteamiento</h3><p>{{ ejemplo().ecuacion }}</p>
+      <ul>@for (parametro of ejemplo().parametros; track parametro.etiqueta) {
+        <li><strong>{{ parametro.etiqueta }}:</strong> {{ parametro.valor }}</li>
+      }</ul>
+    </section>
+    <section class="tarjeta"><h3>Interpretación</h3><p>{{ ejemplo().interpretacion }}</p></section>
+  </div>
+  <section>
+    <h2>Pruébalo paso a paso</h2>
+    <p class="subtitulo">Observa cómo la cuerda corta el eje x y cómo cambia la aproximación en cada iteración.</p>
+    <div class="tarjeta demo">
+      <div class="controles">
+        <span class="insignia">Regla falsa · ejemplo</span>
+        <div class="acciones">
+          <span>Tolerancia absoluta: {{ formato(tolerancia()) }}</span>
+          <button type="button" (click)="siguiente()" [disabled]="terminado()">Siguiente paso</button>
+          <button type="button" class="secundario" (click)="reiniciar()">Reiniciar</button>
+        </div>
+      </div>
+      <svg class="grafica" viewBox="0 0 600 300" role="img" [attr.aria-label]="'Regla falsa: ' + ejemplo().ecuacion">
+        <title>{{ ejemplo().ecuacion }}</title>
+        @for (x of escala().marcasX; track x) {
+          <line class="rejilla" [attr.x1]="escala().px(x)" [attr.x2]="escala().px(x)" y1="20" y2="250" />
+          <text [attr.x]="escala().px(x)" y="278" text-anchor="middle">{{ formato(x) }}</text>
+        }
+        @for (y of escala().marcasY; track y) {
+          <line class="rejilla" x1="48" x2="550" [attr.y1]="escala().py(y)" [attr.y2]="escala().py(y)" />
+          <text x="40" [attr.y]="escala().py(y) + 4" text-anchor="end">{{ formato(y) }}</text>
+        }
+        <line class="eje" x1="48" x2="550" [attr.y1]="escala().py(0)" [attr.y2]="escala().py(0)" />
+        @if (escala().xmin <= 0 && escala().xmax >= 0) {
+          <line class="eje" [attr.x1]="escala().px(0)" [attr.x2]="escala().px(0)" y1="20" y2="250" />
+          <text [attr.x]="escala().px(0) + 8" y="14">y</text>
+        }
+        <text x="570" [attr.y]="escala().py(0) + 4">x</text>
+        <path class="curva" [attr.d]="escala().curva" />
+        @for (fila of filas(); track fila.n) {
+          <line class="cuerda" [class.cuerda-actual]="fila.n === paso()"
+            [attr.x1]="escala().px(fila.a)" [attr.y1]="escala().py(funcion()(fila.a))"
+            [attr.x2]="escala().px(fila.b)" [attr.y2]="escala().py(funcion()(fila.b))" />
+        }
+        @if (actual(); as fila) {
+          @for (extremo of [fila.a, fila.b]; track $index) {
+            <line class="anclaje-linea" [attr.x1]="escala().px(extremo)" [attr.x2]="escala().px(extremo)" [attr.y1]="escala().py(0)" [attr.y2]="escala().py(funcion()(extremo))" />
+            <circle class="anclaje" [attr.cx]="escala().px(extremo)" [attr.cy]="escala().py(funcion()(extremo))" r="5" />
+            <circle class="anclaje" [attr.cx]="escala().px(extremo)" [attr.cy]="escala().py(0)" r="5" />
+          }
+          <text class="rotulo" [attr.x]="escala().px(fila.a) - 8" [attr.y]="escala().py(0) - 8" text-anchor="end">a</text>
+          <text class="rotulo" [attr.x]="escala().px(fila.b) + 8" [attr.y]="escala().py(0) - 8">b</text>
+          <line class="punto-linea" [attr.x1]="escala().px(fila.c)" [attr.x2]="escala().px(fila.c)" [attr.y1]="escala().py(0)" [attr.y2]="escala().py(fila.fc)" />
+          <circle class="punto" [attr.cx]="escala().px(fila.c)" [attr.cy]="escala().py(fila.fc)" r="5" />
+          <circle class="punto" [attr.cx]="escala().px(fila.c)" [attr.cy]="escala().py(0)" r="5" />
+          <text class="rotulo-c" [attr.x]="escala().px(fila.c) + 10" [attr.y]="escala().py(0) + 22">c</text>
+        }
+      </svg>
+      <dl class="indicadores">
+        <div><dt>Iteración</dt><dd>{{ paso() }}</dd></div>
+        <div><dt>Aproximación c</dt><dd>{{ formato(actual()?.c) }}</dd></div>
+        <div><dt>Error absoluto |Δc|</dt><dd>{{ formato(actual()?.delta) }}</dd></div>
+        <div><dt>Extremo fijo</dt><dd>{{ extremoFijo() }}</dd></div>
+      </dl>
+      <div class="grafica-error">
+        <h3>Error absoluto por iteración</h3>
+        <svg viewBox="0 0 600 130" role="img" aria-label="Cambio absoluto por iteración, escala logarítmica">
+          @for (y of [30, 50.5, 71, 91.5, 112]; track y) {
+            <line x1="30" x2="590" [attr.y1]="y" [attr.y2]="y" class="rejilla-error" />
+          }
+          @for (item of errores(); track item.n; let i = $index) {
+            <rect class="barra-error" [attr.x]="xError(i) - anchoError() / 2" [attr.y]="yError(item.error)" [attr.width]="anchoError()" [attr.height]="112 - yError(item.error)">
+              <title>Iteración {{ item.n }}: {{ formato(item.error) }}</title>
+            </rect>
+            <text [attr.x]="xError(i)" y="125" text-anchor="middle">{{ item.n }}</text>
+          }
+          <line x1="30" x2="590" [attr.y1]="yError(tolerancia())" [attr.y2]="yError(tolerancia())" class="tolerancia-error" />
+          <text x="590" [attr.y]="yError(tolerancia()) - 5" text-anchor="end" class="etiqueta-tolerancia">tolerancia</text>
+        </svg>
+        <p class="cap">La primera iteración no tiene comparación anterior. Las barras representan |c<sub>n</sub> − c<sub>n−1</sub>| en escala logarítmica.</p>
+      </div>
+      <p class="mensaje" [class.completado]="terminado() && resultado().convergio" role="status">{{ mensaje() }}</p>
+      @if (filas().length) {
+        <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de regla falsa">
+          <table><caption>Intervalo, corte de la cuerda y cambio absoluto</caption>
+            <thead><tr><th scope="col">n</th><th scope="col">a</th><th scope="col">b</th><th scope="col">c</th><th scope="col">f(c)</th><th scope="col">|c<sub>n</sub> − c<sub>n−1</sub>|</th></tr></thead>
+            <tbody>@for (fila of filas(); track fila.n) {
+              <tr [class.ultima]="fila.n === paso()"><th scope="row">{{ fila.n }}</th><td>{{ formato(fila.a) }}</td><td>{{ formato(fila.b) }}</td><td>{{ formato(fila.c) }}</td><td>{{ formato(fila.fc) }}</td><td>{{ formato(fila.delta) }}</td></tr>
+            }</tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </section>
+  <section><h2>Los pasos del algoritmo</h2>
+    <p class="subtitulo">Del paso 2 al 7 se repite hasta cumplir el criterio de parada o alcanzar el máximo.</p>
+    <ol class="pasos">@for (item of pasos; track $index) {
+      <li><span class="numero" aria-hidden="true">{{ $index + 1 }}</span><div><h3>{{ item[0] }}</h3><p>{{ item[1] }}</p></div></li>
+    }</ol>
+    <aside class="fundamento aplicado"><h3>Aplicado a este ejemplo</h3><p>{{ ejemplo().algoritmo }}</p></aside>
+  </section>
+  <section class="tarjeta"><h2>Conclusión y respuesta</h2><p>{{ ejemplo().conclusion }}</p></section>
+</article>
