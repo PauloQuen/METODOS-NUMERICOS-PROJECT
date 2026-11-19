@@ -60,4 +60,18 @@ describe('Bancos de los módulos 1 y 2',()=>{
     s.renovar('prueba',banco);expect(tanda().some(e=>primera.some(p=>p.id===e.id))).toBeFalse();
     expect(banco.every(e=>e.cuestionario!.length>=11)).toBeTrue();
   });
+  it('inicia una selección nueva al recrear la sesión y aísla las páginas de práctica', () => {
+    const azar = spyOn(Math, 'random').and.returnValue(0);
+    const banco = CATALOGO_MODULO1[0].banco;
+    const sesion = new SesionPracticaService();
+    const primera = sesion.tanda('modulo1:biseccion', banco)();
+    sesion.guardar(primera[0].id, 3);
+    const otraPagina = sesion.tanda('modulo1:transversal', banco)();
+    expect(otraPagina.some(e => e.id === primera[0].id)).toBeFalse();
+    azar.and.returnValue(.99);
+    const recarga = new SesionPracticaService();
+    const segunda = recarga.tanda('modulo1:biseccion', banco)();
+    expect(segunda.map(e => e.id)).not.toEqual(primera.map(e => e.id));
+    expect(recarga.paso(primera[0].id)).toBe(0);
+  });
 });

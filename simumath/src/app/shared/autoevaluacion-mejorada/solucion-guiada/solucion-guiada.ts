@@ -3,6 +3,9 @@ import { ActividadesEjercicioService } from '../../../components/modulo3/shared/
 import type { PreguntaCuestionarioAuto } from '../../models/metodo.model';
 import { ordenarPorIds } from '../barajar';
 import { TextoMatricial } from '../../domain/matriz-vista/texto-matricial';
+import { NgTemplateOutlet } from '@angular/common';
+import { SolucionGuiada as SolucionPractica } from '../../practica-guiada/solucion-guiada';
+import type { EtapaPractica } from '../../practica-guiada/modelos';
 
 /**
  * Un paso de la solución guiada.
@@ -41,7 +44,7 @@ export interface PasoGuia {
 @Component({
   selector: 'app-solucion-guiada',
   standalone: true,
-  imports: [TextoMatricial],
+  imports: [TextoMatricial, NgTemplateOutlet, SolucionPractica],
   templateUrl: './solucion-guiada.html',
   styleUrl: './solucion-guiada.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,6 +57,7 @@ export class SolucionGuiada implements OnInit {
 
   /** Pasos ya redactados por el contenido del método. */
   readonly pasos = input<readonly string[]>([]);
+  readonly etapas = input<EtapaPractica[]>([]);
 
   /**
    * Guía con títulos y preguntas por paso. Tiene prioridad sobre

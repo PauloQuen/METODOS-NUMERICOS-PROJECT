@@ -74,12 +74,29 @@
         <!-- Pasos (1.ª y 2.ª iteración) -->
         <section class="bloque-ejemplo__seccion">
           <h4 class="bloque-ejemplo__subtitulo">{{ tituloPasos() }}</h4>
-          @for (p of ejemplo().pasos; track $index; let i = $index) {
-            <p class="bloque-ejemplo__paso">
-              <strong>{{ etiquetaPaso() }} {{ i + 1 }}</strong>
-            </p>
-            @if (formatoMatricial()) { <app-texto-matricial [texto]="p" /> }
-            @else { <p class="bloque-ejemplo__parrafo">{{ p }}</p> }
+          @if (etapas().length) {
+            @for (etapa of etapas(); track $index; let i = $index) {
+              <p class="bloque-ejemplo__paso"><strong>{{ i + 1 }}. {{ etapa.titulo }}</strong></p>
+              <p class="bloque-ejemplo__parrafo">{{ etapa.explicacion }}</p>
+              @for (cuenta of etapa.cuentas; track $index) {
+                <div class="bloque-ejemplo__cuenta">
+                  <small>{{ cuenta.etiqueta }}</small>
+                  <app-formula-matematica [texto]="cuenta.expresion ?? '(' + cuenta.numerador + ')/(' + cuenta.denominador + ')'" />
+                </div>
+              }
+              @if (etapa.matrices?.length) {
+                <app-grupo-matrices [matrices]="etapa.matrices!" />
+              }
+              <app-formula-matematica [texto]="etapa.resultado" />
+            }
+          } @else {
+            @for (p of ejemplo().pasos; track $index; let i = $index) {
+              <p class="bloque-ejemplo__paso">
+                <strong>{{ etiquetaPaso() }} {{ i + 1 }}</strong>
+              </p>
+              @if (formatoMatricial()) { <app-texto-matricial [texto]="p" /> }
+              @else { <p class="bloque-ejemplo__parrafo">{{ p }}</p> }
+            }
           }
         </section>
 

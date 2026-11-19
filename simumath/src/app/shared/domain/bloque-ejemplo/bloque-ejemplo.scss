@@ -118,6 +118,11 @@
   color: var(--on-surface);
 }
 
+.bloque-ejemplo__cuenta {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .bloque-ejemplo__tabla-datos {
   width: 100%;
   border-collapse: collapse;

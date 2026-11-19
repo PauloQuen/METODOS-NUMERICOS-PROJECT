@@ -1,4 +1,7 @@
-@if (total() > 0 && !completada()) {
+<ng-template #desarrollo><ng-content /></ng-template>
+@if (etapas().length > 0) {
+  <app-solucion-practica [ejercicioId]="ejercicioId()" [etapas]="etapas()" [desarrollo]="desarrollo" />
+} @else if (total() > 0 && !completada()) {
   <section class="guia" aria-label="Solución paso a paso">
     <header class="guia__cabecera">
       <div>
@@ -166,6 +169,6 @@
   }
 
   <div class="guia__desarrollo">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="desarrollo" />
   </div>
 }

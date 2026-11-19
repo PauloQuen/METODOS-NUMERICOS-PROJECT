@@ -1,5 +1,6 @@
 import { crearBanco } from './banco';
-import { barajar, PracticaM3Service } from './practica.service';
+import { PracticaM3Service } from './practica.service';
+import { barajar } from '../../../shared/autoevaluacion-mejorada/barajar';
 import { EJERCICIOS_LAGRANGE } from '../tipos/interpolacion/lagrange/lagrange.contenido';
 import { EJERCICIOS_MINIMOS_CUADRADOS } from '../tipos/ajuste/minimos-cuadrados/minimos-cuadrados.contenido';
 

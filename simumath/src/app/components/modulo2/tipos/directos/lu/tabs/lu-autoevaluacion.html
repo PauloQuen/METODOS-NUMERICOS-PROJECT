@@ -1,14 +1,10 @@
 <div class="autoevaluacion">
   <header class="autoevaluacion__encabezado">
     <h2 class="autoevaluacion__titulo">Autoevaluación</h2>
-    <p class="autoevaluacion__intro">
-      Tres sistemas para practicar factorización LU. Resolvé en papel, respondé
-      el <strong>Cuestionario</strong> y verificá tu vector solución antes de ver el
-      desarrollo.
-    </p>
+    <app-cabecera-practica [total]="banco.length" (nuevaTanda)="nuevaTanda()" />
   </header>
 
-  @for (ejercicio of ejercicios; track ejercicio.id; let i = $index) {
+  @for (ejercicio of ejercicios(); track ejercicio.id; let i = $index) {
     <app-bloque-ejercicio
       [ejercicio]="ejercicio"
       [mejorada]="mejorada"

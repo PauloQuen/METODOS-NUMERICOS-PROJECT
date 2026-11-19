@@ -83,12 +83,14 @@
           <app-solucion-guiada
             [ejercicioId]="ejercicio().id"
             [pasos]="ejercicio().pasos"
+            [etapas]="ejercicio().guia ?? []"
             [formatoMatricial]="formatoMatricial()"
             [cuestionario]="cuestionario()"
             [etiquetaPaso]="etiquetaPaso()"
           >
             <app-bloque-ejemplo
               [ejemplo]="convertirAEjemplo()"
+              [etapas]="ejercicio().guia ?? []"
               [formatoMatricial]="formatoMatricial()"
               [filas]="filas()"
               [columnas]="columnas()"
@@ -120,6 +122,7 @@
         <div class="bloque-ejercicio__solucion">
           <app-bloque-ejemplo
             [ejemplo]="convertirAEjemplo()"
+            [etapas]="ejercicio().guia ?? []"
             [formatoMatricial]="formatoMatricial()"
             [filas]="filas()"
             [columnas]="columnas()"

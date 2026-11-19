@@ -1,15 +1,10 @@
 <div class="autoevaluacion">
   <header class="autoevaluacion__encabezado">
     <h2 class="autoevaluacion__titulo">Autoevaluación</h2>
-    <p class="autoevaluacion__intro">
-      Tres ejercicios para practicar Bisección. Resolvé en papel, comprobá tu
-      comprensión con el <strong>Cuestionario</strong> y verificá tu resultado antes de
-      abrir <strong>Ver solución</strong>. La tabla y el gráfico salen directamente del
-      algoritmo, así que podés comparar paso a paso.
-    </p>
+    <app-cabecera-practica [total]="banco.length" (nuevaTanda)="nuevaTanda()" />
   </header>
 
-  @for (ejercicio of ejercicios; track ejercicio.id) {
+  @for (ejercicio of ejercicios(); track ejercicio.id) {
     <section class="autoevaluacion__bloque">
       <app-bloque-ejercicio
         [ejercicio]="ejercicio"

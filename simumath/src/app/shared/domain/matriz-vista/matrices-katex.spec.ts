@@ -13,7 +13,7 @@ import { GaussAutoevaluacion } from '../../../components/modulo2/tipos/directos/
 import { LuAutoevaluacion } from '../../../components/modulo2/tipos/directos/lu/tabs/lu-autoevaluacion';
 import { BloqueEjercicio } from '../bloque-ejercicio/bloque-ejercicio';
 import { SolutionGateService, claveDeGate } from '../../autoevaluacion-mejorada/solution-gate.service';
-import { ActividadesEjercicioService } from '../../../components/modulo3/shared/actividades-ejercicio/actividades-ejercicio.service';
+import { SesionPracticaService } from '../../practica-guiada/sesion-practica.service';
 
 describe('Matrices del módulo 2 con KaTeX', () => {
   beforeEach(() => TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] }));
@@ -193,7 +193,7 @@ describe('Matrices del módulo 2 con KaTeX', () => {
     it(`${tipo.name} mantiene KaTeX durante la guía y al consultar el desarrollo completo`, async () => {
       const f = TestBed.createComponent<unknown>(tipo);
       f.detectChanges();
-      const actividades = TestBed.inject(ActividadesEjercicioService);
+      const practica = TestBed.inject(SesionPracticaService);
       for (const vista of f.debugElement.queryAll(By.directive(BloqueEjercicio))) {
         const bloque = vista.componentInstance as BloqueEjercicio;
         const host = vista.nativeElement as HTMLElement;
@@ -204,16 +204,16 @@ describe('Matrices del módulo 2 con KaTeX', () => {
         const boton = Array.from(host.querySelectorAll('button'))
           .find(b => b.textContent!.trim() === 'Ver solución')!;
         boton.click();
-        for (let i = 0; i < e.pasos.length; i++) {
-          actividades.guardarPasoGuia(e.id, i);
+        for (let i = 0; i < e.guia!.length; i++) {
+          practica.guardar(e.id, i);
           f.detectChanges();
           await f.whenStable();
-          if (separarMatrices(e.pasos[i]).some(p => p.matrices)) {
+          if (e.guia![i].matrices?.length) {
             expect(host.querySelector('app-solucion-guiada app-matriz-vista .katex')).not.toBeNull();
           }
           expect(host.querySelector('.katex-error')).toBeNull();
         }
-        actividades.guardarPasoGuia(e.id, e.pasos.length);
+        practica.guardar(e.id, e.guia!.length);
         f.detectChanges();
         await f.whenStable();
         expect(host.querySelector('app-solucion-guiada app-bloque-ejemplo app-matriz-vista .katex')).not.toBeNull();

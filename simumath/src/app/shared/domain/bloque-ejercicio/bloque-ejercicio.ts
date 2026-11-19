@@ -21,6 +21,7 @@ import { ExerciseActions } from '../../autoevaluacion-mejorada/exercise-actions/
 import { QuizPanel } from '../../autoevaluacion-mejorada/quiz-panel/quiz-panel';
 import { AnswerCheckPanel } from '../../autoevaluacion-mejorada/answer-check-panel/answer-check-panel';
 import { SolucionGuiada } from '../../autoevaluacion-mejorada/solucion-guiada/solucion-guiada';
+import type { EtapaPractica } from '../../practica-guiada/modelos';
 
 /**
  * Bloque de ejercicio (Autoevaluación) — mismo modelo que el Módulo 3.
@@ -59,7 +60,7 @@ import { SolucionGuiada } from '../../autoevaluacion-mejorada/solucion-guiada/so
 })
 export class BloqueEjercicio {
   /** Ejercicio a resolver. */
-  readonly ejercicio = input.required<EjercicioBase>();
+  readonly ejercicio = input.required<EjercicioBase & { guia?: EtapaPractica[] }>();
 
   /** Filas calculadas de la solución. */
   readonly filas = input<Record<string, number | string>[]>([]);

@@ -5,6 +5,9 @@ import { PasosControl } from '../pasos-control/pasos-control';
 import { UiCard } from '../../ui/ui-card/ui-card';
 import { TextoMatricial } from '../matriz-vista/texto-matricial';
 import { ParametrosMatriciales } from '../matriz-vista/parametros-matriciales';
+import { GrupoMatrices } from '../matriz-vista/grupo-matrices';
+import { FormulaMatematica } from '../../practica-guiada/formula-matematica';
+import type { EtapaPractica } from '../../practica-guiada/modelos';
 import type { Columna, DibujarMetodo, EjemploBase } from '../../models/metodo.model';
 
 /**
@@ -35,12 +38,13 @@ import type { Columna, DibujarMetodo, EjemploBase } from '../../models/metodo.mo
 @Component({
   selector: 'app-bloque-ejemplo',
   standalone: true,
-  imports: [IterationTable, GraficoMetodo, PasosControl, UiCard, TextoMatricial, ParametrosMatriciales],
+  imports: [IterationTable, GraficoMetodo, PasosControl, UiCard, TextoMatricial, ParametrosMatriciales, GrupoMatrices, FormulaMatematica],
   templateUrl: './bloque-ejemplo.html',
   styleUrl: './bloque-ejemplo.scss',
 })
 export class BloqueEjemplo {
   readonly formatoMatricial = input(false);
+  readonly etapas = input<EtapaPractica[]>([]);
   /**
    * El ejemplo a mostrar, con su texto.
    *

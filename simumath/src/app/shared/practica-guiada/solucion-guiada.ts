@@ -6,7 +6,7 @@ import type { EtapaPractica } from './modelos';
 import { numeroTexto } from './modelos';
 import { SesionPracticaService } from './sesion-practica.service';
 @Component({
-  selector:'app-solucion-guiada',standalone:true,imports:[NgTemplateOutlet,FormulaMatematica,GrupoMatrices],
+  selector:'app-solucion-practica',standalone:true,imports:[NgTemplateOutlet,FormulaMatematica,GrupoMatrices],
   templateUrl:'./solucion-guiada.html',styleUrl:'./solucion-guiada.scss',
 })
 export class SolucionGuiada {

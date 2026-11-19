@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { UiCard } from '../../../shared/ui/ui-card/ui-card';
 import { Badge } from '../../../shared/ui/badge/badge';
 import { ExerciseActions } from '../../../shared/autoevaluacion-mejorada/exercise-actions/exercise-actions';
@@ -13,10 +13,12 @@ import {
   resolverConfig,
 } from '../../../shared/autoevaluacion-mejorada/solution-gate.service';
 import { DESBLOQUEO_MODULO1, DESBLOQUEO_TIPOS_MODULO1 } from '../autoevaluacion.config';
-import {
-  EJERCICIOS_AUTO_MEJORADOS,
-  type EjercicioAutoMejorado,
-} from './datos/modulo1-autoevaluacion.data';
+import type { EjercicioAutoMejorado } from './datos/modulo1-autoevaluacion.data';
+import { CATALOGO_MODULO1 } from './bancos/catalogo';
+import { SesionPracticaService, mezclar } from '../../../shared/practica-guiada/sesion-practica.service';
+import { CabeceraPractica } from '../../../shared/practica-guiada/cabecera-practica';
+import type { ConGuia } from '../../../shared/practica-guiada/modelos';
+import type { Ejercicio } from '../../../shared/models/metodo.model';
 
 /**
  * AUTOEVALUACIÓN TRANSVERSAL DEL MÓDULO 1.
@@ -31,12 +33,34 @@ import {
  */
 @Component({
   selector: 'app-autoevaluacion-mejorada',
-  imports: [UiCard, Badge, ExerciseActions, QuizPanel, AnswerCheckPanel, SolucionGuiada],
+  imports: [UiCard, Badge, ExerciseActions, QuizPanel, AnswerCheckPanel, SolucionGuiada, CabeceraPractica],
   templateUrl: './autoevaluacion-mejorada.html',
   styleUrl: './autoevaluacion-mejorada.scss',
 })
 export class AutoevaluacionMejorada {
-  readonly ejercicios = EJERCICIOS_AUTO_MEJORADOS;
+  private readonly practica = inject(SesionPracticaService);
+  readonly banco = CATALOGO_MODULO1.flatMap((grupo, i) => grupo.banco.map(e => ({
+    ...e, metodo: grupo.metodo, tema: grupo.nombre,
+    variante: (['amber-solid', 'amber', 'navy', 'teal'] as const)[i % 4],
+  })));
+
+  /** Una selección por método, manteniendo tres numéricos y tres de aplicación. */
+  private readonly seleccionar = (disponibles: typeof this.banco) =>
+    mezclar(CATALOGO_MODULO1.map(g => g.metodo)).map((metodo, i) =>
+      mezclar(disponibles.filter(e => e.metodo === metodo &&
+        e.tipo === (i < 3 ? 'numerico' : 'casuistica')))[0]);
+
+  private readonly tanda = this.practica.tanda('modulo1:transversal', this.banco, this.seleccionar);
+  readonly ejercicios = computed(() => this.tanda().map((e, i) => ({
+    ...e, numero: i + 1,
+    texto: [e.enunciado, e.ecuacion, ...e.parametros.map(p => `${p.etiqueta}: ${p.valor}`)].filter(Boolean).join('\n'),
+    solucion: e.pasos.join('\n\n'),
+    resolucion: e.resolucion ? { ...e.resolucion, respuestaFinalTexto: e.resolucion.respuestaFinalTexto ?? '' } : undefined,
+  })));
+
+  nuevaTanda(): void {
+    this.practica.renovar('modulo1:transversal', this.banco, this.seleccionar);
+  }
   readonly actividades = inject(ActividadesEjercicioService);
   private readonly gate = inject(SolutionGateService);
 
@@ -81,12 +105,8 @@ export class AutoevaluacionMejorada {
     return `ae-panel-${ejercicioId}-${panel}`;
   }
 
-  /** La solución transversal viene en HTML; se separa por saltos de línea. */
-  protected pasosDe(ejercicio: EjercicioAutoMejorado): string[] {
-    return ejercicio.solucion
-      .split(/<br\s*\/?>/i)
-      .map((paso) => paso.trim())
-      .filter(Boolean);
+  protected pasosDe(ejercicio: EjercicioAutoMejorado & ConGuia<Ejercicio>): string[] {
+    return ejercicio.pasos;
   }
 
   alternarSolucion(ejercicioId: string): void {
@@ -107,7 +127,7 @@ export class AutoevaluacionMejorada {
   }
 
   reintentar(ejercicioId: string): void {
-    const ejercicio = this.ejercicios.find((e) => e.id === ejercicioId);
+    const ejercicio = this.ejercicios().find((e) => e.id === ejercicioId);
     this.actividades.reintentar(ejercicioId, ejercicio?.cuestionario ?? []);
   }
 
@@ -126,7 +146,7 @@ export class AutoevaluacionMejorada {
   alComprobarCuestionario(ejercicioId: string): void {
     this.actividades.comprobar(ejercicioId);
 
-    const ejercicio = this.ejercicios.find((e) => e.id === ejercicioId);
+    const ejercicio = this.ejercicios().find((e) => e.id === ejercicioId);
     const total = ejercicio?.cuestionario?.length ?? 0;
     if (total === 0) return;
 
@@ -149,7 +169,7 @@ export class AutoevaluacionMejorada {
   }
 
   alVerificarResolucion(ejercicioId: string): void {
-    const ejercicio = this.ejercicios.find((e) => e.id === ejercicioId);
+    const ejercicio = this.ejercicios().find((e) => e.id === ejercicioId);
     if (!ejercicio?.resolucion) return;
 
     this.actividades.verificar(
