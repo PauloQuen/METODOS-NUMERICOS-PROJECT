@@ -6,36 +6,4 @@
   tituloMetodo="El algoritmo"
   tituloCriterios="¿Cuándo se detiene?"
   tituloRecomendaciones="Consejos de uso"
->
-  <section class="teoria-m3__seccion">
-    <h2 class="teoria-m3__titulo">Ejemplo numérico resuelto</h2>
-    <app-bloque-ejemplo
-      [ejemplo]="teoria.ejemploNormal"
-      [funcion]="funcionNumerico"
-      [filas]="ejemploNumerico().filas"
-      [columnas]="columnas"
-      [filaFinal]="ejemploNumerico().filaFinal"
-      [rango]="rangoNumerico()"
-      [dibujarMetodo]="dibujar"
-      [raiz]="ejemploNumerico().raiz"
-    />
-  </section>
-
-  <section class="teoria-m3__seccion">
-    <h2 class="teoria-m3__titulo">Ejemplo desde una casuística real</h2>
-    <p class="teoria-m3__parrafo">
-      Un problema como llega en la práctica: con los datos de donde salen, el planteamiento y los
-      pasos escritos uno por uno.
-    </p>
-    <app-bloque-ejemplo
-      [ejemplo]="teoria.ejemploCasuistica"
-      [funcion]="funcionCasuistica"
-      [filas]="ejemploCasuistica().filas"
-      [columnas]="columnas"
-      [filaFinal]="ejemploCasuistica().filaFinal"
-      [rango]="rangoCasuistica()"
-      [dibujarMetodo]="dibujar"
-      [raiz]="ejemploCasuistica().raiz"
-    />
-  </section>
-</app-teoria-contenido>
+/>
