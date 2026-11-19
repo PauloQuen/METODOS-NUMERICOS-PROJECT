@@ -101,13 +101,11 @@ export class PuntoFijoTeoria {
 
   readonly raices = [2 - Math.SQRT2, 2 + Math.SQRT2];
 
-  // Geometría del gráfico (mismo viewBox que el boceto: 450 × 430).
-  readonly L = 44;
-  readonly T = 18;
-  readonly B = 402;
-  readonly SX = 95;
-  readonly SY = 96;
-  readonly marcas = [1, 2, 3, 4];
+  // Formato horizontal compartido con las demostraciones de métodos abiertos.
+  readonly L = 48;
+  readonly R = 550;
+  readonly T = 20;
+  readonly B = 250;
 
   readonly despeje = signal(0);
   readonly semilla = signal(2.5);
@@ -119,6 +117,39 @@ export class PuntoFijoTeoria {
   readonly filas = computed(() => this.estado().filas);
   readonly terminado = computed(() => this.estado().terminado);
   readonly mensaje = computed(() => this.estado().mensaje);
+
+  readonly rangoSemilla = computed(() => {
+    if (this.despeje() === 2) {
+      return { min: 0.6, max: 4, ayuda: 'Dominio: x ≥ 0,5. Usamos semillas desde 0,6 para que los siguientes pasos permanezcan en el dominio real.' };
+    }
+    if (this.despeje() === 1) {
+      return { min: -2, max: 3.4, ayuda: 'Dominio: x ≠ 4. Las semillas van de −2 a 3,4 para mantener las iteraciones alejadas del polo x = 4.' };
+    }
+    if (this.despeje() === 3) {
+      return { min: -1, max: 4, ayuda: 'Dominio: todos los números reales. Explora semillas entre −1 y 4; estar en el dominio no garantiza convergencia.' };
+    }
+    return { min: -4, max: 4, ayuda: 'Dominio: todos los números reales. También puedes explorar semillas negativas; estar en el dominio no garantiza convergencia.' };
+  });
+
+  readonly escala = computed(() => {
+    const estado = this.estado();
+    const valores = [-1, 4, estado.x0, ...estado.filas.map(f => f.gx)];
+    const inicial = this.actual().g(estado.x0);
+    if (Number.isFinite(inicial)) valores.push(inicial);
+    const min = Math.min(...valores);
+    const max = Math.max(...valores);
+    const margen = (max - min) * 0.12;
+    return { min: min - margen, max: max + margen };
+  });
+
+  readonly marcas = computed(() => {
+    const { min, max } = this.escala();
+    const base = 10 ** Math.floor(Math.log10((max - min) / 6));
+    const paso = [1, 2, 5, 10].find(v => v * base >= (max - min) / 6)! * base;
+    const valores: number[] = [];
+    for (let v = Math.ceil(min / paso) * paso; v <= max; v += paso) valores.push(v);
+    return valores;
+  });
 
   /** Tipo de convergencia según |g′| en la raíz atractiva, como en el boceto. */
   readonly caso = computed(() => {
@@ -146,9 +177,14 @@ export class PuntoFijoTeoria {
     }
     const r = filas[filas.length - 1];
     const k = filas.length;
-    const tendencia = k > 1
-      ? r.dx < filas[k - 2].dx ? 'se acerca' : 'se aleja'
-      : null;
+    // Compara errores respecto de una misma raíz, no desplazamientos entre pasos.
+    // Sin atractor, usa como referencia la raíz más cercana a la semilla inicial.
+    const indice = this.actual().atractor;
+    const raiz = indice >= 0 ? this.raices[indice] : this.raices.reduce((a, b) =>
+      Math.abs(a - this.estado().x0) <= Math.abs(b - this.estado().x0) ? a : b);
+    const antes = Math.abs(r.x - raiz);
+    const despues = Math.abs(r.gx - raiz);
+    const tendencia = despues < antes ? 'se acerca' : despues > antes ? 'se aleja' : null;
     return {
       titulo: `Iteración ${k}`,
       tendencia,
@@ -171,8 +207,14 @@ export class PuntoFijoTeoria {
     }));
   });
 
-  px(v: number): number { return this.L + v * this.SX; }
-  py(v: number): number { return this.B - v * this.SY; }
+  px(v: number): number {
+    const { min, max } = this.escala();
+    return this.L + (v - min) / (max - min) * (this.R - this.L);
+  }
+  py(v: number): number {
+    const { min, max } = this.escala();
+    return this.B - (v - min) / (max - min) * (this.B - this.T);
+  }
 
   /** Curva g(x) en 241 muestras; levanta el lápiz fuera de dominio o de escala. */
   readonly curva = computed(() => {
@@ -180,9 +222,10 @@ export class PuntoFijoTeoria {
     let d = '';
     let dibujando = false;
     for (let i = 0; i <= 240; i++) {
-      const x = 4 * i / 240;
+      const { min, max } = this.escala();
+      const x = min + (max - min) * i / 240;
       const y = g(x);
-      if (!Number.isFinite(y) || Math.abs(y) > 50) { dibujando = false; continue; }
+      if (!Number.isFinite(y) || y < min || y > max) { dibujando = false; continue; }
       d += `${dibujando ? 'L' : 'M'}${this.px(x).toFixed(1)} ${this.py(y).toFixed(1)}`;
       dibujando = true;
     }
@@ -221,12 +264,10 @@ export class PuntoFijoTeoria {
       ...estado.filas.map((f, k) => ({ x: f.gx, n: k + 1 })),
     ];
     const salida: EtiquetaX[] = [];
-    let anterior = -1;
     for (const c of candidatas) {
       const X = this.px(c.x);
-      if (X < this.L || X > this.L + 4 * this.SX) continue;
-      if (anterior >= 0 && Math.abs(X - anterior) < 20) continue;
-      anterior = X;
+      if (X < this.L || X > this.R) continue;
+      if (salida.some(e => Math.abs(X - this.px(e.x)) < 28)) continue;
       salida.push(c);
     }
     return salida;
@@ -239,10 +280,11 @@ export class PuntoFijoTeoria {
   readonly etiquetaG = computed(() => {
     const g = this.actual().g;
     for (let i = 240; i > 0; i--) {
-      const x = 4 * i / 240;
+      const { min, max } = this.escala();
+      const x = min + (max - min) * i / 240;
       const y = g(x);
-      if (Number.isFinite(y) && y > 0.3 && y < 3.7 && Math.abs(y - x) > 0.35) {
-        return { x: this.px(x) + 8, y: this.py(y) - 8 };
+      if (Number.isFinite(y) && this.py(y) > this.T + 25 && this.py(y) < this.B - 20 && Math.abs(this.py(y) - this.py(x)) > 20) {
+        return { x: Math.min(this.px(x) + 8, this.R - 32), y: this.py(y) - 8 };
       }
     }
     return null;
@@ -329,7 +371,10 @@ export class PuntoFijoTeoria {
   }
 
   cambiarSemilla(event: Event): void {
-    this.semilla.set(Number((event.target as HTMLInputElement).value));
+    const valor = Number((event.target as HTMLInputElement).value);
+    if (!Number.isFinite(valor)) return;
+    const { min, max } = this.rangoSemilla();
+    this.semilla.set(Math.min(max, Math.max(min, valor)));
     this.reiniciar();
   }
 

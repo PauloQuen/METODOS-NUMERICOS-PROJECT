@@ -43,11 +43,12 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .chip-error { background: var(--c-error-fondo); color: var(--c-error-texto); }
 .chip-primario { background: var(--c-primario-suave); color: var(--c-primario-hover); }
 
-.dg { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--e-4); align-items: start; }
-.grafica { width: 100%; height: auto; display: block; border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); background: var(--c-fondo); }
+.dg { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-4); align-items: start; }
+.grafica { width: 100%; height: auto; aspect-ratio: 2 / 1; display: block; box-sizing: border-box; border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); background: var(--c-fondo); }
 .grafica text { fill: var(--c-texto-suave); font-size: 13px; font-family: var(--c-fuente); }
 .grafica .marca { stroke: var(--c-borde); }
-.grafica .eje { stroke: var(--c-error-texto); stroke-width: 1.8; }
+.grafica .eje { stroke: var(--c-borde); stroke-width: 1.5; }
+.grafica .rejilla { stroke: var(--c-borde-suave); stroke-dasharray: 3 4; }
 .diagonal { stroke: var(--c-texto-suave); stroke-dasharray: 6 5; stroke-width: 1.6; }
 .curva { fill: none; stroke: var(--c-texto); stroke-width: 2.8; }
 .proyeccion { stroke: var(--color-metodo); stroke-width: 1.2; stroke-dasharray: 3 4; opacity: .8; }
@@ -56,10 +57,9 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .grafica circle.repulsor { fill: var(--c-superficie); stroke: var(--c-error-texto); stroke-width: 2.5; }
 .semilla-punto { fill: var(--c-primario); }
 .punto-actual { fill: var(--c-error-texto); }
-.grafica .mano { font-family: "Caveat", "Segoe Print", cursive; font-size: 21px; font-weight: 600; fill: var(--color-metodo); }
+.grafica .mano { font-family: var(--c-fuente); font-size: 13px; font-weight: 600; fill: var(--color-metodo); }
 .grafica .mano.semilla-texto { fill: var(--c-primario); }
 .grafica .mano.atractor-texto { fill: var(--c-ok-texto); }
-.grafica .mano.repulsor-texto { fill: var(--c-error-texto); }
 .grafica .mano.tenue { fill: var(--c-texto-suave); }
 .grafica .mano.etiqueta-g { fill: var(--c-texto); }
 
