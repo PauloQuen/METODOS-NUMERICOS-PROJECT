@@ -1,9 +1,170 @@
-<app-teoria-contenido
-  [teoria]="teoria"
-  [terceraTexto]="teoria.ordenConvergencia"
-  terceraTitulo="Orden de convergencia"
-  terceraIcono="speed"
-  tituloMetodo="El algoritmo"
-  tituloCriterios="Criterios de parada"
-  tituloRecomendaciones="Recomendaciones"
-/>
+<article class="teoria">
+  <header class="introduccion">
+    <div>
+      <p class="etiqueta">La idea del método</p>
+      <h2>Una cuerda que se acerca a la raíz</h2>
+      <p>Une los extremos de la curva con una recta y toma su cruce con el eje x.
+        Conserva el intervalo donde hay cambio de signo y vuelve a trazar la cuerda.</p>
+    </div>
+    <div class="formula">
+      <strong aria-label="c igual a a menos f de a por b menos a, dividido entre f de b menos f de a">
+        c = a − <span class="fraccion"><span>f(a) · (b − a)</span><span>f(b) − f(a)</span></span>
+      </strong>
+      <span>El cruce de la cuerda con el eje x</span>
+      <small>Usa los valores de la función, no el punto medio.</small>
+    </div>
+  </header>
+
+  <aside class="fundamento">
+    <h3>¿Por qué funciona? Bolzano e interpolación lineal</h3>
+    <p>Si f es continua en [a, b] y f(a) · f(b) &lt; 0, existe al menos una raíz.
+      La cuerda cruza el eje dentro del intervalo, pero ese cruce no tiene por qué ser la raíz de f.
+      Evaluar f(c) permite conservar el cambio de signo.</p>
+  </aside>
+
+  <section aria-labelledby="demo-titulo">
+    <h2 id="demo-titulo">Pruébalo paso a paso</h2>
+    <p class="subtitulo">Explora f(x) = x³ − x − 2 en [1, 2]. Observa cómo cambia la cuerda y cómo su cruce c se acerca a la raíz.</p>
+    <div class="tarjeta demo">
+      <div class="controles">
+        <span class="insignia">Regla Falsa · demostración</span>
+        <div class="acciones">
+          <label for="regla-falsa-teoria-tolerancia">Tolerancia absoluta</label>
+          <select id="regla-falsa-teoria-tolerancia" [value]="tolerancia()" (change)="cambiarTolerancia($event)">
+            <option value="0.01">0,01</option>
+            <option value="0.001">0,001</option>
+            <option value="0.000001">0,000001</option>
+          </select>
+          <button type="button" (click)="siguiente()" [disabled]="terminado()">Siguiente paso</button>
+          <button type="button" class="secundario" (click)="reiniciar()">Reiniciar</button>
+        </div>
+      </div>
+      <svg class="grafica" viewBox="0 0 600 300" role="img" aria-labelledby="grafica-titulo grafica-descripcion">
+        <title id="grafica-titulo">Regla Falsa de x³ − x − 2</title>
+        <desc id="grafica-descripcion">La cuerda une los extremos del intervalo evaluado,
+          de {{ formato(intervalo().a) }} a {{ formato(intervalo().b) }}.
+          @if (actual(); as fila) { Cruza el eje en c = {{ formato(fila.c) }}; f(c) = {{ formato(fila.fc) }}. }
+        </desc>
+        @for (x of [1, 1.5, 2]; track x) {
+          <line class="rejilla" [attr.x1]="px(x)" [attr.x2]="px(x)" y1="20" y2="270" />
+          <text [attr.x]="px(x)" y="290" text-anchor="middle">{{ formato(x) }}</text>
+        }
+        <rect class="banda" [attr.x]="px(intervalo().a)" y="20"
+          [attr.width]="px(intervalo().b) - px(intervalo().a)" height="250" />
+        <line class="eje" x1="40" x2="580" [attr.y1]="py(0)" [attr.y2]="py(0)" />
+        <text x="22" [attr.y]="py(0) + 4">0</text>
+        <text x="580" y="290">x</text>
+        <path class="curva" [attr.d]="curva" />
+        <line class="extremo" [attr.x1]="px(intervalo().a)" [attr.x2]="px(intervalo().a)" y1="20" y2="270" />
+        <line class="extremo" [attr.x1]="px(intervalo().b)" [attr.x2]="px(intervalo().b)" y1="20" y2="270" />
+        <text class="rotulo" [attr.x]="px(intervalo().a) - 8" y="36" text-anchor="end">a (−)</text>
+        <text class="rotulo" [attr.x]="px(intervalo().b) + 8" y="36">b (+)</text>
+        <line class="cuerda" [attr.x1]="px(intervalo().a)" [attr.y1]="py(funcion(intervalo().a))"
+          [attr.x2]="px(intervalo().b)" [attr.y2]="py(funcion(intervalo().b))" />
+        <circle class="anclaje" [attr.cx]="px(intervalo().a)" [attr.cy]="py(funcion(intervalo().a))" r="4" />
+        <circle class="anclaje" [attr.cx]="px(intervalo().b)" [attr.cy]="py(funcion(intervalo().b))" r="4" />
+        @if (actual(); as fila) {
+          <line class="punto-linea" [attr.x1]="px(fila.c)" [attr.x2]="px(fila.c)"
+            [attr.y1]="py(0)" [attr.y2]="py(fila.fc)" />
+          <circle class="punto" [attr.cx]="px(fila.c)" [attr.cy]="py(fila.fc)" r="5" />
+          <circle class="punto" [attr.cx]="px(fila.c)" [attr.cy]="py(0)" r="5" />
+          <text class="rotulo-c" [attr.x]="px(fila.c) + 10" [attr.y]="py(0) + 24">c</text>
+        }
+      </svg>
+      <p class="leyenda"><span>— Curva f(x)</span><span class="leyenda-cuerda">┄ Cuerda entre extremos</span><span class="leyenda-c">● c y f(c)</span></p>
+      <dl class="indicadores">
+        <div><dt>Iteración</dt><dd>{{ paso() }}</dd></div>
+        <div><dt>Ancho evaluado</dt><dd>{{ formato(intervalo().b - intervalo().a) }}</dd></div>
+        <div><dt>Aproximación c</dt><dd>{{ formato(actual()?.c) }}</dd></div>
+        <div><dt>Cambio absoluto |Δc|</dt><dd>{{ formato(actual()?.delta) }}</dd></div>
+      </dl>
+      <p class="mensaje" [class.completado]="terminado() && resultado().convergio" role="status">{{ mensaje() }}</p>
+      @if (filas().length) {
+        <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de regla falsa">
+          <table>
+            <caption>Intervalo, cruce de la cuerda y cambio entre aproximaciones</caption>
+            <thead><tr><th scope="col">n</th><th scope="col">a</th><th scope="col">b</th><th scope="col">c</th><th scope="col">f(c)</th><th scope="col">|Δc|</th></tr></thead>
+            <tbody>
+              @for (fila of filas(); track fila.n) {
+                <tr [class.ultima]="fila.n === paso()"><th scope="row">{{ fila.n }}</th><td>{{ formato(fila.a) }}</td><td>{{ formato(fila.b) }}</td><td>{{ formato(fila.c) }}</td><td>{{ formato(fila.fc) }}</td><td>{{ formato(fila.delta) }}</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="pasos-titulo">
+    <h2 id="pasos-titulo">Los pasos del algoritmo</h2>
+    <p class="subtitulo">Verifica las condiciones y repite el cruce de la cuerda, la evaluación y la actualización del intervalo.</p>
+    <ol class="pasos">
+      @for (paso of pasos; track $index) {
+        <li><span class="numero" aria-hidden="true">{{ $index + 1 }}</span><div><h3>{{ paso[0] }}</h3><p>{{ paso[1] }}</p></div></li>
+      }
+    </ol>
+  </section>
+
+  <section aria-labelledby="parada-titulo">
+    <h2 id="parada-titulo">¿Cuándo se detiene?</h2>
+    <p class="subtitulo">Regla Falsa no divide el ancho por dos. El criterio debe reflejar cómo avanza el cruce de la cuerda.</p>
+    <details class="criterio-principal" open>
+      <summary>Cambio absoluto |cₙ − cₙ₋₁| <span class="insignia">Por defecto</span></summary>
+      <p>Esta demostración usa el criterio absoluto del algoritmo del portal: desde la segunda iteración,
+        se detiene cuando |cₙ − cₙ₋₁| ≤ tolerancia. La primera fila muestra «—» porque no tiene una
+        aproximación anterior. Un cambio pequeño no garantiza que la distancia a la raíz sea pequeña.</p>
+    </details>
+    <details>
+      <summary>Cambio relativo entre aproximaciones</summary>
+      <p>Divide |cₙ − cₙ₋₁| por |cₙ|, siempre que cₙ ≠ 0. Es una alternativa para comparar cambios
+        respecto de la magnitud de la aproximación. Cerca de cero es preferible un criterio absoluto.
+        No es el criterio seleccionado en esta demostración.</p>
+    </details>
+    <details>
+      <summary>Residuo |f(c)|</summary>
+      <p>Comprueba la cercanía de f(c) a cero. Multiplicar f por una constante cambia el residuo,
+        aunque las raíces y los cruces de las cuerdas sean iguales. Úsalo como información complementaria:
+        por sí solo no garantiza un error pequeño en x.</p>
+    </details>
+    <details>
+      <summary>¿Por qué no usar (b − a)/2?</summary>
+      <p>La cota del semiancho corresponde al punto medio; c no suele ser el punto medio en Regla Falsa.
+        Si la raíz está en [a, b], una cota válida para c es max(c − a, b − c).
+        Además, un extremo puede quedar fijo y el ancho no tender a cero, aunque c sí se acerque a la raíz.</p>
+    </details>
+    <aside class="fundamento convergencia">
+      <h3>¿Qué tan rápido converge?</h3>
+      <p>La convergencia suele ser lineal para raíces simples bajo condiciones regulares, sin el factor
+        fijo de reducción de Bisección. Una función casi recta puede favorecer el avance; una curvatura
+        marcada puede dejar un extremo fijo y hacerlo lento. En esta demostración, observa cómo b permanece en 2.</p>
+    </aside>
+  </section>
+
+  <section aria-labelledby="balance-titulo">
+    <h2 id="balance-titulo">Ventajas y limitaciones</h2>
+    <div class="balance">
+      <div class="tarjeta ventajas"><h3>✓ Ventajas</h3><ul>
+        <li>Conserva un intervalo con cambio de signo y una raíz dentro, si f es continua.</li>
+        <li>Aprovecha los valores de f en los extremos para elegir la aproximación.</li>
+        <li>No necesita derivadas.</li>
+        <li>Puede avanzar más rápido que Bisección cuando la función es casi lineal.</li>
+      </ul></div>
+      <div class="tarjeta limitaciones"><h3>! Limitaciones</h3><ul>
+        <li>Un extremo puede quedar fijo durante muchas iteraciones.</li>
+        <li>No reduce el intervalo a la mitad ni garantiza superar a Bisección.</li>
+        <li>Necesita continuidad y cambio de signo; puede no detectar raíces de multiplicidad par.</li>
+        <li>Un cambio pequeño entre aproximaciones puede ocultar un avance muy lento.</li>
+      </ul></div>
+    </div>
+  </section>
+  <section class="tarjeta consejos" aria-labelledby="consejos-titulo">
+    <h2 id="consejos-titulo">Consejos de uso</h2>
+    <ol>
+      <li>Revisa la continuidad y los signos de f(a) y f(b), y actualiza el valor de f del extremo que reemplazas.</li>
+      <li>Elige la tolerancia según la precisión y las unidades del problema.</li>
+      <li>Observa el residuo y los extremos junto al cambio absoluto para reconocer el estancamiento.</li>
+      <li>Establece un máximo de iteraciones. Si el avance es muy lento, considera Bisección o variantes como Illinois.</li>
+    </ol>
+  </section>
+</article>
