@@ -7,14 +7,9 @@ p, li { color: var(--c-texto-suave); }
 .introduccion { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--e-6); align-items: center; }
 .etiqueta { color: var(--c-acento); font-size: var(--t-xs); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: var(--e-2); }
 .formula { padding: var(--e-5); border: 2px solid var(--c-primario); border-radius: var(--r-lg); background: var(--c-superficie); text-align: center; display: grid; gap: var(--e-2); }
-.formula strong { color: var(--c-primario); font-size: clamp(1.1rem, 2.5vw, 1.6rem); display: flex; align-items: center; justify-content: center; gap: var(--e-2); }
-.fraccion { display: inline-flex; flex-direction: column; line-height: 1.5; }
-.fraccion span:first-child { border-bottom: 2px solid currentColor; }
-.fraccion span { padding: var(--e-1); }
-.formula > span { color: var(--c-texto-suave); font-size: var(--t-xs); }
+.formula strong { color: var(--c-primario); font-size: clamp(1.05rem, 2.2vw, 1.45rem); }
+.formula span { color: var(--c-texto-suave); font-size: var(--t-xs); }
 .formula small { color: var(--c-acento-oscuro); font-size: var(--t-xs); font-style: italic; }
-.fundamento { padding: var(--e-5); border-left: 4px solid var(--c-acento); background: var(--c-acento-suave); border-radius: var(--r-md); }
-.fundamento h3 { margin-bottom: var(--e-2); }
 .subtitulo { margin-bottom: var(--e-5); max-width: 75ch; }
 .tarjeta { background: var(--c-superficie); padding: var(--e-5); border: 1px solid var(--c-borde-suave); border-radius: var(--r-lg); }
 .demo { display: grid; gap: var(--e-4); min-width: 0; }
@@ -24,29 +19,27 @@ p, li { color: var(--c-texto-suave); }
 .insignia { display: inline-block; padding: var(--e-1) var(--e-3); color: var(--c-acento-oscuro); background: var(--c-acento-suave); border-radius: var(--r-full); font-size: var(--t-xs); font-weight: 600; }
 button, select { font: inherit; min-height: 44px; border: 1px solid var(--c-primario); border-radius: var(--r-sm); padding: var(--e-2) var(--e-3); }
 button { background: var(--c-primario); color: var(--c-sobre-primario); cursor: pointer; font-weight: 600; }
-button:hover:not(:disabled) { background: var(--c-primario-hover); color: var(--c-sobre-primario); }
+button:hover:not(:disabled) { background: var(--c-primario-hover); }
 button:disabled { opacity: .5; cursor: default; }
 button.secundario, select { background: var(--c-superficie); color: var(--c-primario); }
 button:focus-visible, select:focus-visible, summary:focus-visible, .tabla-scroll:focus-visible { outline: 3px solid var(--c-acento); outline-offset: 3px; }
 .grafica { width: 100%; height: auto; display: block; border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); background: var(--c-fondo); }
 .grafica text { fill: var(--c-texto-suave); font-size: 13px; font-family: var(--c-fuente); }
 .rejilla { stroke: var(--c-borde-suave); stroke-dasharray: 3 4; }
-.eje { stroke: var(--c-borde); }
-.banda { fill: var(--c-primario-suave); }
-.curva { fill: none; stroke: var(--c-texto); stroke-width: 2.5; }
-.extremo { stroke: var(--c-primario); stroke-width: 2; }
-.grafica .rotulo { fill: var(--c-primario); font-weight: 700; }
-.cuerda { stroke: var(--c-ok-texto); stroke-width: 2.5; stroke-dasharray: 7 3; }
-.anclaje { fill: var(--c-ok-texto); }
-.punto-linea { stroke: var(--c-error-texto); stroke-width: 2; stroke-dasharray: 4 3; }
-.punto, .grafica .rotulo-c { fill: var(--c-error-texto); }
-.leyenda { display: flex; flex-wrap: wrap; gap: var(--e-3); font-size: var(--t-xs); }
-.leyenda-cuerda { color: var(--c-ok-texto); }
-.leyenda-c { color: var(--c-error-texto); }
+.eje { stroke: var(--c-borde); }.curva { fill: none; stroke: var(--c-texto); stroke-width: 2.5; }
+.cuerda { stroke: var(--c-ok-texto); stroke-width: 1.4; opacity: .55; }
+.cuerda-actual { stroke: var(--c-error-texto); stroke-width: 2.8; opacity: 1; }
+.anclaje { fill: var(--c-primario); }.punto-linea { stroke: var(--c-error-texto); stroke-width: 2; stroke-dasharray: 4 3; }
+.punto, .rotulo-c { fill: var(--c-error-texto); }.grafica .rotulo { fill: var(--c-primario); font-weight: 700; }
 .indicadores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--e-3); margin: 0; }
 .indicadores div { border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); padding: var(--e-3); min-width: 0; }
 dt { color: var(--c-texto-suave); font-size: var(--t-xs); }
 dd { margin: var(--e-1) 0 0; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.grafica-error { border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); padding: var(--e-3); }
+.grafica-error svg { width: 100%; height: auto; display: block; background: var(--c-fondo); border-radius: var(--r-sm); }
+.grafica-error text { fill: var(--c-texto-suave); font-size: 12px; }.eje-error { stroke: var(--c-borde); }
+.barra-error { fill: var(--c-primario); opacity: .85; }.tolerancia-error { stroke: var(--c-ok-texto); stroke-dasharray: 5 4; }
+.cap { font-size: var(--t-xs); margin-top: var(--e-2); }
 .mensaje { padding: var(--e-3); border-radius: var(--r-sm); background: var(--c-primario-suave); color: var(--c-primario-hover); }
 .completado { color: var(--c-ok-texto); background: var(--c-ok-fondo); }
 .ayuda-tabla { font-size: var(--t-xs); }
@@ -54,35 +47,23 @@ dd { margin: var(--e-1) 0 0; font-weight: 700; font-variant-numeric: tabular-num
 table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: var(--t-xs); }
 caption { padding: var(--e-3); text-align: left; color: var(--c-texto-suave); }
 th, td { text-align: right; padding: var(--e-2) var(--e-3); white-space: nowrap; border-bottom: 1px solid var(--c-borde-suave); }
-thead, tbody th { background: var(--c-fondo); }
-tbody th { position: sticky; left: 0; }
-.ultima { background: var(--c-acento-suave); }
+thead, tbody th { background: var(--c-fondo); }tbody th { position: sticky; left: 0; }.ultima { background: var(--c-acento-suave); }
+.derivacion { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: var(--e-4); }
+.derivacion svg { width: 100%; height: auto; border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); background: var(--c-fondo); }
+.derivacion text { fill: var(--c-texto-suave); }.triangulo-grande { fill: var(--c-error-fondo); stroke: var(--c-error-texto); stroke-width: 2.5; }
+.triangulo-pequeno { fill: var(--c-ok-fondo); stroke: var(--c-ok-texto); stroke-width: 3; }.punto-grande { fill: var(--c-error-texto); }.punto-pequeno { fill: var(--c-ok-texto); }.punto-c { fill: var(--c-primario); }
+.ecuacion { color: var(--c-primario); font-weight: 700; margin-bottom: var(--e-3); }
 .pasos { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-3); }
 .pasos li { display: flex; align-items: flex-start; gap: var(--e-3); padding: var(--e-4); border: 1px solid var(--c-borde-suave); border-left: 4px solid var(--c-primario); border-radius: var(--r-md); background: var(--c-superficie); }
-.pasos li:nth-child(4) { border-left-color: var(--c-ok-texto); }
-.pasos li:last-child { grid-column: 1 / -1; }
-.pasos h3 { color: var(--c-texto); margin-bottom: var(--e-1); }
+.pasos li:nth-child(4) { border-left-color: var(--c-ok-texto); }.pasos li:last-child { grid-column: 1 / -1; }.pasos h3 { color: var(--c-texto); margin-bottom: var(--e-1); }
 .numero { display: grid; place-items: center; flex: 0 0 28px; height: 28px; border-radius: 50%; background: var(--c-primario); color: var(--c-sobre-primario); font-weight: 700; }
-details { border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); background: var(--c-superficie); margin-bottom: var(--e-3); }
-summary { cursor: pointer; padding: var(--e-4); font-weight: 600; }
-summary .insignia { margin-left: var(--e-2); }
-details p { padding: 0 var(--e-4) var(--e-4); }
+.details, details { border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); background: var(--c-superficie); margin-bottom: var(--e-3); }
+summary { cursor: pointer; padding: var(--e-4); font-weight: 600; }summary .insignia { margin-left: var(--e-2); }details p { padding: 0 var(--e-4) var(--e-4); }
 .criterio-principal { border: 2px solid var(--c-ok-texto); }
-.convergencia { margin-top: var(--e-5); }
 .balance { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-4); }
-.ventajas { border-top: 4px solid var(--c-ok-texto); }
-.limitaciones { border-top: 4px solid var(--c-error-texto); }
-.ventajas h3 { color: var(--c-ok-texto); }
-.limitaciones h3 { color: var(--c-error-texto); }
-ul, .consejos ol { padding-left: var(--e-5); margin-bottom: 0; }
-li + li { margin-top: var(--e-2); }
-.pasos li + li { margin-top: 0; }
-.consejos { border-top: 4px solid var(--c-primario); }
+.ventajas { border-top: 4px solid var(--c-ok-texto); }.limitaciones { border-top: 4px solid var(--c-error-texto); }.ventajas h3 { color: var(--c-ok-texto); }.limitaciones h3 { color: var(--c-error-texto); }
+ul, .consejos ol { padding-left: var(--e-5); margin-bottom: 0; }li + li { margin-top: var(--e-2); }.pasos li + li { margin-top: 0; }.consejos { border-top: 4px solid var(--c-primario); }
 @media (max-width: 720px) {
-  .introduccion, .pasos, .balance { grid-template-columns: minmax(0, 1fr); }
-  .indicadores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .tarjeta, .fundamento { padding: var(--e-4); }
-  .teoria { gap: var(--e-6); }
-  .acciones { width: 100%; }
-  .acciones button { flex: 1 1 auto; }
+  .introduccion, .pasos, .balance, .derivacion { grid-template-columns: minmax(0, 1fr); }
+  .indicadores { grid-template-columns: repeat(2, minmax(0, 1fr)); }.tarjeta { padding: var(--e-4); }.teoria { gap: var(--e-6); }.acciones { width: 100%; }.acciones button { flex: 1 1 auto; }.formula strong { font-size: 1rem; }
 }
