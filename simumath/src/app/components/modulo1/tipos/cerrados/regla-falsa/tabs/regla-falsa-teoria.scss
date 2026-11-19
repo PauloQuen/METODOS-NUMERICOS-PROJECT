@@ -29,7 +29,7 @@ button:focus-visible, select:focus-visible, summary:focus-visible, .tabla-scroll
 .eje { stroke: var(--c-borde); }.curva { fill: none; stroke: var(--c-texto); stroke-width: 2.5; }
 .cuerda { stroke: var(--c-ok-texto); stroke-width: 1.4; opacity: .55; }
 .cuerda-actual { stroke: var(--c-error-texto); stroke-width: 2.8; opacity: 1; }
-.anclaje { fill: var(--c-primario); }.punto-linea { stroke: var(--c-error-texto); stroke-width: 2; stroke-dasharray: 4 3; }
+.anclaje { fill: var(--c-primario); }.anclaje-linea { stroke: var(--c-primario); stroke-width: 2; stroke-dasharray: 4 3; }.punto-linea { stroke: var(--c-error-texto); stroke-width: 2; stroke-dasharray: 4 3; }
 .punto, .rotulo-c { fill: var(--c-error-texto); }.grafica .rotulo { fill: var(--c-primario); font-weight: 700; }
 .indicadores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--e-3); margin: 0; }
 .indicadores div { border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); padding: var(--e-3); min-width: 0; }

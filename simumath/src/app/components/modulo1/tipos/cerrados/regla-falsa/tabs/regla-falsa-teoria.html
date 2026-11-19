@@ -52,10 +52,16 @@
         }
 
         @if (actual(); as fila) {
+          <line class="anclaje-linea" [attr.x1]="px(fila.a)" [attr.x2]="px(fila.a)"
+            [attr.y1]="py(0)" [attr.y2]="py(funcion(fila.a))" />
+          <line class="anclaje-linea" [attr.x1]="px(fila.b)" [attr.x2]="px(fila.b)"
+            [attr.y1]="py(0)" [attr.y2]="py(funcion(fila.b))" />
           <circle class="anclaje" [attr.cx]="px(fila.a)" [attr.cy]="py(funcion(fila.a))" r="5" />
           <circle class="anclaje" [attr.cx]="px(fila.b)" [attr.cy]="py(funcion(fila.b))" r="5" />
-          <text class="rotulo" [attr.x]="px(fila.a) - 8" [attr.y]="py(funcion(fila.a)) + 18" text-anchor="end">a</text>
-          <text class="rotulo" [attr.x]="px(fila.b) - 8" [attr.y]="py(funcion(fila.b)) - 8" text-anchor="end">b</text>
+          <circle class="anclaje" [attr.cx]="px(fila.a)" [attr.cy]="py(0)" r="6" />
+          <circle class="anclaje" [attr.cx]="px(fila.b)" [attr.cy]="py(0)" r="6" />
+          <text class="rotulo" [attr.x]="px(fila.a) - 8" [attr.y]="py(0) - 8" text-anchor="end">a</text>
+          <text class="rotulo" [attr.x]="px(fila.b) + 8" [attr.y]="py(0) - 8">b</text>
           <line class="punto-linea" [attr.x1]="px(fila.c)" [attr.x2]="px(fila.c)"
             [attr.y1]="py(0)" [attr.y2]="py(fila.fc)" />
           <circle class="punto" [attr.cx]="px(fila.c)" [attr.cy]="py(fila.fc)" r="5" />
