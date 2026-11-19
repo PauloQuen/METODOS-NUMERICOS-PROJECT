@@ -16,12 +16,12 @@
   <section aria-labelledby="demo-titulo">
     <h2 id="demo-titulo">Pruébalo paso a paso</h2>
     <p class="subtitulo">f(x) = x³ − x − 2 en [1, 2]. Cada paso traza una cuerda entre los extremos;
-      observa los puntos c, el cambio relativo y el extremo que permanece fijo.</p>
+      observa los puntos c, el cambio absoluto y el extremo que permanece fijo.</p>
     <div class="tarjeta demo">
       <div class="controles">
         <span class="insignia">Regla Falsa · demostración</span>
         <div class="acciones">
-          <label for="rf-tolerancia">Tolerancia relativa</label>
+          <label for="rf-tolerancia">Tolerancia absoluta</label>
           <select id="rf-tolerancia" [value]="tolerancia()" (change)="cambiarTolerancia($event)">
             <option value="0.01">0,01</option>
             <option value="0.001">0,001</option>
@@ -67,25 +67,33 @@
       <dl class="indicadores">
         <div><dt>Iteración</dt><dd>{{ paso() }}</dd></div>
         <div><dt>Aproximación c</dt><dd>{{ formato(actual()?.c) }}</dd></div>
-        <div><dt>Error relativo |Δc|/|c|</dt><dd>{{ formatoPorcentaje(errorRelativo()) }}</dd></div>
+        <div><dt>Error absoluto |Δc|</dt><dd>{{ formato(errorAbsoluto()) }}</dd></div>
         <div><dt>Extremo fijo</dt><dd>{{ extremoFijo() ? extremoFijo() + ' (sin cambiar)' : '—' }}</dd></div>
       </dl>
 
       <div class="grafica-error">
-        <h3>Error relativo por iteración</h3>
-        <svg viewBox="0 0 600 130" role="img" aria-label="Cambio relativo por iteración">
-          <line x1="30" x2="590" y1="110" y2="110" class="eje-error" />
-          @for (fila of filas(); track fila.n) {
-            @if (fila.delta !== undefined && fila.c !== 0) {
-              <rect [attr.x]="38 + ($index * 46)" y="48"
-                [attr.width]="30" [attr.height]="62" class="barra-error" />
-              <text [attr.x]="53 + ($index * 46)" y="124" text-anchor="middle">{{ fila.n }}</text>
-            }
+        <h3>Error absoluto por iteración</h3>
+        <svg viewBox="0 0 600 130" role="img" aria-label="Error absoluto representado con barras por iteración">
+          <line x1="30" x2="590" y1="112" y2="112" class="eje-error" />
+          @for (marca of [0, 0.25, 0.5, 0.75, 1]; track $index) {
+            <line [attr.x1]="30 + marca * 560" [attr.x2]="30 + marca * 560" y1="30" y2="112" class="rejilla-error" />
           }
-          <line x1="30" x2="590" [attr.y1]="110 - 62 * (tolerancia() / 0.01)"
-            [attr.y2]="110 - 62 * (tolerancia() / 0.01)" class="tolerancia-error" />
+          @for (division of [30, 50.5, 71, 91.5, 112]; track $index) {
+            <line x1="30" x2="590" [attr.y1]="division" [attr.y2]="division" class="rejilla-error" />
+          }
+          @for (item of erroresPorIteracion(); track item.n; let indice = $index) {
+            <rect
+              [attr.x]="xError(indice, erroresPorIteracion().length) - anchoError(erroresPorIteracion().length) / 2"
+              [attr.y]="yError(item.error)"
+              [attr.width]="anchoError(erroresPorIteracion().length)"
+              [attr.height]="alturaError(item.error)"
+              class="barra-error" />
+            <text [attr.x]="xError(indice, erroresPorIteracion().length)" y="124" text-anchor="middle">{{ item.n }}</text>
+          }
+          <line x1="30" x2="590" [attr.y1]="yTolerancia()" [attr.y2]="yTolerancia()" class="tolerancia-error" />
+          <text x="590" [attr.y]="yTolerancia() - 5" text-anchor="end" class="etiqueta-tolerancia">tolerancia</text>
         </svg>
-        <p class="cap">La primera iteración no tiene comparación anterior. La línea punteada representa la tolerancia elegida.</p>
+        <p class="cap">La primera iteración no tiene comparación anterior. Cada rectángulo representa |cₙ − cₙ₋₁|; la barra termina bajo la línea punteada cuando cumple la tolerancia.</p>
       </div>
 
       <p class="mensaje" [class.completado]="terminado() && resultado().convergio" role="status">{{ mensaje() }}</p>
@@ -94,14 +102,14 @@
         <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
         <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de regla falsa">
           <table>
-            <caption>Intervalo, corte de la cuerda y cambio relativo</caption>
-            <thead><tr><th scope="col">n</th><th scope="col">a</th><th scope="col">b</th><th scope="col">c</th><th scope="col">f(c)</th><th scope="col">|cₙ − cₙ₋₁| / |cₙ|</th></tr></thead>
+            <caption>Intervalo, corte de la cuerda y cambio absoluto</caption>
+            <thead><tr><th scope="col">n</th><th scope="col">a</th><th scope="col">b</th><th scope="col">c</th><th scope="col">f(c)</th><th scope="col">|cₙ − cₙ₋₁|</th></tr></thead>
             <tbody>
               @for (fila of filas(); track fila.n) {
                 <tr [class.ultima]="fila.n === paso()">
                   <th scope="row">{{ fila.n }}</th><td>{{ formato(fila.a) }}</td><td>{{ formato(fila.b) }}</td>
                   <td>{{ formato(fila.c) }}</td><td>{{ formato(fila.fc) }}</td>
-                  <td>{{ fila.delta === undefined || fila.c === 0 ? '—' : formatoPorcentaje(valorAbsoluto(fila.delta / fila.c)) }}</td>
+                  <td>{{ formato(fila.delta) }}</td>
                 </tr>
               }
             </tbody>
@@ -146,9 +154,9 @@
     <h2 id="parada-titulo">¿Cuándo se detiene?</h2>
     <p class="subtitulo">El ancho del intervalo puede engañar porque un extremo permanece fijo.</p>
     <details class="criterio-principal" open>
-      <summary>Cambio relativo entre aproximaciones <span class="insignia">Por defecto del boceto</span></summary>
-      <p>Compara el corte actual con el anterior: |cₙ − cₙ₋₁| / |cₙ|.
-        Es invariante a la escala de f y muestra cuánto avanza el método. La primera iteración no tiene comparación anterior.</p>
+      <summary>Cambio absoluto entre aproximaciones <span class="insignia">Por defecto</span></summary>
+      <p>Compara el corte actual con el anterior: |cₙ − cₙ₋₁|.
+        Se detiene cuando esa cantidad es menor o igual a la tolerancia. La primera iteración no tiene comparación anterior.</p>
     </details>
     <details>
       <summary>Ancho del intervalo (b − a)</summary>
@@ -158,7 +166,7 @@
     <details>
       <summary>Residuo |f(c)|</summary>
       <p>Es sensible a la escala de la función. Multiplicar f por una constante puede cambiar el residuo
-        sin cambiar la raíz. Por eso no sustituye el cambio relativo entre aproximaciones.</p>
+        sin cambiar la raíz. Por eso no sustituye el cambio absoluto entre aproximaciones.</p>
     </details>
   </section>
 
@@ -185,7 +193,7 @@
     <ol>
       <li>Elige el intervalo más angosto posible que contenga la raíz.</li>
       <li>Comprueba la continuidad y f(a) · f(b) &lt; 0 antes de empezar.</li>
-      <li>Usa el cambio relativo entre cortes, no el ancho del intervalo.</li>
+      <li>Usa el cambio absoluto entre cortes, no el ancho del intervalo.</li>
       <li>Si un extremo lleva muchas iteraciones fijo, considera Bisección o una variante modificada.</li>
       <li>Establece un máximo de iteraciones y verifica el residuo como comprobación adicional.</li>
     </ol>

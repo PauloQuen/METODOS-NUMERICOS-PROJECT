@@ -38,7 +38,10 @@ dd { margin: var(--e-1) 0 0; font-weight: 700; font-variant-numeric: tabular-num
 .grafica-error { border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); padding: var(--e-3); }
 .grafica-error svg { width: 100%; height: auto; display: block; background: var(--c-fondo); border-radius: var(--r-sm); }
 .grafica-error text { fill: var(--c-texto-suave); font-size: 12px; }.eje-error { stroke: var(--c-borde); }
-.barra-error { fill: var(--c-primario); opacity: .85; }.tolerancia-error { stroke: var(--c-ok-texto); stroke-dasharray: 5 4; }
+.rejilla-error { stroke: var(--c-borde-suave); stroke-dasharray: 3 4; }
+.barra-error { fill: var(--c-primario); opacity: .85; stroke: var(--c-primario-hover); stroke-width: 1; }
+.tolerancia-error { stroke: var(--c-ok-texto); stroke-width: 2.5; stroke-dasharray: 7 5; }
+.etiqueta-tolerancia { fill: var(--c-ok-texto); font-size: 12px; font-weight: 700; }
 .cap { font-size: var(--t-xs); margin-top: var(--e-2); }
 .mensaje { padding: var(--e-3); border-radius: var(--r-sm); background: var(--c-primario-suave); color: var(--c-primario-hover); }
 .completado { color: var(--c-ok-texto); background: var(--c-ok-fondo); }
