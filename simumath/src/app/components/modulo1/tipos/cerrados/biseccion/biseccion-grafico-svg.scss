@@ -1,0 +1,66 @@
+:host { display: block; min-width: 0; }
+
+.grafico {
+  position: relative;
+  width: 100%;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  background: var(--c-fondo);
+  touch-action: pan-y;
+}
+
+.controles {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--c-superficie) 92%, transparent);
+  backdrop-filter: blur(4px) saturate(1.05);
+  box-shadow: var(--sombra-2);
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--c-texto-suave);
+  cursor: pointer;
+
+  &:hover { background: var(--c-primario-suave); color: var(--c-primario); }
+  &:focus-visible { outline: 2px solid var(--c-acento); outline-offset: 2px; }
+  .material-symbols-outlined { font-size: 1.15rem; }
+}
+
+text {
+  fill: var(--c-texto-suave);
+  font-family: var(--c-fuente);
+  font-size: 12px;
+}
+
+.etiqueta-eje { fill: var(--c-texto); font-weight: 700; }
+.rejilla { stroke: var(--c-borde-suave); stroke-dasharray: 3 4; }
+.eje { stroke: var(--c-borde); stroke-width: 1.4; }
+.curva { fill: none; stroke: var(--c-texto); stroke-width: 2.5; }
+/* Igual que en Teoría: la banda se dibuja ANTES de la curva, así que nunca
+   la tapa aunque el intervalo sea muy angosto. */
+.banda { fill: var(--c-primario-suave); }
+.extremo { stroke: var(--c-primario); stroke-width: 2; stroke-dasharray: 5 4; }
+.rotulo { fill: var(--c-primario); font-weight: 700; font-size: 13px; }
+.punto-linea { stroke: var(--c-error-texto); stroke-width: 2; stroke-dasharray: 4 3; }
+.punto, .rotulo-c { fill: var(--c-error-texto); }
+.rotulo-c { font-weight: 700; font-size: 13px; }

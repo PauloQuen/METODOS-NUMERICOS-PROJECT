@@ -1,0 +1,140 @@
+<article class="ejemplo-teoria" [attr.aria-labelledby]="'ejemplo-' + indice() + '-titulo'">
+  <header class="ejemplo-teoria__encabezado">
+    <div>
+      <p class="etiqueta">Ejemplo {{ indice() + 1 }} de 4 · Bisección</p>
+      <h3 class="ejemplo-teoria__titulo" [id]="'ejemplo-' + indice() + '-titulo'">{{ ejemplo().titulo }}</h3>
+    </div>
+  </header>
+
+  @if (esCasuistica() && ejemplo().enunciado) {
+    <section class="ejemplo-teoria__seccion">
+      <h4>Enunciado</h4>
+      <p>{{ ejemplo().enunciado }}</p>
+    </section>
+  }
+
+  @if (esCasuistica() && ejemplo().extraccion) {
+    <section class="ejemplo-teoria__seccion">
+      <h4>Extracción de datos</h4>
+      <p>{{ ejemplo().extraccion!.busqueda }}</p>
+      <div class="ejemplo-teoria__tabla-scroll" tabindex="0" role="region" aria-label="Datos extraídos del enunciado">
+        <table>
+          <thead><tr><th scope="col">Símbolo</th><th scope="col">Valor</th><th scope="col">¿Qué es?</th></tr></thead>
+          <tbody>
+            @for (dato of ejemplo().extraccion!.datos; track dato.simbolo) {
+              <tr><th scope="row">{{ dato.simbolo }}</th><td>{{ dato.valor }}</td><td>{{ dato.queEs }}</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p>{{ ejemplo().extraccion!.formulacion }}</p>
+    </section>
+  }
+
+  <div class="contexto">
+  <section class="ejemplo-teoria__seccion tarjeta">
+    <h4>Planteamiento</h4>
+    <p>{{ ejemplo().ecuacion }}</p>
+    @if (ejemplo().parametros.length > 0) {
+      <ul class="ejemplo-teoria__lista">
+        @for (parametro of ejemplo().parametros; track parametro.etiqueta) {
+          <li><strong>{{ parametro.etiqueta }}:</strong> {{ parametro.valor }}</li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="ejemplo-teoria__seccion tarjeta">
+    <h4>Interpretación</h4>
+    <p>{{ ejemplo().interpretacion }}</p>
+  </section>
+  </div>
+
+  <section [attr.aria-labelledby]="'ejemplo-' + indice() + '-demo'">
+    <h4 class="ejemplo-teoria__h2" [id]="'ejemplo-' + indice() + '-demo'">Pruébalo paso a paso</h4>
+    <p class="subtitulo">Observa el intervalo de cada iteración: la franja azul se achica y la curva siempre queda visible.</p>
+    <ui-card padding="md">
+      <div class="demo">
+        <div class="controles">
+          <span class="insignia">Bisección · ejemplo {{ indice() + 1 }}</span>
+          <div class="acciones">
+            <span>Tolerancia: {{ formato(ejemplo().calculo.tol) }}</span>
+            <button type="button" (click)="siguiente()" [disabled]="terminado()">Siguiente paso</button>
+            <button type="button" class="secundario" (click)="reiniciar()">Reiniciar</button>
+          </div>
+        </div>
+
+        <app-biseccion-grafico-svg
+          [funcion]="funcion()"
+          [iteraciones]="filas()"
+          [pasoActual]="paso() - 1"
+          [intervaloInicial]="intervalo()"
+          [mostrarControles]="false"
+          [rango]="rango()"
+          [leyenda]="ejemplo().ecuacion"
+        />
+
+        <dl class="indicadores">
+          <div><dt>Iteración</dt><dd>{{ actual()?.n ?? 0 }}</dd></div>
+          <div>
+            <dt>Ancho evaluado</dt>
+            <dd>{{ formato(intervalo().b - intervalo().a) }}</dd>
+          </div>
+          <div><dt>Aproximación c</dt><dd>{{ actual() ? formato(actual()!.c) : '—' }}</dd></div>
+          <div><dt>Cota (b − a)/2</dt><dd>{{ actual() ? formato(actual()!.error) : '—' }}</dd></div>
+        </dl>
+
+        <p class="mensaje" [class.completado]="terminado() && calculo().convergio" role="status">{{ mensaje() }}</p>
+
+        @if (historial().length) {
+          <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
+          <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de bisección">
+            <table>
+              <caption>Intervalo y cota de error de cada punto medio</caption>
+              <thead>
+                <tr>
+                  <th scope="col">n</th><th scope="col">a</th><th scope="col">b</th>
+                  <th scope="col">c</th><th scope="col">f(c)</th><th scope="col">(b − a)/2</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (fila of historial(); track fila.n) {
+                  <tr [class.ultima]="esUltima(fila)" [class.cumple]="cumpleCriterio(fila)">
+                    <th scope="row">{{ fila.n }}</th>
+                    <td>{{ formato(fila.a) }}</td>
+                    <td>{{ formato(fila.b) }}</td>
+                    <td>{{ formato(fila.c) }}</td>
+                    <td>{{ formato(fila.fc) }}</td>
+                    <td>{{ formato(fila.error) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </ui-card>
+  </section>
+
+  <section [attr.aria-labelledby]="'ejemplo-' + indice() + '-pasos'">
+    <h4 class="ejemplo-teoria__h2" [id]="'ejemplo-' + indice() + '-pasos'">Los pasos del algoritmo</h4>
+    <p class="subtitulo">Verifica las condiciones una vez; después repite desde el punto medio hasta cumplir la tolerancia.</p>
+    <ol class="pasos">
+      @for (paso of pasosAlgoritmo; track $index) {
+        <li>
+          <span class="numero" aria-hidden="true">{{ $index + 1 }}</span>
+          <div><h5>{{ paso[0] }}</h5><p>{{ paso[1] }}</p></div>
+        </li>
+      }
+    </ol>
+    <aside class="fundamento">
+      <h5>Aplicado a este ejemplo</h5>
+      <p>{{ ejemplo().algoritmo }}</p>
+    </aside>
+  </section>
+
+  <section class="tarjeta">
+    <h4 class="ejemplo-teoria__h2">Conclusión y respuesta</h4>
+    <p class="conclusion">{{ ejemplo().conclusion }}</p>
+  </section>
+</article>

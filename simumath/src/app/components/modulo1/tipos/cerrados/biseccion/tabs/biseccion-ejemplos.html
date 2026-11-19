@@ -3,23 +3,20 @@
     <h2 class="ejemplos__titulo">Ejemplos resueltos</h2>
     <p class="ejemplos__intro">
       Acá están los cuatro ejemplos de Bisección, dos numéricos y dos de casuística.
-      Cada tabla y cada gráfico se calculan corriendo el algoritmo con los datos del
-      enunciado, así que podés reproducir cada paso con la calculadora de la
-      última pestaña.
+      Cada uno sigue la misma estructura que la teoría: gráfico, indicadores,
+      historial y pasos del algoritmo. Todas las tablas y
+      gráficas se calculan corriendo el algoritmo con los datos del enunciado.
     </p>
   </header>
 
-  @for (ejemplo of ejemplos; track ejemplo.titulo) {
+  @for (ejemplo of ejemplos; track ejemplo.titulo; let i = $index) {
     <section class="ejemplos__bloque">
-      <app-bloque-ejemplo
+      <app-biseccion-ejemplo
         [ejemplo]="ejemplo"
-        [funcion]="funcionDe($index)"
-        [filas]="calculoDe($index).filas"
-        [columnas]="columnas"
-        [filaFinal]="calculoDe($index).filaFinal"
-        [rango]="rangoDe($index)"
-        [dibujarMetodo]="dibujar"
-        [raiz]="calculoDe($index).raiz"
+        [calculo]="calculoDe(i)"
+        [funcion]="funciones[i]"
+        [rango]="rangos[i]"
+        [indice]="i"
       />
     </section>
   }

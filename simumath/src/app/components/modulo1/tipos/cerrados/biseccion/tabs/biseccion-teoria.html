@@ -100,32 +100,17 @@
   <section aria-labelledby="parada-titulo">
     <h2 id="parada-titulo">¿Cuándo se detiene?</h2>
     <p class="subtitulo">Distingue una cota garantizada del error de un indicador de cercanía.</p>
-    <details class="criterio-principal" open>
-      <summary>Cota del intervalo <span class="insignia">Por defecto</span></summary>
-      <p>Para el punto medio, |c − raíz| ≤ (b − a)/2. Se detiene cuando esta cota es menor o igual
-        que la tolerancia. No mide el error real: lo acota, siempre que se mantengan las condiciones de Bolzano.</p>
-    </details>
-    <details>
-      <summary>Residuo |f(c)|</summary>
-      <p>Mide la cercanía de f(c) a cero, no la distancia de c a la raíz. Si multiplicas la función por
-        1000 y mantienes la tolerancia, el residuo aumenta y el criterio puede requerir más iteraciones.
-        Un residuo pequeño no garantiza por sí solo un error pequeño en x.</p>
-    </details>
-    <details>
-      <summary>Residuo normalizado</summary>
-      <p>Divide |f(c)| por una escala de referencia de la función, positiva y explícitamente definida.
-        Puede reducir la sensibilidad al escalado, pero no sustituye la cota del intervalo.</p>
-    </details>
-    <details>
-      <summary>Cambio entre aproximaciones</summary>
-      <p>Compara |cₙ − cₙ₋₁|, o su versión relativa |cₙ − cₙ₋₁| / |cₙ| cuando cₙ ≠ 0.
-        Es un indicador a posteriori; cerca de cero conviene usar una tolerancia absoluta.</p>
-    </details>
+    @for (criterio of criterios; track criterio.titulo) {
+      <details [class.criterio-principal]="criterio.principal" [open]="criterio.principal">
+        <summary>{{ criterio.titulo }}
+          @if (criterio.insignia) { <span class="insignia">{{ criterio.insignia }}</span> }
+        </summary>
+        <p>{{ criterio.texto }}</p>
+      </details>
+    }
     <aside class="fundamento convergencia">
       <h3>¿Qué tan rápido converge?</h3>
-      <p>El ancho se reduce por un factor de 1/2 en cada reducción: Lₖ = (b₀ − a₀)/2ᵏ.
-        En el n-ésimo punto medio (n empieza en 1), la cota es (b₀ − a₀)/2ⁿ.
-        La reducción de esta cota es lineal y permite anticipar el número de iteraciones.</p>
+      <p>{{ convergencia }}</p>
     </aside>
   </section>
 

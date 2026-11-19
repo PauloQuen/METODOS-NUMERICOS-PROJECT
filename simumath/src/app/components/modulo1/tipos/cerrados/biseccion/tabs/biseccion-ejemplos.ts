@@ -1,9 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { EJEMPLOS_BISECCION } from '../biseccion.contenido';
-import { COLUMNAS_BISECCION } from '../biseccion.config';
 import { BiseccionService, type BiseccionEstado } from '../biseccion.service';
-import { dibujarBiseccion } from '../biseccion.grafico';
-import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bloque-ejemplo';
+import { BiseccionEjemplo } from '../biseccion-ejemplo';
 
 /**
  * PESTAÑA DE EJEMPLOS de Bisección.
@@ -15,13 +13,15 @@ import { BloqueEjemplo } from '../../../../../../shared/domain/bloque-ejemplo/bl
  * con 4 ejemplos se corra el algoritmo 4 veces por ciclo de detección
  * de cambios, y con más ejemplos se nota.
  *
- * Los datos del ejemplo están verificados en los tests, así que si el
- * cálculo falla, es que alguien cambió el contenido sin recalcular.
+ * ── Misma estructura que Teoría ──────────────────────────────────────
+ * El layout de cada ejemplo (gráfico, indicadores, mensaje, historial,
+ * pasos del algoritmo, criterios de parada y conclusión) vive en
+ * `BiseccionEjemplo`, que comparte los textos con la pestaña Teoría.
  */
 @Component({
   selector: 'app-biseccion-ejemplos',
   standalone: true,
-  imports: [BloqueEjemplo],
+  imports: [BiseccionEjemplo],
   templateUrl: './biseccion-ejemplos.html',
   styleUrl: './biseccion-ejemplos.scss',
 })
@@ -30,9 +30,6 @@ export class BiseccionEjemplos {
 
   /** Los ejemplos del contenido: 2 numéricos y 2 casuísticas. */
   readonly ejemplos = EJEMPLOS_BISECCION;
-
-  readonly columnas = COLUMNAS_BISECCION;
-  readonly dibujar = dibujarBiseccion;
 
   /**
    * El cálculo de cada ejemplo, ya hecho.
@@ -50,15 +47,7 @@ export class BiseccionEjemplos {
     return this.calculos[indice];
   }
 
-  /** La función ya parseada de ese ejemplo, para el gráfico. */
-  protected funcionDe(indice: number): (x: number) => number {
-    return this.servicio.funcionDeEjemplo(this.ejemplos[indice]);
-  }
-
-  /** El rango del eje X de ese ejemplo. */
-  protected rangoDe(indice: number): { min: number; max: number } {
-    return this.servicio.rangoPara(this.ejemplos[indice].calculo);
-  }
-
-  /** Las claves del gráfico: bisección usa a, b y c. */
+  /** Funciones ya parseadas y rangos, estables para no recalcular la escala del SVG en cada ciclo. */
+  protected readonly funciones = this.ejemplos.map((e) => this.servicio.funcionDeEjemplo(e));
+  protected readonly rangos = this.ejemplos.map((e) => this.servicio.rangoPara(e.calculo));
 }
