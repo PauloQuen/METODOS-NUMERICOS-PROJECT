@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { DemoIteracion, ResumenIteracion } from '../../shared/demo-iteracion';
+import { PASOS_PUNTO_FIJO } from '../punto-fijo-pasos';
 
 interface Despeje {
   etiqueta: string;
@@ -310,15 +311,7 @@ export class PuntoFijoTeoria {
     return null;
   });
 
-  readonly pasos = [
-    ['error', 'Reescribe la ecuación', 'Despeja la incógnita de f(x) = 0 para tener x = g(x) y elige una semilla x₀ cerca de la raíz. No hay intervalo.'],
-    ['primario', 'Evalúa g(x₀)', 'Si da exactamente x₀, ya es el punto fijo.'],
-    ['primario', 'Guarda x₁ = g(x₀)', 'Y mide el desplazamiento |Δx| = |x₁ − x₀|.'],
-    ['acento', 'Proyecta contra la diagonal', 'El siguiente paso arranca en x₁, no en g(x₀): cada punto rebota contra y = x.'],
-    ['ok', 'Compara con la tolerancia', 'Si |Δx| queda debajo, para y devuelve el último punto como aproximación.'],
-    ['neutro', 'Repite desde el paso 2', 'Con el punto nuevo: la reescritura se evalúa siempre sobre la última x.'],
-    ['error', 'Revisa el tope y el resultado', 'Si se agota el máximo de iteraciones, avisa que no convergió. Verifica además que g(raíz) = raíz: un punto fijo de g que no anule f delata una reescritura mal elegida.'],
-  ];
+  readonly pasos = PASOS_PUNTO_FIJO;
 
   readonly casos = [
     ['0 < g′ < 1', 'ok', 'Convergencia monótona: la escalera baja o sube en un solo sentido.'],

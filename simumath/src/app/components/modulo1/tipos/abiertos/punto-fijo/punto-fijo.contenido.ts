@@ -365,69 +365,58 @@ export const TEORIA_PUNTO_FIJO: ContenidoTeoria = {
 /* EJEMPLOS                                                            */
 /* ================================================================== */
 
-export const EJEMPLOS_PUNTO_FIJO: Ejemplo[] = [
+export interface EjemploPuntoFijo extends Ejemplo {
+  obtencionG: { pasos: string[]; dominio: string };
+}
+
+export const EJEMPLOS_PUNTO_FIJO: EjemploPuntoFijo[] = [
   {
-    id: 'punto-fijo-ej1-dottie',
-    titulo: 'La constante que se mira a sí misma',
+    id: 'punto-fijo-ej1-monotono',
+    obtencionG: {
+      pasos: ['Partimos de x − cos(x) = 0, es decir, x = cos(x).', 'Sumamos 3x a ambos lados: 4x = 3x + cos(x). Dividimos entre 4.', 'Definimos g(x) = (3x + cos(x))/4. Esta combinación del valor anterior con cos(x) suaviza los pasos sin cambiar el punto fijo.'],
+      dominio: 'g está definida para todo x real; el coseno se evalúa en radianes. En [0, 1], g lleva el intervalo a sí mismo y 0 < g′(x) = (3 − sen(x))/4 ≤ 0.75 < 1.',
+    },
+    titulo: 'Una aproximación gradual al punto de equilibrio del coseno',
     tipo: 'numerico',
     enunciado:
-      'Resolver x − cos(x) = 0, la ecuación de la constante de Dottie: el ' +
-      'único punto donde la recta y = x toca la curva y = cos(x). No tiene ' +
-      'solución con fórmula; se despeja x = cos(x) y se arranca de una ' +
-      'semilla x₀ = 1.',
+      'Resolver x − cos(x) = 0 mediante g(x) = (3x + cos(x))/4, desde x₀ = 0.1. ' +
+      'Observa cómo las aproximaciones crecen hacia el equilibrio sin cruzarlo.',
     ecuacion: 'x − cos(x) = 0',
     parametros: [
-      { etiqueta: 'Reescritura', valor: 'g(x) = cos(x)' },
-      { etiqueta: 'Semilla', valor: 'x₀ = 1' },
-      { etiqueta: 'Tolerancia', valor: '10⁻⁵' },
+      { etiqueta: 'g(x)', valor: 'g(x) = (3x + cos(x))/4' },
+      { etiqueta: 'Semilla', valor: 'x₀ = 0.1' },
+      { etiqueta: 'Tolerancia', valor: '0.0001' },
     ],
     interpretacion:
-      'La constante de Dottie es 0.7390851332..., sin expresión con ' +
-      'elementos elementales: solo se obtiene iterando. Acá el punto fijo ' +
-      'paga caro la reescritura: g′(x) = −sen(x) vale ≈ −0.674 en la raíz, ' +
-      'muy cerca de −1, y cada paso borra poquísimo. El costo: 29 ' +
-      'iteraciones, contra las 17 de la bisección, las 5 de la regla falsa ' +
-      'y de la secante, y las 4 de Newton. Igual las da todas gratis: sin ' +
-      'derivada, sin intervalo, una sola semilla.',
+      'La función combina el 75 % del valor anterior con el 25 % de cos(x). ' +
+      'Desde 0.1, los valores aumentan hacia 0.739085 sin oscilar. ' +
+      'La pendiente positiva y menor que 1 produce una escalera monótona; ' +
+      'los primeros saltos, aproximadamente 0.223751, 0.156074 y 0.101813, disminuyen gradualmente.',
     pasos: [
-      'Paso 0 — Reescritura y semilla: x = cos(x), con x₀ = 1 (en ' +
-        'radianes). Primera evaluación: g(1) = cos(1) = 0.54030231. El ' +
-        'primer rebote es enorme: |Δx| = 0.45969769.',
-      'Paso 1 — x₁ = g(x₀) = cos(1) = 0.54030231, con |Δx| = 0.45969769. ' +
-        'La siguiente evaluación, g(0.54030231), ya vale 0.85755322.',
-      'Paso 2 — x₂ = g(x₁) = cos(0.54030231) = 0.85755322 con |Δx| = ' +
-        '0.31725091: la telaraña oscila pero se achica.',
-      'Paso 3 — x₃ = g(x₂) = 0.65428979 con |Δx| = 0.20326343, y la ' +
-        'evaluación siguiente da 0.79348036.',
-      'Paso 4 — la alternancia sigue contrayéndose: 0.13919057, 0.09211159, ' +
-        '0.06259091, 0.04185726, 0.02831534, 0.01901372, 0.01283331... ' +
-        'cada valor multiplica al anterior por ≈0.674, el módulo de g′.',
-      'Paso 5 — y así hasta la iteración 29, donde el |Δx| queda en ' +
-        '7.04 × 10⁻⁶, recién ahí por debajo de la tolerancia.',
+      'Paso 0 — Se define g(x) = (3x + cos(x))/4 y se parte de x₀ = 0.1.',
+      'Paso 1 — x₁ = g(0.1) ≈ 0.323751; |Δx| ≈ 0.223751.',
+      'Paso 2 — x₂ ≈ 0.479825; |Δx| ≈ 0.156074.',
+      'Paso 3 — x₃ ≈ 0.581638; |Δx| ≈ 0.101813.',
+      'Los siguientes valores siguen creciendo hacia el punto fijo. En la iteración 17 el desplazamiento es menor que 0.0001.',
     ],
     algoritmo:
-      'La tabla es la demostración de la convergencia lineal: el cociente ' +
-      'entre deltas consecutivos se estabiliza en ≈0.674, que es ' +
-      'exactamente |g′(raíz)| = |−sen(0.7390823)|. Esa es la firma del ' +
-      'punto fijo: el error se multiplica por una constante menor que 1, y ' +
-      'cuando esa constante está cerca de 1 el método tarda — acá, 29 ' +
-      'pasos para borrar un 0.45969769 inicial.',
+      'Se evalúa (3x + cos(x))/4 sobre la última aproximación. La escalera avanza ' +
+      'desde abajo sin alternar a ambos lados de la raíz; los desplazamientos ' +
+      'se reducen con un factor que tiende a g′(raíz) ≈ 0.581597.',
     criterio:
-      'Se detiene en la iteración 29, cuando |Δx| = 7.04 × 10⁻⁶ < 10⁻⁵. ' +
-      'Veintinueve pasos, la peor marca del módulo en este ejemplo, con el ' +
-      'único costo de evaluar cos.',
+      'Se detiene en la iteración 17: |Δx| ≈ 0.000061 < 0.0001. El desplazamiento es un indicador a posteriori, no el error real.',
     conclusion:
-      'La raíz es x ≈ 0.73908230 (la constante de Dottie vale ' +
-      '0.7390851332...): el desplazamiento final fue de 7.1 × 10⁻⁶, por ' +
-      'debajo de la tolerancia de 1 × 10⁻⁵, y la diferencia real con el ' +
-      'valor exacto es de 2.8 × 10⁻⁶, apenas formato de la tabla. Fueron ' +
-      '29 iteraciones, contra las 17 de la bisección, las 5 de la regla ' +
-      'falsa y de la secante, y las 4 de Newton: el costo de no usar ' +
-      'derivada ni intervalo, pagado en la reescritura.',
-    calculo: { funcion: 'cos(x)', x0: 1, tol: 1e-5 },
+      'Tras 17 iteraciones monótonas, x ≈ 0.739. El punto fijo satisface ' +
+      'x = cos(x) y su valor de referencia es aproximadamente 0.739085. ' +
+      'La combinación elegida evita las oscilaciones de g(x) = cos(x).',
+    calculo: { funcion: '(3*x + cos(x))/4', x0: 0.1, tol: 0.0001 },
   },
   {
     id: 'punto-fijo-ej2-lambert',
+    obtencionG: {
+      pasos: ['Partimos de x · eˣ = 1.', 'Dividimos por eˣ, que siempre es positivo: x = 1/eˣ = e⁻ˣ.', 'Definimos g(x) = e⁻ˣ, de modo que xₙ₊₁ = e^(−xₙ).'],
+      dominio: 'g está definida para todo x real; sus valores son positivos.',
+    },
     titulo: 'El gasto que se paga a sí mismo',
     tipo: 'numerico',
     enunciado:
@@ -484,6 +473,10 @@ export const EJEMPLOS_PUNTO_FIJO: Ejemplo[] = [
   },
   {
     id: 'punto-fijo-ej3-puente',
+    obtencionG: {
+      pasos: ['Partimos de λ · e^λ = 5, con λ > 0 por su significado físico.', 'Dividimos por λ: e^λ = 5/λ. Aplicamos el logaritmo natural: λ = ln(5/λ).', 'Definimos g(λ) = ln(5/λ), de modo que λₙ₊₁ = ln(5/λₙ).'],
+      dominio: 'Se exige λ > 0 para evaluar ln(5/λ). Cada nuevo valor debe seguir siendo positivo para continuar.',
+    },
     titulo: 'El cable que cuelga y el número e',
     tipo: 'casuistica',
     enunciado:
@@ -578,91 +571,76 @@ export const EJEMPLOS_PUNTO_FIJO: Ejemplo[] = [
     calculo: { funcion: 'ln(5/x)', x0: 1, tol: 1e-4 },
   },
   {
-    id: 'punto-fijo-ej4-ph',
-    titulo: 'El pH que converge en tres pasos',
+    id: 'punto-fijo-ej4-tanque',
+    obtencionG: {
+      pasos: ['En cada ciclo se conserva el 60 % de la concentración anterior y se añade una dosis equivalente a 4 mg/L.', 'En equilibrio, la concentración no cambia: x = 0.6x + 4; equivalentemente, 0.4x − 4 = 0.', 'Definimos g(x) = 0.6x + 4 y calculamos xₙ₊₁ = 0.6xₙ + 4.'],
+      dominio: 'g está definida para todo x real. Físicamente se usan concentraciones no negativas. Desde x₀ = 0, todos los valores permanecen en [0, 10] mg/L.',
+    },
+    titulo: 'La concentración de un tanque que sube hasta el equilibrio',
     tipo: 'casuistica',
     enunciado:
-      'En un laboratorio se prepara ácido acético 0.1 M, con Ka = 1.8 × ' +
-      '10⁻⁵. La concentración de H⁺, x (en mol/L), cumple x² = Ka·(0.1 − x), ' +
-      'o sea x = √(Ka·(0.1 − x)). Se arranca de x₀ = 0.001 mol/L, un valor ' +
-      'típico para un ácido débil de esa concentración, y se pide precisión ' +
-      'de 10⁻⁶.',
-    ecuacion: 'x² + 1.8×10⁻⁵·x − 1.8×10⁻⁶ = 0',
+      'Un tanque de volumen constante pasa por ciclos de renovación y dosificación. ' +
+      'Cada ciclo conserva el 60 % del soluto anterior y añade una dosis equivalente ' +
+      'a 4 mg/L. Partiendo de agua limpia, x₀ = 0, calcula la concentración de ' +
+      'equilibrio con tolerancia de 0.0005 mg/L entre ciclos consecutivos.',
+    ecuacion: '0.4x − 4 = 0',
     parametros: [
-      { etiqueta: 'Reescritura', valor: 'g(x) = √(1.8×10⁻⁵·(0.1 − x))' },
-      { etiqueta: 'Semilla', valor: 'x₀ = 0.001 mol/L' },
-      { etiqueta: 'Tolerancia', valor: '10⁻⁶' },
+      { etiqueta: 'g(x)', valor: 'g(x) = 0.6x + 4' },
+      { etiqueta: 'Semilla', valor: 'x₀ = 0 mg/L' },
+      { etiqueta: 'Tolerancia', valor: '0.0005 mg/L' },
     ],
     extraccion: {
       busqueda:
-        'la concentración x de H⁺ en el equilibrio del ácido débil: la raíz ' +
-        'de x² = Ka·(0.1 − x), que después se convierte en pH = −log₁₀(x) ' +
-        'para reportar el resultado del laboratorio.',
+        'La concentración x de soluto que se mantiene constante entre dos ciclos de renovación y dosificación.',
       datos: [
         {
           simbolo: 'x₀',
-          valor: '0.001 mol/L',
+          valor: '0 mg/L',
           queEs:
-            'semilla: valor típico de H⁺ para un ácido débil 0.1 M, el orden de magnitud correcto',
+            'Concentración inicial: agua limpia.',
         },
         {
-          simbolo: 'Ka',
-          valor: '1.8 × 10⁻⁵',
+          simbolo: 'r',
+          valor: '0.6',
           queEs:
-            'constante de acidez del ácido acético, el dato de la tabla de equilibrios',
+            'Fracción de soluto que permanece tras cada renovación.',
         },
         {
-          simbolo: 'C',
-          valor: '0.1 M',
+          simbolo: 'd',
+          valor: '4 mg/L',
           queEs:
-            'concentración analítica inicial del ácido, la que se preparó en el laboratorio',
+            'Incremento de concentración por la dosis añadida en cada ciclo.',
         },
       ],
       formulacion:
-        'Se despeja la x como punto fijo: de x² = Ka·(0.1 − x) sale ' +
-        'x = √(Ka·(0.1 − x)), con Ka = 1.8 × 10⁻⁵ y C = 0.1 M. La semilla ' +
-        'x₀ = 0.001 mol/L es un valor típico del orden de magnitud: la ' +
-        'química no necesita más que eso para arrancar. Y esta reescritura ' +
-        'es una joya: g′(x) = −Ka/(2·√(Ka·(0.1 − x))) vale ≈ −0.0067 en la ' +
-        'raíz, casi cero, así que el punto fijo va a converger rapidísimo.',
+        'El balance por ciclo es xₙ₊₁ = r·xₙ + d = 0.6xₙ + 4. En equilibrio ' +
+        'xₙ₊₁ = xₙ = x, de modo que x = 0.6x + 4 y f(x) = 0.4x − 4 = 0.',
     },
     interpretacion:
-      'Cuando |g′| es chico, el punto fijo vuela: acá g′ ≈ −0.0067, y el ' +
-      'método cierra en SOLO 3 iteraciones — le gana hasta a Newton (5), a ' +
-      'la secante (7), a la regla falsa (11) y a la bisección (18). En el ' +
-      'laboratorio esto significa: tres cuentas de la planilla y el pH ya ' +
-      'está calculado.',
+      'Como g′(x) = 0.6, cada ciclo conserva el 60 % de la distancia al ' +
+      'equilibrio de 10 mg/L. Desde agua limpia, la concentración aumenta ' +
+      'sin sobrepasar ese valor. La escalera monótona muestra pasos grandes ' +
+      'al principio y cada vez más cortos después.',
     pasos: [
-      'Paso 0 — Reescritura y semilla: x = √(1.8 × 10⁻⁵·(0.1 − x)), con ' +
-        'x₀ = 0.001. Primera evaluación: g(0.001) = √(1.8 × 10⁻⁵·0.099) = ' +
-        '√(1.782 × 10⁻⁶) = 0.00133492.',
-      'Paso 1 — x₁ = g(x₀) = 0.00133492, con |Δx| = 0.00033492. El ácido ' +
-        'ya ajustó la concentración en el tercer decimal.',
-      'Paso 2 — x₂ = g(x₁) = 0.00133266 con |Δx| = 0.00000226: la ' +
-        'siguiente evaluación, g(0.00133266), ya da 0.00133267.',
-      'Paso 3 — x₃ = g(x₂) = 0.00133267 con |Δx| = 0.00000002 < 10⁻⁶: ' +
-        'parada en la tercera iteración. El pH es −log₁₀(0.00133267) ≈ ' +
-        '2.875.',
+      'Paso 0 — Se parte de x₀ = 0 mg/L y se define g(x) = 0.6x + 4.',
+      'Paso 1 — x₁ = 0.6·0 + 4 = 4 mg/L; |Δx| = 4.',
+      'Paso 2 — x₂ = 0.6·4 + 4 = 6.4 mg/L; |Δx| = 2.4.',
+      'Paso 3 — x₃ = 0.6·6.4 + 4 = 7.84 mg/L; |Δx| = 1.44.',
+      'Los valores siguen creciendo: 8.704, 9.2224, 9.53344… En el ciclo 19 el cambio queda por debajo de 0.0005 mg/L.',
     ],
     algoritmo:
-      'La tabla es cortísima porque la derivada de la reescritura es ' +
-      'diminuta: g′(x) = −Ka/(2·g(x)) ≈ −0.0067 en la raíz. El error pasa ' +
-      'de 3.3 × 10⁻⁴ a 2.3 × 10⁻⁶ y de ahí a 2 × 10⁻⁸ en tres filas: cada ' +
-      'paso encoge la distancia a la raíz por el factor 0.0067, y por eso ' +
-      'el punto fijo — el método «lineal» — deja atrás a Newton en este ' +
-      'problema.',
+      'Se multiplica la concentración anterior por 0.6 y se suman 4 mg/L. ' +
+      'Los desplazamientos son 4, 2.4, 1.44…: cada uno es 0.6 veces el ' +
+      'anterior. Aunque f es lineal, la iteración elegida no llega de golpe ' +
+      'al equilibrio: permite observar 19 pasos de convergencia monótona.',
     criterio:
-      'Se detiene en la iteración 3, cuando |Δx| = 2 × 10⁻⁸ < 10⁻⁶. La ' +
-      'reescritura con g′ casi nula es el mejor caso del punto fijo.',
+      'Se detiene en el ciclo 19: |Δx| ≈ 0.000406 mg/L < 0.0005 mg/L. ' +
+      'El cambio entre ciclos no es el error real respecto del equilibrio.',
     conclusion:
-      'La concentración es x ≈ 0.00133267 (el valor exacto es ' +
-      '0.00133267097...), o sea un pH de 2.875: el desplazamiento final ' +
-      'fue de 2 × 10⁻⁸, muy por debajo de la tolerancia de 1 × 10⁻⁶, y la ' +
-      'diferencia real con la raíz exacta es de 1.0 × 10⁻⁹, puro formato ' +
-      'de la tabla. Fueron 3 iteraciones, contra las 5 de Newton, las 7 de ' +
-      'la secante, las 11 de la regla falsa y las 18 de la bisección: el ' +
-      'punto fijo acá es el método más rápido del módulo.',
-    calculo: { funcion: 'sqrt(0.000018*(0.1 - x))', x0: 0.001, tol: 1e-6 },
+      'Tras 19 ciclos, x ≈ 9.999391 mg/L. El equilibrio exacto es ' +
+      '4/(1 − 0.6) = 10 mg/L. La concentración crece monótonamente ' +
+      'hacia ese valor; el desplazamiento final es aproximadamente 0.000406 mg/L.',
+    calculo: { funcion: '0.6*x + 4', x0: 0, tol: 0.0005 },
   },
 ];
 
