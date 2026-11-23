@@ -3,6 +3,7 @@ import { ejecutarSecante } from '../secante.algoritmo';
 import { DemoIteracion, ResumenIteracion } from '../../shared/demo-iteracion';
 import { graficaDemo } from '../../shared/demo-grafica';
 import { DemoEjes } from '../../shared/demo-ejes';
+import { PASOS_SECANTE } from '../secante-pasos';
 
 interface FilaDemo {
   n: number;
@@ -146,15 +147,7 @@ export class SecanteTeoria {
     return `Paso ${fila.n}: pendiente de la secante ${this.formato(fila.pendiente, 3)}. La recta corta el eje en ${this.formato(fila.xn)}; |Δx| = ${this.formatoDelta(fila.delta)}.`;
   });
 
-  readonly pasos = [
-    ['error', 'Elige DOS semillas', 'x₀ y x₁, distintas entre sí y cerca de la raíz. No hay intervalo que verificar.'],
-    ['primario', 'Evalúa f(x₀) y f(x₁)', 'En las dos semillas.'],
-    ['error', 'Comprueba f(x₁) ≠ f(x₀)', 'Si son iguales, la secante es horizontal y el método no puede dar el paso.'],
-    ['primario', 'Calcula el nuevo punto', 'Con la fórmula de la secante.'],
-    ['primario', 'Evalúa f(xₙ₊₁)', 'Si da cero exacto, terminó.'],
-    ['ok', 'Mide el desplazamiento', '|Δx| = |xₙ₊₁ − xₙ|, y compáralo con la tolerancia.'],
-    ['neutro', 'Avanza la ventana', 'x₀ ← x₁ y x₁ ← x₂, y vuelve al paso 2. Si se agota el máximo de iteraciones, avisa que no convergió.'],
-  ];
+  readonly pasos = PASOS_SECANTE;
 
   readonly criterios = [
     ['Desplazamiento |Δx|', 'El que usa por defecto', 'ok', 'Mide cuánto se movió la x entre dos iteraciones. Es invariante a la escala de f: multiplicar la función por 1000 no cambia el paso. Ojo: es una medición a posteriori; con f muy plana, un Δx chico puede esconder un error grande.'],
