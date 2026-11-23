@@ -100,10 +100,13 @@
   <section aria-labelledby="parada-titulo">
     <h2 id="parada-titulo">¿Cuándo se detiene?</h2>
     <p class="subtitulo">Distingue una cota garantizada del error de un indicador de cercanía.</p>
-    @for (criterio of criterios; track criterio.titulo) {
+    @for (criterio of criterios; track criterio.titulo; let i = $index) {
       <details [class.criterio-principal]="criterio.principal" [open]="criterio.principal">
         <summary>{{ criterio.titulo }}
-          @if (criterio.insignia) { <span class="insignia">{{ criterio.insignia }}</span> }
+          <span class="chip" [class.chip-ok]="criterio.principal"
+            [class.chip-error]="i === 1" [class.chip-primario]="i > 1">
+            {{ criterio.principal ? 'El que usa por defecto' : i === 1 ? 'Sensible a la escala' : i === 2 ? 'Complementario' : 'A posteriori' }}
+          </span>
         </summary>
         <p>{{ criterio.texto }}</p>
       </details>
@@ -132,7 +135,7 @@
     </div>
   </section>
   <section class="tarjeta consejos" aria-labelledby="consejos-titulo">
-    <h2 id="consejos-titulo">Consejos de uso</h2>
+    <h2 id="consejos-titulo">Recomendaciones</h2>
     <ol>
       <li>Busca un intervalo pequeño y comprueba la continuidad y los signos de los extremos.</li>
       <li>Elige la tolerancia según las unidades y la precisión que requiere el problema.</li>

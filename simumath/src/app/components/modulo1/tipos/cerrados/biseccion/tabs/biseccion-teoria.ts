@@ -11,7 +11,7 @@ import {
   selector: 'app-biseccion-teoria',
   standalone: true,
   templateUrl: './biseccion-teoria.html',
-  styleUrl: './biseccion-teoria.scss',
+  styleUrls: ['./biseccion-teoria.scss', '../../shared/pasos-criterios.scss'],
 })
 export class BiseccionTeoria {
   readonly tolerancia = signal(0.001);

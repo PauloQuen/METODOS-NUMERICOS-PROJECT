@@ -6,7 +6,7 @@ import { PASOS_REGLA_FALSA } from '../regla-falsa-pasos';
   selector: 'app-regla-falsa-teoria',
   standalone: true,
   templateUrl: './regla-falsa-teoria.html',
-  styleUrl: './regla-falsa-teoria.scss',
+  styleUrls: ['./regla-falsa-teoria.scss', '../../shared/pasos-criterios.scss'],
 })
 export class ReglaFalsaTeoria {
   readonly tolerancia = signal(0.001);

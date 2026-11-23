@@ -30,7 +30,7 @@ interface FilaVista {
   standalone: true,
   imports: [BiseccionGraficoSvg, UiCard],
   templateUrl: './biseccion-ejemplo.html',
-  styleUrl: './biseccion-ejemplo.scss',
+  styleUrls: ['./biseccion-ejemplo.scss', '../shared/pasos-criterios.scss'],
 })
 export class BiseccionEjemplo {
   readonly ejemplo = input.required<Ejemplo>();

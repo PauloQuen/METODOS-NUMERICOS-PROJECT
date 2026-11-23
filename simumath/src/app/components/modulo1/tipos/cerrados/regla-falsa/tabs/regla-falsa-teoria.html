@@ -147,7 +147,7 @@
   </section>
 
   <section aria-labelledby="pasos-titulo">
-    <h2 id="pasos-titulo">Los pasos</h2>
+    <h2 id="pasos-titulo">Los pasos del algoritmo</h2>
     <p class="subtitulo">Del paso 2 al 7 se repite hasta cumplir el criterio de parada o alcanzar el máximo.</p>
     <ol class="pasos">
       @for (paso of pasos; track $index) {
@@ -160,17 +160,17 @@
     <h2 id="parada-titulo">¿Cuándo se detiene?</h2>
     <p class="subtitulo">El ancho del intervalo puede engañar porque un extremo permanece fijo.</p>
     <details class="criterio-principal" open>
-      <summary>Cambio absoluto entre aproximaciones <span class="insignia">Por defecto</span></summary>
+      <summary>Cambio absoluto entre aproximaciones <span class="chip chip-ok">El que usa por defecto</span></summary>
       <p>Compara el corte actual con el anterior: |cₙ − cₙ₋₁|.
         Se detiene cuando esa cantidad es menor o igual a la tolerancia. La primera iteración no tiene comparación anterior.</p>
     </details>
     <details>
-      <summary>Ancho del intervalo (b − a)</summary>
+      <summary>Ancho del intervalo (b − a) <span class="chip chip-error">No garantiza el error</span></summary>
       <p>En Bisección sí puede servir como garantía, pero en Regla Falsa un extremo puede quedarse fijo.
         Cuando el intervalo deja de reducirse, el ancho no mide el avance ni garantiza el error de c.</p>
     </details>
     <details>
-      <summary>Residuo |f(c)|</summary>
+      <summary>Residuo |f(c)| <span class="chip chip-error">Sensible a la escala</span></summary>
       <p>Es sensible a la escala de la función. Multiplicar f por una constante puede cambiar el residuo
         sin cambiar la raíz. Por eso no sustituye el cambio absoluto entre aproximaciones.</p>
     </details>

@@ -8,7 +8,7 @@ import { PASOS_REGLA_FALSA } from './regla-falsa-pasos';
   selector: 'app-regla-falsa-ejemplo',
   standalone: true,
   templateUrl: './regla-falsa-ejemplo.html',
-  styleUrls: ['./tabs/regla-falsa-teoria.scss', './regla-falsa-ejemplo.scss'],
+  styleUrls: ['./tabs/regla-falsa-teoria.scss', './regla-falsa-ejemplo.scss', '../shared/pasos-criterios.scss'],
 })
 export class ReglaFalsaEjemplo {
   readonly ejemplo = input.required<Ejemplo>();
