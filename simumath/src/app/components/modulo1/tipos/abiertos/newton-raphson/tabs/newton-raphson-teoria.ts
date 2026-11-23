@@ -3,6 +3,7 @@ import { newtonRaphson } from '../newton-raphson.algoritmo';
 import { DemoIteracion, ResumenIteracion } from '../../shared/demo-iteracion';
 import { graficaDemo } from '../../shared/demo-grafica';
 import { DemoEjes } from '../../shared/demo-ejes';
+import { PASOS_NEWTON } from '../newton-raphson-pasos';
 
 interface FilaDemo {
   n: number;
@@ -106,15 +107,7 @@ export class NewtonRaphsonTeoria {
     return `Paso ${fila.n}: f′(xₙ) = ${this.formato(fila.fpx, 3)}. La tangente corta el eje en ${this.formato(fila.xn)}; |Δx| = ${this.formatoDelta(fila.delta)}.`;
   });
 
-  readonly pasos = [
-    ['error', 'Elige la semilla x₀', 'Es el único dato que aportas y no hay intervalo que verificar.'],
-    ['error', 'Evalúa f(xₙ) y f′(xₙ)', 'Si |f′(xₙ)| es casi cero, frena: el paso se va a disparar.'],
-    ['primario', 'Calcula xₙ₊₁', 'Con la fórmula xₙ₊₁ = xₙ − f(xₙ)/f′(xₙ).'],
-    ['primario', 'Evalúa f(xₙ₊₁)', 'Si da cero exacto, terminó: ese punto es la raíz.'],
-    ['ok', 'Mide el desplazamiento', '|Δx| = |xₙ₊₁ − xₙ|, y compáralo con la tolerancia.'],
-    ['neutro', 'Corre el índice', 'Si |Δx| todavía no llega a la tolerancia, la x vieja se reemplaza por la nueva.'],
-    ['neutro', 'Vuelve al paso 2', 'Si se agota el máximo de iteraciones, avisa que no convergió y devuelve el último punto.'],
-  ];
+  readonly pasos = PASOS_NEWTON;
 
   readonly criterios = [
     ['Desplazamiento |Δx|', 'El que usa por defecto', 'ok', 'Mide cuánto se movió la x entre dos iteraciones. Es invariante a la escala de f: multiplicar la función por 1000 no cambia el paso. Ojo: es una medición a posteriori; con f muy plana, un Δx chico puede esconder un error grande.'],

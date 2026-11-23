@@ -1,14 +1,12 @@
 <div class="ejemplos">
+  <header>
+    <h2>Ejemplos resueltos</h2>
+    <p>Explora cada ejemplo paso a paso: las tangentes, el detalle de la iteración y el historial avanzan juntos.</p>
+  </header>
   @for (ejemplo of ejemplos; track ejemplo.id; let i = $index) {
-    <app-bloque-ejemplo
+    <app-newton-raphson-ejemplo
       [ejemplo]="ejemplo"
-      [columnas]="columnas"
-      [filas]="estados()[i].filas"
-      [filaFinal]="estados()[i].filaFinal"
       [funcion]="funciones[i]"
-      [rango]="rangos()[i]"
-      [dibujarMetodo]="dibujar"
-      [raiz]="estados()[i].raiz"
     />
   }
 </div>

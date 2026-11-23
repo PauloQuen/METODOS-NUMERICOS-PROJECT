@@ -1,0 +1,101 @@
+<article class="teoria">
+  <header>
+    <p class="etiqueta">Ejemplo resuelto · Newton-Raphson</p>
+    <h2>{{ ejemplo().titulo }}</h2>
+  </header>
+  @if (ejemplo().tipo === 'casuistica') {
+    @if (ejemplo().enunciado) {
+      <section><h3>Enunciado</h3><p>{{ ejemplo().enunciado }}</p></section>
+    }
+    @if (ejemplo().extraccion; as extraccion) {
+      <section class="extraccion">
+        <h3>Extracción de datos</h3><p>{{ extraccion.busqueda }}</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Datos del enunciado">
+          <table>
+            <thead><tr><th scope="col">Símbolo</th><th scope="col">Valor</th><th scope="col">¿Qué es?</th></tr></thead>
+            <tbody>@for (dato of extraccion.datos; track dato.simbolo) {
+              <tr><th scope="row">{{ dato.simbolo }}</th><td>{{ dato.valor }}</td><td>{{ dato.queEs }}</td></tr>
+            }</tbody>
+          </table>
+        </div>
+        <p>{{ extraccion.formulacion }}</p>
+      </section>
+    }
+  }
+  <div class="contexto">
+    <section class="tarjeta"><h3>Planteamiento</h3><p>{{ ejemplo().ecuacion }}</p>
+      <ul>@for (parametro of ejemplo().parametros; track parametro.etiqueta) {
+        <li><strong>{{ parametro.etiqueta }}:</strong> {{ parametro.valor }}</li>
+      }</ul>
+    </section>
+    <section class="tarjeta"><h3>Interpretación</h3><p>{{ ejemplo().interpretacion }}</p></section>
+  </div>
+  <section>
+    <h2>Pruébalo paso a paso</h2>
+    <p class="subtitulo">Cada paso traza una tangente desde la aproximación actual y añade una fila al historial.</p>
+    <div class="tarjeta demo">
+      <div class="controles">
+        <span class="insignia">Newton-Raphson · ejemplo</span>
+        <div class="acciones">
+          <span>Semilla x₀ = {{ formato(semilla()) }}</span>
+          <span>Tolerancia |Δx|: {{ formato(tolerancia()) }}</span>
+          <button type="button" (click)="siguiente()" [disabled]="terminado()">Siguiente paso</button>
+          <button type="button" class="secundario" (click)="reiniciar()">Reiniciar</button>
+        </div>
+      </div>
+      <svg class="grafica" viewBox="0 0 600 300" role="img" [attr.aria-label]="'Tangentes de Newton-Raphson: ' + ejemplo().ecuacion">
+        <title>{{ ejemplo().ecuacion }}</title>
+        <desc>Tangentes desde la semilla {{ formato(semilla()) }}. La última se resalta en rojo.</desc>
+        <defs><clipPath [id]="clipId()"><rect x="48" y="20" width="502" height="230" /></clipPath></defs>
+        <g app-demo-ejes [escala]="grafica()" />
+        <g [attr.clip-path]="'url(#' + clipId() + ')'">
+          <path class="curva" [attr.d]="grafica().curva" />
+          @if (!filas().length) {
+            <line class="anclaje" [attr.x1]="px(semilla())" [attr.x2]="px(semilla())" [attr.y1]="py(0)" [attr.y2]="py(funcion()(semilla()))" />
+            <circle class="semilla" [attr.cx]="px(semilla())" [attr.cy]="py(funcion()(semilla()))" r="5" />
+            <text class="rotulo" [attr.x]="px(semilla()) + 8" [attr.y]="py(0) + 18">x₀</text>
+          }
+          @for (fila of filas(); track fila.n; let ultima = $last) {
+            <g [class.actual]="ultima">
+              <line class="tangente" [attr.x1]="px(fila.x)" [attr.y1]="py(fila.fx)" [attr.x2]="px(fila.xn)" [attr.y2]="py(0)" />
+              <line class="anclaje" [attr.x1]="px(fila.x)" [attr.y1]="py(0)" [attr.x2]="px(fila.x)" [attr.y2]="py(fila.fx)" />
+              <circle class="punto" [attr.cx]="px(fila.x)" [attr.cy]="py(fila.fx)" r="4" />
+              <circle class="punto" [attr.cx]="px(fila.xn)" [attr.cy]="py(0)" r="5" />
+            </g>
+          }
+        </g>
+        <text class="rotulo" x="550" y="14" text-anchor="end">y = f(x)</text>
+      </svg>
+      <app-demo-iteracion [datos]="resumen()" />
+      @if (filas().length) {
+        <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de Newton-Raphson">
+          <table>
+            <caption>Iteraciones, tangente y desplazamiento</caption>
+            <thead><tr>
+              <th scope="col">n</th><th scope="col">x<sub>n</sub></th><th scope="col">f(x<sub>n</sub>)</th>
+              <th scope="col">x<sub>n+1</sub></th><th scope="col">|Δx|</th>
+            </tr></thead>
+            <tbody>@for (fila of filas(); track fila.n; let ultima = $last) {
+              <tr [class.ultima]="ultima"><th scope="row">{{ fila.n }}</th>
+                <td>{{ formato(fila.x) }}</td><td>{{ formato(fila.fx) }}</td>
+                <td>{{ formato(fila.xn) }}</td><td>{{ formato(fila.delta) }}</td>
+              </tr>
+            }</tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </section>
+  <section>
+    <h2>Los pasos del algoritmo</h2>
+    <p class="subtitulo">Siete pasos; del 2 al 7 se repiten hasta cumplir el criterio de parada.</p>
+    <ol class="pasos">@for (item of pasos; track $index) {
+      <li [class]="'paso-' + item[0]"><span class="numero" aria-hidden="true">{{ $index + 1 }}</span>
+        <div><h3>{{ item[1] }}</h3><p>{{ item[2] }}</p></div>
+      </li>
+    }</ol>
+    <aside class="tarjeta aplicado"><h3>Aplicado a este ejemplo</h3><p>{{ ejemplo().algoritmo }}</p></aside>
+  </section>
+  <section class="tarjeta"><h2>Conclusión y respuesta</h2><p>{{ ejemplo().conclusion }}</p></section>
+</article>
