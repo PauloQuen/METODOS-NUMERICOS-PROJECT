@@ -1,0 +1,1 @@
+var n=r=>Number.isFinite(r)?Number(r.toFixed(8)).toString():"\u2014";function u(r,a,t,i,e){return{id:r,enunciado:a,tipo:"opcion-multiple",correcta:"a",explicacion:e,opciones:[t,...i].map((o,c)=>({id:String.fromCharCode(97+c),texto:o}))}}function s(r,a,t,i){let e=Math.max(.5,Math.abs(t)*.2);return u(r,a,n(t),[t+e,t-e,t+2*e].map(n),i)}export{n as a,u as b,s as c};

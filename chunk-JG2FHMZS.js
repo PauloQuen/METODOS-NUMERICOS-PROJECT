@@ -1,1 +1,0 @@
-import{a as t,b as i}from"./chunk-EJTVJ2MX.js";import{a as r}from"./chunk-ZEVXQLKC.js";var s={politica:"cualquiera",umbralCuestionario:.66,intentosParaRendirse:3},l={directos:{},iterativos:{}},n={gauss:{},lu:{}};function a(o,e){return[r,s,l[o]??{},n[e]??{}]}function D(o,e){return t(i,{moduloId:"modulo2",tipoId:o,metodoId:e})}export{a,D as b};
