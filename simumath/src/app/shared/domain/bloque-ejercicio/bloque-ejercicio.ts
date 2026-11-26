@@ -1,6 +1,7 @@
 import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { UiCard } from '../../ui/ui-card/ui-card';
 import { BloqueEjemplo } from '../bloque-ejemplo/bloque-ejemplo';
+import { ParametrosMatriciales } from '../matriz-vista/parametros-matriciales';
 import type {
   Columna,
   DibujarMetodo,
@@ -20,6 +21,7 @@ import { ExerciseActions } from '../../autoevaluacion-mejorada/exercise-actions/
 import { QuizPanel } from '../../autoevaluacion-mejorada/quiz-panel/quiz-panel';
 import { AnswerCheckPanel } from '../../autoevaluacion-mejorada/answer-check-panel/answer-check-panel';
 import { SolucionGuiada } from '../../autoevaluacion-mejorada/solucion-guiada/solucion-guiada';
+import type { EtapaPractica } from '../../practica-guiada/modelos';
 
 /**
  * Bloque de ejercicio (Autoevaluación) — mismo modelo que el Módulo 3.
@@ -47,6 +49,7 @@ import { SolucionGuiada } from '../../autoevaluacion-mejorada/solucion-guiada/so
   imports: [
     UiCard,
     BloqueEjemplo,
+    ParametrosMatriciales,
     ExerciseActions,
     QuizPanel,
     AnswerCheckPanel,
@@ -57,7 +60,7 @@ import { SolucionGuiada } from '../../autoevaluacion-mejorada/solucion-guiada/so
 })
 export class BloqueEjercicio {
   /** Ejercicio a resolver. */
-  readonly ejercicio = input.required<EjercicioBase>();
+  readonly ejercicio = input.required<EjercicioBase & { guia?: EtapaPractica[] }>();
 
   /** Filas calculadas de la solución. */
   readonly filas = input<Record<string, number | string>[]>([]);
@@ -95,6 +98,7 @@ export class BloqueEjercicio {
 
   /** Contexto para la clave del gate (no se mezcla entre métodos). */
   readonly moduloId = input('modulo1');
+  readonly formatoMatricial = computed(() => this.moduloId() === 'modulo2');
   readonly tipoId = input('');
   readonly metodoId = input('');
 

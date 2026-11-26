@@ -90,15 +90,17 @@
           <dt class="guia__pregunta">¿La matriz es enorme y no entra en memoria?</dt>
           <dd class="guia__respuesta">
             Usá <strong>Jacobi</strong> o <strong>Gauss-Seidel</strong>. Cada paso cuesta
-            O(n) porque no arma ninguna matriz. A cambio necesitan que el sistema esté bien
-            condicionado para que el método converja.
+            O(n²) con una matriz densa, y puede aprovechar los elementos no nulos de una
+            matriz dispersa. La dominancia diagonal estricta garantiza convergencia para
+            ambos. Esta calculadora usa almacenamiento denso para estudiar sistemas pequeños.
           </dd>
         </div>
         <div class="guia__fila">
           <dt class="guia__pregunta">¿Jacobi converge pero tarda demasiado?</dt>
           <dd class="guia__respuesta">
             Probá <strong>Gauss-Seidel</strong>: usa el valor nuevo de las incógnitas que ya
-            resolvió y suele necesitar la mitad de iteraciones.
+            resolvió y puede necesitar menos iteraciones. Compara ambos con los mismos
+            datos: la mejora depende del sistema y del orden de las ecuaciones.
           </dd>
         </div>
       </dl>

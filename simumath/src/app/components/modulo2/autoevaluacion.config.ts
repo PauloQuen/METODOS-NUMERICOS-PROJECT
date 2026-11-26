@@ -27,6 +27,8 @@ export const DESBLOQUEO_TIPOS_MODULO2: Record<string, NivelDesbloqueo> = {
 export const DESBLOQUEO_METODOS_MODULO2: Record<string, NivelDesbloqueo> = {
   gauss: {},
   lu: {},
+  jacobi: {},
+  'gauss-seidel': {},
 };
 
 /** Niveles que recibe el bloque, del más general al más específico. */

@@ -1,4 +1,7 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { crearBancoRaices } from '../../../../autoevaluacion/bancos/crear-banco';
+import { SesionPracticaService } from '../../../../../../shared/practica-guiada/sesion-practica.service';
+import { CabeceraPractica } from '../../../../../../shared/practica-guiada/cabecera-practica';
+import { Component, computed, inject } from '@angular/core';
 import { EJERCICIOS_NEWTON } from '../newton-raphson.contenido';
 import { COLUMNAS_NEWTON } from '../newton-raphson.config';
 import { NewtonRaphsonService } from '../newton-raphson.service';
@@ -10,15 +13,17 @@ import { dibujarNewtonRaphson } from '../newton-raphson.grafico';
 @Component({
   selector: 'app-newton-raphson-autoevaluacion',
   standalone: true,
-  imports: [BloqueEjercicio],
+  imports: [BloqueEjercicio, CabeceraPractica],
   templateUrl: './newton-raphson-autoevaluacion.html',
   styleUrl: './newton-raphson-autoevaluacion.scss',
 })
 export class NewtonRaphsonAutoevaluacion {
-  readonly ejercicios = EJERCICIOS_NEWTON.map((e) => ({
+  private readonly practica = inject(SesionPracticaService);
+  readonly banco = crearBancoRaices(EJERCICIOS_NEWTON.map((e) => ({
     ...e,
     ...(AUTOEVALUACION_NEWTON[e.id] ?? {}),
-  }));
+  })), 'newton-raphson');
+  readonly ejercicios = this.practica.tanda('modulo1:newton-raphson', this.banco);
 
   readonly mejorada = autoevaluacionMejoradaM1('abiertos', 'newton-raphson');
   readonly desbloqueoBase = politicaDeMetodoM1('abiertos', 'newton-raphson');
@@ -27,17 +32,21 @@ export class NewtonRaphsonAutoevaluacion {
 
   private readonly servicio = inject(NewtonRaphsonService);
 
-  protected readonly estados = signal(
-    this.ejercicios.map((e) => this.servicio.calcularEjemplo(e)),
+  protected readonly estados = computed(() =>
+    this.ejercicios().map((e) => this.servicio.calcularEjemplo(e)),
   );
 
-  protected readonly funciones = this.ejercicios.map((e) =>
+  protected readonly funciones = computed(() => this.ejercicios().map((e) =>
     this.servicio.funcionDeEjemplo(e),
-  );
+  ));
 
   protected readonly rangos = computed(() =>
-    this.ejercicios.map((e, i) =>
+    this.ejercicios().map((e, i) =>
       this.servicio.rangoPara(e.calculo, this.estados()[i].raiz),
     ),
   );
+
+  nuevaTanda(): void {
+    this.practica.renovar('modulo1:newton-raphson', this.banco);
+  }
 }

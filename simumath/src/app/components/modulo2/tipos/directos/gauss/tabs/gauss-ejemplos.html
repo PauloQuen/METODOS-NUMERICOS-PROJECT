@@ -1,6 +1,7 @@
 <div class="ejemplos">
   @for (ejemplo of ejemplos; track ejemplo.id; let i = $index) {
     <app-bloque-ejemplo
+      [formatoMatricial]="true"
       [ejemplo]="ejemplo"
       [columnas]="columnas"
       [filas]="estados()[i].filas"

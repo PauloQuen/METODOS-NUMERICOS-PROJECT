@@ -1,19 +1,17 @@
 <section class="auto-mejorada">
   <div class="section-heading">
     <h2 class="section-heading__title">Autoevaluación</h2>
-    <p class="section-heading__subtitle">
-      Resolvé el cuestionario o verificá tu respuesta para desbloquear la solución.
-    </p>
+    <app-cabecera-practica [total]="banco.length" (nuevaTanda)="nuevaTanda()" />
   </div>
 
   <div class="auto-mejorada__list">
-    @for (e of ejercicios; track e.id) {
+    @for (e of ejercicios(); track e.id) {
       <ui-card elevation="sm" class="ejercicio">
         <div class="ejercicio__head">
           <app-badge [text]="'Ejercicio ' + e.numero" variant="navy" />
           <app-badge [text]="e.tema" [variant]="e.variante" />
         </div>
-        <p class="ejercicio__texto" [innerHTML]="e.texto"></p>
+        <p class="ejercicio__texto">{{ e.texto }}</p>
 
         <app-exercise-actions
           [ejercicioId]="e.id"
@@ -67,9 +65,9 @@
               [ejercicioId]="e.id"
               [pasos]="pasosDe(e)"
               [cuestionario]="e.cuestionario ?? []"
-              [interpretarHtml]="true"
+              [etapas]="e.guia"
             >
-              <p [innerHTML]="e.solucion"></p>
+              <p class="ejercicio__texto">{{ e.solucion }}</p>
             </app-solucion-guiada>
           </div>
         }

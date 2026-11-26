@@ -18,7 +18,7 @@ function nuevos(metodo:MetodoSistemas):EjercicioSistema[] {
    return {id:`${metodo}-banco-${i+1}`,titulo:aplicado?contexto:`Sistema ${n} × ${n} · caso ${i+1}`,tipo:aplicado?'casuistica':'numerico',
      enunciado:aplicado?`En un modelo didáctico de ${contexto.toLowerCase()}, las incógnitas representan ${n} cantidades desconocidas. Cada fila de la tabla indica los coeficientes de una restricción y su total. Usa esos balances para determinar las cantidades. Datos simulados.`:undefined,
      ecuacion:A.map((fila,r)=>fila.map((a,j)=>`(${a})x${j+1}`).join(' + ')+` = ${b[r]}`).join('\n'),
-     parametros:[{etiqueta:'Dimensión',valor:`${n} × ${n}`}],calculo:{A,b},interpretacion:'Cada fila representa una ecuación y cada columna una incógnita; el término independiente es el total de esa ecuación.',pasos:[],algoritmo:'Transformar el sistema sin cambiar su solución.',criterio:'Verificar A·x = b.',conclusion:''};
+     parametros:[{etiqueta:'Dimensión',valor:`${n} × ${n}`},{etiqueta:'Matriz A',valor:JSON.stringify(A)},{etiqueta:'Lado derecho b',valor:JSON.stringify(b)}],calculo:{A,b},interpretacion:'Cada fila representa una ecuación y cada columna una incógnita; el término independiente es el total de esa ecuación.',pasos:[],algoritmo:'Transformar el sistema sin cambiar su solución.',criterio:'Verificar A·x = b.',conclusion:''};
  });
 }
 export function crearBancoSistemas(base:EjercicioSistema[],metodo:MetodoSistemas):ConGuia<EjercicioSistema>[] {

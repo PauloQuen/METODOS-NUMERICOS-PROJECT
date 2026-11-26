@@ -1,0 +1,17 @@
+{
+  "extends": "../../../../tsconfig.spec.json",
+  "include": [
+    "./bancos.spec.ts",
+    "./paginas-practica.spec.ts",
+    "./solucion-guiada.spec.ts",
+    "../domain/matriz-vista/*.spec.ts",
+    "../autoevaluacion-mejorada/**/*.spec.ts",
+    "../../components/modulo3/autoevaluacion/practica.spec.ts",
+    "../../components/modulo3/autoevaluacion/solucion-guiada.spec.ts",
+    "../../components/modulo1/tipos/**/*.spec.ts",
+    "../../components/modulo2/tipos/directos/gauss/**/*.spec.ts",
+    "../../components/modulo2/tipos/directos/lu/**/*.spec.ts",
+    "../../components/modulo2/registro-modulo2.spec.ts",
+    "../../components/modulo2/tipos/iterativos/shared/*.spec.ts"
+  ]
+}

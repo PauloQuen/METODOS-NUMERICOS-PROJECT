@@ -41,11 +41,7 @@
             }
           </div>
           @if(paso.matrices?.length) {
-            <div class="matrices">
-              @for(matriz of paso.matrices;track $index) {
-                <app-matriz-vista [titulo]="matriz.titulo" [valores]="matriz.valores" [aumentada]="matriz.aumentada ?? false" [filaActiva]="matriz.fila" [columnaActiva]="matriz.columna" />
-              }
-            </div>
+            <app-grupo-matrices class="matrices" [matrices]="paso.matrices!" />
           }
         }
       </div>

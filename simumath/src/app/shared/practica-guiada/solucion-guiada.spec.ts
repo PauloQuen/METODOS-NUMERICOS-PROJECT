@@ -5,7 +5,7 @@ import { SolucionGuiada } from './solucion-guiada';
 import { CATALOGO_MODULO1 } from '../../components/modulo1/autoevaluacion/bancos/catalogo';
 import { BloqueEjercicio } from '../domain/bloque-ejercicio/bloque-ejercicio';
 import { SolutionGateService, claveDeGate } from '../autoevaluacion-mejorada/solution-gate.service';
-@Component({standalone:true,imports:[SolucionGuiada],template:`<ng-template #final><p id="desarrollo-final">Desarrollo completo</p></ng-template><app-solucion-guiada ejercicioId="test-guia" [etapas]="ejercicio.guia" [desarrollo]="final"/>`})
+@Component({standalone:true,imports:[SolucionGuiada],template:`<ng-template #final><p id="desarrollo-final">Desarrollo completo</p></ng-template><app-solucion-practica ejercicioId="test-guia" [etapas]="ejercicio.guia" [desarrollo]="final"/>`})
 class Host{ejercicio=CATALOGO_MODULO1[0].banco[3];}
 describe('Guía y notación matemática de M1 y M2',()=>{
  beforeEach(()=>TestBed.configureTestingModule({imports:[Host,FormulaMatematica,BloqueEjercicio],providers:[provideZonelessChangeDetection()]}));

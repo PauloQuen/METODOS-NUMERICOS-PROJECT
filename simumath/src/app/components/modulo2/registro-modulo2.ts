@@ -60,12 +60,11 @@ export const FAMILIAS_MODULO2: readonly FamiliaModulo2[] = [
     principio:
       'Repiten un paso: van armando una aproximación de la solución.',
     descripcion:
-      'Despejan una incógnita usando las demás y repiten, acercándose a la ' +
-      'solución paso a paso. Son lentos, pero su costo por paso es bajísimo y ' +
-      'no forma matrices: para sistemas enormes son la única opción real. A ' +
-      'cambio necesitan un criterio de parada y, sobre todo, que el sistema ' +
-      'esté bien elegido: con la diagonally dominante o bien condicionada, ' +
-      'convergen; con cualquier otra, pueden divergir.',
+      'Calculan nuevas aproximaciones a partir de un vector inicial. Cada barrida ' +
+      'cuesta O(n²) para una matriz densa y puede aprovechar los elementos no nulos ' +
+      'de una matriz dispersa. La dominancia diagonal estricta por filas garantiza ' +
+      'la convergencia de Jacobi y Gauss-Seidel. Se necesita comprobar el cambio, ' +
+      'el residuo y el límite de iteraciones; un buen condicionamiento por sí solo no garantiza convergencia.',
   },
 ] as const;
 
@@ -147,12 +146,12 @@ export const REGISTRO_MODULO2: readonly MetodoModulo2[] = [
     nombre: 'Jacobi',
     ruta: 'jacobi',
     familia: 'iterativos',
-    estado: 'planificado',
+    estado: 'implementado',
     formula: 'xᵢ⁽ᵏ⁺¹⁾ = (bᵢ − Σⱼ≠ᵢ aᵢⱼ xⱼ⁽ᵏ⁾) / aᵢᵢ',
     idea:
       'Despeja cada incógnita usando el valor VIEJO de las demás, todas a la vez.',
     cuandoUsarlo:
-      'Es el iterativo más simple de entender y de programar. Converge si la matriz es diagonalmente dominante; si no, puede oscilar o divergir.',
+      'Permite calcular las componentes de una barrida de forma independiente. La dominancia diagonal estricta garantiza convergencia; sin esa garantía hay que estudiar el sistema y observar el residuo.',
     iterativo: true,
   },
   {
@@ -160,12 +159,12 @@ export const REGISTRO_MODULO2: readonly MetodoModulo2[] = [
     nombre: 'Gauss-Seidel',
     ruta: 'gauss-seidel',
     familia: 'iterativos',
-    estado: 'planificado',
-    formula: 'xᵢ⁽ᵏ⁺¹⁾ = (bᵢ − Σⱼ≠ᵢ aᵢⱼ xⱼ⁽ᵏ⁺¹⁾) / aᵢᵢ',
+    estado: 'implementado',
+    formula: 'xᵢ⁽ᵏ⁺¹⁾ = (bᵢ − Σⱼ<ᵢ aᵢⱼ xⱼ⁽ᵏ⁺¹⁾ − Σⱼ>ᵢ aᵢⱼ xⱼ⁽ᵏ⁾) / aᵢᵢ',
     idea:
       'Igual que Jacobi, pero usa el valor NUEVO de las incógnitas que ya resolvió.',
     cuandoUsarlo:
-      'Cuando Jacobi converge pero despacio: Gauss-Seidel suele necesitar la mitad de iteraciones, porque la información nueva se usa de inmediato.',
+      'Reutiliza las actualizaciones dentro de la misma barrida y puede necesitar menos iteraciones. Converge para matrices estrictamente diagonalmente dominantes o simétricas definidas positivas.',
     iterativo: true,
   },
 ] as const;

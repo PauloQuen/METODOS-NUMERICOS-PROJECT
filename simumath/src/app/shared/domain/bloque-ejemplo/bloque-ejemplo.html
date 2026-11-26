@@ -1,6 +1,6 @@
 <div class="bloque-ejemplo">
   <ui-card>
-    <div class="bloque-ejemplo__grilla">
+    <div class="bloque-ejemplo__grilla" [class.bloque-ejemplo__grilla--matrices]="formatoMatricial()">
       <!-- Columna 1: texto -->
       <div class="bloque-ejemplo__texto">
         <div class="bloque-ejemplo__encabezado">
@@ -52,35 +52,59 @@
           <h4 class="bloque-ejemplo__subtitulo">Planteamiento</h4>
           <p class="bloque-ejemplo__parrafo">{{ ejemplo().ecuacion }}</p>
           @if (ejemplo().parametros.length > 0) {
-            <ul class="bloque-ejemplo__lista">
-              @for (p of ejemplo().parametros; track p.etiqueta) {
-                <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
-              }
-            </ul>
+            @if (formatoMatricial()) {
+              <app-parametros-matriciales [parametros]="ejemplo().parametros" />
+            } @else {
+              <ul class="bloque-ejemplo__lista">
+                @for (p of ejemplo().parametros; track p.etiqueta) {
+                  <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
+                }
+              </ul>
+            }
           }
         </section>
 
         <!-- Interpretación -->
         <section class="bloque-ejemplo__seccion">
           <h4 class="bloque-ejemplo__subtitulo">Interpretación</h4>
-          <p class="bloque-ejemplo__parrafo">{{ ejemplo().interpretacion }}</p>
+          @if (formatoMatricial()) { <app-texto-matricial [texto]="ejemplo().interpretacion" /> }
+          @else { <p class="bloque-ejemplo__parrafo">{{ ejemplo().interpretacion }}</p> }
         </section>
 
         <!-- Pasos (1.ª y 2.ª iteración) -->
         <section class="bloque-ejemplo__seccion">
           <h4 class="bloque-ejemplo__subtitulo">{{ tituloPasos() }}</h4>
-          @for (p of ejemplo().pasos; track $index; let i = $index) {
-            <p class="bloque-ejemplo__paso">
-              <strong>{{ etiquetaPaso() }} {{ i + 1 }}</strong>
-            </p>
-            <p class="bloque-ejemplo__parrafo">{{ p }}</p>
+          @if (etapas().length) {
+            @for (etapa of etapas(); track $index; let i = $index) {
+              <p class="bloque-ejemplo__paso"><strong>{{ i + 1 }}. {{ etapa.titulo }}</strong></p>
+              <p class="bloque-ejemplo__parrafo">{{ etapa.explicacion }}</p>
+              @for (cuenta of etapa.cuentas; track $index) {
+                <div class="bloque-ejemplo__cuenta">
+                  <small>{{ cuenta.etiqueta }}</small>
+                  <app-formula-matematica [texto]="cuenta.expresion ?? '(' + cuenta.numerador + ')/(' + cuenta.denominador + ')'" />
+                </div>
+              }
+              @if (etapa.matrices?.length) {
+                <app-grupo-matrices [matrices]="etapa.matrices!" />
+              }
+              <app-formula-matematica [texto]="etapa.resultado" />
+            }
+          } @else {
+            @for (p of ejemplo().pasos; track $index; let i = $index) {
+              <p class="bloque-ejemplo__paso">
+                <strong>{{ etiquetaPaso() }} {{ i + 1 }}</strong>
+              </p>
+              @if (formatoMatricial()) { <app-texto-matricial [texto]="p" /> }
+              @else { <p class="bloque-ejemplo__parrafo">{{ p }}</p> }
+            }
           }
         </section>
 
         <!-- Algoritmo -->
         <section class="bloque-ejemplo__seccion">
           <h4 class="bloque-ejemplo__subtitulo">Algoritmo aplicado</h4>
-          <p class="bloque-ejemplo__parrafo">{{ ejemplo().algoritmo }}</p>
+          @if (formatoMatricial()) { <app-texto-matricial [texto]="ejemplo().algoritmo" /> }
+          @else { <p class="bloque-ejemplo__parrafo">{{ ejemplo().algoritmo }}</p> }
         </section>
 
         <!-- Criterio -->
@@ -120,6 +144,7 @@
               [total]="filas().length"
               [paso]="pasoActual()"
               [texto]="textoPaso(pasoActual())"
+              [formatoMatricial]="formatoMatricial()"
               [etiquetaDePaso]="etiquetaPaso()"
               (pasoCambiado)="alCambiarPaso($event)"
             />
@@ -132,7 +157,11 @@
     @if (ejemplo().conclusion) {
       <section class="bloque-ejemplo__seccion">
         <h4 class="bloque-ejemplo__subtitulo">Conclusión y respuesta</h4>
-        <p class="bloque-ejemplo__parrafo bloque-ejemplo__parrafo--destacado">{{ ejemplo().conclusion }}</p>
+        @if (formatoMatricial()) {
+          <app-texto-matricial class="bloque-ejemplo__parrafo--destacado" [texto]="ejemplo().conclusion!" />
+        } @else {
+          <p class="bloque-ejemplo__parrafo bloque-ejemplo__parrafo--destacado">{{ ejemplo().conclusion }}</p>
+        }
       </section>
     }
 
@@ -140,6 +169,7 @@
     <section class="bloque-ejemplo__tabla">
       <app-iteration-table
         [columns]="columnas()"
+        [formatoMatricial]="formatoMatricial()"
         [rows]="filas()"
         [highlightRowIndex]="filaFinal()"
         [highlightBadge]="highlightBadge()"
