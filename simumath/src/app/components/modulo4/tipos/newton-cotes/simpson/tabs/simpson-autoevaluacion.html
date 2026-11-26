@@ -1,0 +1,29 @@
+<div class="lista-m4-tab">
+  <header class="lista-m4-tab__encabezado">
+    <h2 class="lista-m4-tab__titulo">Autoevaluación</h2>
+    <p class="lista-m4-tab__intro">
+      Cuatro ejercicios para resolver a mano antes de mirar la solución. Cada uno trae una pista y
+      tres preguntas de comprensión: hay que acertarlas todas y marcar el resultado como enviado
+      para desbloquear la tabla y las parábolas.
+    </p>
+  </header>
+
+  @for (ejercicio of ejercicios; track ejercicio.id) {
+    <section class="lista-m4-tab__bloque">
+      <app-bloque-ejercicio-integracion
+        [ejercicio]="ejercicio"
+        modulo="modulo4"
+        tipo="newton-cotes"
+        metodo="simpson"
+        [estado]="calculoDe($index)"
+        [columnas]="columnas"
+        [funcion]="funcionDe($index)"
+        [rango]="rangoDe($index)"
+        [dibujarAntes]="dibujoDe($index).antes"
+        [dibujarMetodo]="dibujoDe($index).despues"
+        leyenda="f(x) y las parábolas de la solución"
+        tituloTabla="Tabla de nodos, coeficientes y suma"
+      />
+    </section>
+  }
+</div>

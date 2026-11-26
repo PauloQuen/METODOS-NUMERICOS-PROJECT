@@ -2,7 +2,7 @@
   <!-- 1. Concepto -->
   <section class="teoria-m3__seccion">
     <h2 class="teoria-m3__titulo">¿Qué es y para qué sirve?</h2>
-    <p class="teoria-m3__parrafo">{{ teoria().concepto }}</p>
+    <p class="teoria-m3__parrafo"><app-math-texto [texto]="teoria().concepto" /></p>
 
     @if (teoria().videoUrl; as videoUrl) {
       <a class="recurso" [href]="videoUrl" target="_blank" rel="noopener noreferrer">
@@ -44,7 +44,7 @@
         id="teoria-panel-fundamento"
         [hidden]="abierta() !== 'fundamento'"
       >
-        <p>{{ teoria().fundamento }}</p>
+        <p><app-math-texto [texto]="teoria().fundamento" /></p>
       </div>
     </div>
 
@@ -68,7 +68,7 @@
         id="teoria-panel-falla"
         [hidden]="abierta() !== 'falla'"
       >
-        <p>{{ teoria().cuandoFalla }}</p>
+        <p><app-math-texto [texto]="teoria().cuandoFalla" /></p>
       </div>
     </div>
 
@@ -92,7 +92,7 @@
         id="teoria-panel-tercera"
         [hidden]="abierta() !== 'tercera'"
       >
-        <p>{{ terceraTexto() }}</p>
+        <p><app-math-texto [texto]="terceraTexto()" /></p>
       </div>
     </div>
   </section>
@@ -128,7 +128,11 @@
   <section class="teoria-m3__seccion">
     <h2 class="teoria-m3__titulo">{{ tituloMetodo() }}</h2>
 
-    <div class="formula-m3">{{ teoria().algoritmo.formula }}</div>
+    @if (formulaTex()) {
+      <div class="formula-m3"><app-math [tex]="formulaTex()" [display]="true" /></div>
+    } @else {
+      <div class="formula-m3">{{ teoria().algoritmo.formula }}</div>
+    }
 
     <div class="grilla-m3">
       <ui-card>
@@ -137,7 +141,7 @@
           @for (paso of teoria().algoritmo.pasos; track $index) {
             <li class="pasos-m3__paso">
               <span class="pasos-m3__numero">{{ $index + 1 }}</span>
-              <span>{{ paso }}</span>
+              <span><app-math-texto [texto]="paso" /></span>
             </li>
           }
         </ol>
@@ -149,7 +153,7 @@
           @for (criterio of teoria().algoritmo.criterios; track criterio.nombre) {
             <div class="criterios-m3__item">
               <p class="criterios-m3__nombre">{{ criterio.nombre }}</p>
-              <p class="criterios-m3__texto">{{ criterio.explicacion }}</p>
+              <p class="criterios-m3__texto"><app-math-texto [texto]="criterio.explicacion" /></p>
             </div>
           }
         </div>
@@ -161,7 +165,7 @@
         <h3 class="tarjeta-m3__titulo tarjeta-m3__titulo--bueno">Ventajas</h3>
         <ul class="lista-m3 lista-m3--bueno">
           @for (ventaja of teoria().algoritmo.ventajas; track ventaja) {
-            <li>{{ ventaja }}</li>
+            <li><app-math-texto [texto]="ventaja" /></li>
           }
         </ul>
       </ui-card>
@@ -170,7 +174,7 @@
         <h3 class="tarjeta-m3__titulo tarjeta-m3__titulo--malo">Limitaciones</h3>
         <ul class="lista-m3 lista-m3--malo">
           @for (limitacion of teoria().algoritmo.limitaciones; track limitacion) {
-            <li>{{ limitacion }}</li>
+            <li><app-math-texto [texto]="limitacion" /></li>
           }
         </ul>
       </ui-card>
@@ -180,7 +184,7 @@
       <h3 class="tarjeta-m3__titulo">{{ tituloRecomendaciones() }}</h3>
       <ul class="lista-m3">
         @for (recomendacion of teoria().algoritmo.recomendaciones; track recomendacion) {
-          <li>{{ recomendacion }}</li>
+          <li><app-math-texto [texto]="recomendacion" /></li>
         }
       </ul>
     </ui-card>

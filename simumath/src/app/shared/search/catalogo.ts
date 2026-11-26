@@ -3,20 +3,15 @@
  *
  * ── Qué es y qué no es ───────────────────────────────────────────────
  * NO es un registro paralelo: es una VISTA común de los registros que ya
- * existen (`REGISTRO` del M1, `REGISTRO_MODULO2`, `METODOS_MODULO3` y
- * `METODOS_MODULO0`). Las familias y los métodos se derivan de ellos, así
- * que agregar un método en su registro lo hace aparecer en el buscador y
- * en los accesos de la portada sin tocar este archivo.
+ * existen (`REGISTRO` del M1, `REGISTRO_MODULO2`, `METODOS_MODULO3`,
+ * `METODOS_MODULO4`, `METODOS_MODULO5` y `METODOS_MODULO0`). Las familias
+ * y los métodos se derivan de ellos, así que agregar un método en su
+ * registro lo hace aparecer en el buscador y en los accesos de la portada
+ * sin tocar este archivo.
  *
  * Lo único que se declara acá son los MÓDULOS como tales (nombre,
  * subtítulo, descripción, si está disponible) y el material transversal
  * que no vive dentro de un método: son datos de portada, no de método.
- *
- * ── Los módulos 4 y 5 ───────────────────────────────────────────────
- * Están anunciados en la portada anterior como "En desarrollo" y no
- * tienen ruta todavía. Su información no se borra: entra al índice con
- * `ruta: null` y el buscador la muestra como "En desarrollo", sin
- * prometer una página que no existe.
  */
 
 import { FAMILIAS, REGISTRO } from '../domain/numerico/registro';
@@ -30,6 +25,16 @@ import {
   METODOS_MODULO3 as METODOS_M3,
   rutaDeFamiliaModulo3,
 } from '../../components/modulo3/registro-modulo3';
+import {
+  FAMILIAS_MODULO4 as FAMILIAS_M4,
+  METODOS_MODULO4 as METODOS_M4,
+  rutaDeFamiliaModulo4,
+} from '../../components/modulo4/registro-modulo4';
+import {
+  FAMILIAS_MODULO5 as FAMILIAS_M5,
+  METODOS_MODULO5 as METODOS_M5,
+  rutaDeFamiliaModulo5,
+} from '../../components/modulo5/registro-modulo5';
 import {
   FAMILIAS_MODULO0 as FAMILIAS_M0,
   METODOS_MODULO0 as METODOS_M0,
@@ -155,6 +160,52 @@ const CAT_FAMILIAS_M3: FamiliaCatalogo[] = FAMILIAS_M3.map((f) => ({
   descripcion: f.descripcion,
   ruta: rutaDeFamiliaModulo3(f.key),
   metodos: CAT_METODOS_M3.filter((m) => m.familia === f.key),
+}));
+
+/* ------------------------------------------------------------------ */
+/* Módulo 4                                                            */
+/* ------------------------------------------------------------------ */
+
+const CAT_METODOS_M4: MetodoCatalogo[] = METODOS_M4.map((m) => ({
+  key: m.key,
+  nombre: m.nombre,
+  familia: m.familia,
+  idea: m.idea,
+  formula: m.formula,
+  rutaBase: `${rutaDeFamiliaModulo4(m.familia)}/${m.ruta}`,
+  estado: 'disponible',
+}));
+
+const CAT_FAMILIAS_M4: FamiliaCatalogo[] = FAMILIAS_M4.map((f) => ({
+  key: f.key,
+  nombre: f.nombre,
+  principio: f.principio,
+  descripcion: f.descripcion,
+  ruta: rutaDeFamiliaModulo4(f.key),
+  metodos: CAT_METODOS_M4.filter((m) => m.familia === f.key),
+}));
+
+/* ------------------------------------------------------------------ */
+/* Módulo 5                                                            */
+/* ------------------------------------------------------------------ */
+
+const CAT_METODOS_M5: MetodoCatalogo[] = METODOS_M5.map((m) => ({
+  key: m.key,
+  nombre: m.nombre,
+  familia: m.familia,
+  idea: m.idea,
+  formula: m.formula,
+  rutaBase: `${rutaDeFamiliaModulo5(m.familia)}/${m.ruta}`,
+  estado: 'disponible',
+}));
+
+const CAT_FAMILIAS_M5: FamiliaCatalogo[] = FAMILIAS_M5.map((f) => ({
+  key: f.key,
+  nombre: f.nombre,
+  principio: f.principio,
+  descripcion: f.descripcion,
+  ruta: rutaDeFamiliaModulo5(f.key),
+  metodos: CAT_METODOS_M5.filter((m) => m.familia === f.key),
 }));
 
 /* ------------------------------------------------------------------ */
@@ -287,28 +338,28 @@ export const MODULOS: readonly ModuloCatalogo[] = [
   {
     id: 'modulo4',
     etiqueta: 'Módulo 4',
-    nombre: 'Diferenciación e integración numérica',
-    subtitulo: 'Fase 4 · en desarrollo',
+    nombre: 'Integración numérica',
+    subtitulo: 'Fase 4 · área bajo la curva',
     descripcion:
-      'Diferencias finitas, Regla del Trapecio, Simpson 1/3 y 3/8, y Cuadratura de Gauss-Legendre.',
-    ruta: null,
-    estado: 'planificado',
-    familias: [],
+      'Regla del trapecio compuesta y regla de Simpson 1/3 compuesta, con tabla de coeficientes, área paso a paso y medición del error.',
+    ruta: '/modulo4',
+    estado: 'disponible',
+    familias: CAT_FAMILIAS_M4,
     secciones: [],
-    claves: ['fase 4', 'simpson', 'trapecio', 'integracion', 'derivacion', 'gauss legendre'],
+    claves: ['fase 4', 'simpson', 'trapecio', 'integracion', 'area', 'newton cotes'],
   },
   {
     id: 'modulo5',
     etiqueta: 'Módulo 5',
     nombre: 'Ecuaciones diferenciales ordinarias',
-    subtitulo: 'Fase 5 · en desarrollo',
+    subtitulo: 'Fase 5 · problemas de valor inicial',
     descripcion:
-      'Problemas de valor inicial mediante Euler, Euler Mejorado (Heun) y Runge-Kutta de 4to orden (RK4).',
-    ruta: null,
-    estado: 'planificado',
-    familias: [],
+      'Euler explícito y Runge-Kutta de orden 4 para problemas de valor inicial, con teoría, ejemplos resueltos, autoevaluación, calculadora, comparación y convergencia.',
+    ruta: '/modulo5',
+    estado: 'disponible',
+    familias: CAT_FAMILIAS_M5,
     secciones: [],
-    claves: ['fase 5', 'edo', 'euler', 'heun', 'runge kutta', 'rk4'],
+    claves: ['fase 5', 'edo', 'euler', 'runge kutta', 'rk4', 'valor inicial'],
   },
 ] as const;
 

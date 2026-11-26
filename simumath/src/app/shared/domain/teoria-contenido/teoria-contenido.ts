@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation, computed, input, signal } from '@angular/core';
 import { UiCard } from '../../ui/ui-card/ui-card';
+import { MathFormula } from '../../math/math';
+import { MathTexto } from '../../math/math-texto';
 import type { RecursoTeoria, TeoriaPlantillaVista } from '../../models/metodo.model';
 
 /**
@@ -24,7 +26,7 @@ import type { RecursoTeoria, TeoriaPlantillaVista } from '../../models/metodo.mo
 @Component({
   selector: 'app-teoria-contenido',
   standalone: true,
-  imports: [UiCard],
+  imports: [UiCard, MathFormula, MathTexto],
   templateUrl: './teoria-contenido.html',
   styleUrl: './teoria-contenido.scss',
   encapsulation: ViewEncapsulation.None,
@@ -40,6 +42,13 @@ export class TeoriaContenido {
   readonly videoEtiqueta = input('Video · ejemplo resuelto');
   readonly videoTitulo = input('Video · ejemplo resuelto');
   readonly videoDescripcion = input('');
+
+  /**
+   * Fórmula principal en TeX. Si viene, se dibuja con KaTeX; si no, se
+   * usa el texto plano de `teoria().algoritmo.formula` (compatibilidad
+   * con los módulos que todavía no migraron).
+   */
+  readonly formulaTex = input('');
 
   readonly tituloMetodo = input('El método');
   readonly tituloCriterios = input('¿Qué se mide?');

@@ -1,0 +1,42 @@
+<section class="panel-resultado" [attr.aria-labelledby]="tituloId()">
+  <h4 class="panel-resultado__titulo" [id]="tituloId()">Tu resultado</h4>
+  <p class="panel-resultado__ayuda">
+    Escribí tu resultado o subí una foto/PDF de tu desarrollo. Después marcá que lo enviaste:
+    escribir o subir, por sí solo, no desbloquea la solución.
+  </p>
+
+  <label class="panel-resultado__campo">
+    <span>Resultado escrito</span>
+    <textarea
+      rows="3"
+      [value]="estado().texto"
+      (input)="enTexto($event)"
+      placeholder="Ej.: I ≈ 0,34375"
+    ></textarea>
+  </label>
+
+  <label class="panel-resultado__campo">
+    <span>Archivo (opcional)</span>
+    <input type="file" accept="image/*,.pdf" (change)="enArchivo($event)" />
+  </label>
+
+  @if (estado().archivoNombre) {
+    <p class="panel-resultado__archivo">Archivo seleccionado: {{ estado().archivoNombre }}</p>
+  }
+
+  <div class="panel-resultado__acciones">
+    <button
+      type="button"
+      class="panel-resultado__boton"
+      [disabled]="!puedeMarcar()"
+      (click)="marcar()"
+    >
+      Marcar resultado como enviado
+    </button>
+    @if (estado().enviado) {
+      <span class="panel-resultado__enviado" role="status">Resultado enviado</span>
+    } @else {
+      <span class="panel-resultado__pendiente" role="status">Resultado todavía no enviado</span>
+    }
+  </div>
+</section>

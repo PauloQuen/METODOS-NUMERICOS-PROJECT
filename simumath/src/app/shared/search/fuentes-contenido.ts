@@ -245,6 +245,26 @@ export const FUENTES_CONTENIDO: readonly FuenteContenido[] = [
     },
   },
 
+  /* ── Módulo 4 ─────────────────────────────────────────────────── */
+  {
+    clave: 'modulo4/newton-cotes/trapecio',
+    cargar: async () => {
+      const m = await import(
+        '../../components/modulo4/tipos/newton-cotes/trapecio/trapecio.contenido'
+      );
+      return contenidoDe(m.TEORIA_TRAPECIO, [...m.EJEMPLOS_TRAPECIO, ...m.EJERCICIOS_TRAPECIO]);
+    },
+  },
+  {
+    clave: 'modulo4/newton-cotes/simpson',
+    cargar: async () => {
+      const m = await import(
+        '../../components/modulo4/tipos/newton-cotes/simpson/simpson.contenido'
+      );
+      return contenidoDe(m.TEORIA_SIMPSON, [...m.EJEMPLOS_SIMPSON, ...m.EJERCICIOS_SIMPSON]);
+    },
+  },
+
   /*
    * Módulo 0 publicado: sus cuatro fuentes están arriba, una por método.
    * `catalogo.ts` ya lo declara `disponible`, así que el índice puede

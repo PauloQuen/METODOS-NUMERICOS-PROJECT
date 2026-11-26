@@ -1,0 +1,195 @@
+.bloque-ejercicio {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bloque-ejercicio__titulo {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--on-surface);
+}
+
+.bloque-ejercicio__seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.85rem;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  background: var(--surface-container-lowest);
+}
+
+.bloque-ejercicio__subtitulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--on-surface);
+}
+
+.bloque-ejercicio__parrafo {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--on-surface);
+}
+
+.bloque-ejercicio__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--on-surface);
+}
+
+.bloque-ejercicio__pista {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  font-size: var(--text-body-sm);
+  line-height: 1.55;
+  color: var(--on-surface);
+  background: var(--surface-container);
+  border-left: 3px solid var(--secondary);
+  border-radius: var(--radius-sm);
+
+  .material-symbols-outlined {
+    font-size: 1.1rem;
+    color: var(--secondary);
+  }
+}
+
+/* ── Cuestionario ──────────────────────────────────────────────────── */
+
+.bloque-ejercicio__pregunta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+
+  legend {
+    padding: 0 0.3rem;
+    font-weight: 600;
+    font-size: var(--text-body-md);
+    color: var(--on-surface);
+  }
+}
+
+.bloque-ejercicio__opcion {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: var(--text-body-md);
+  line-height: 1.5;
+  color: var(--on-surface);
+  cursor: pointer;
+
+  input {
+    margin-top: 0.25rem;
+    accent-color: var(--primary);
+  }
+}
+
+.bloque-ejercicio__correcto,
+.bloque-ejercicio__incorrecto {
+  margin: 0.25rem 0 0;
+  padding: 0.4rem 0.55rem;
+  font-size: var(--text-body-sm);
+  line-height: 1.55;
+  border-radius: var(--radius-sm);
+}
+
+.bloque-ejercicio__correcto {
+  color: var(--c-ok-texto);
+  background: var(--c-ok-fondo);
+}
+
+.bloque-ejercicio__incorrecto {
+  color: var(--c-error-texto);
+  background: var(--c-error-fondo);
+}
+
+/* ── Acciones ──────────────────────────────────────────────────────── */
+
+.bloque-ejercicio__acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.bloque-ejercicio__boton,
+.bloque-ejercicio__boton-secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 1rem;
+  font-size: var(--text-label-lg);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-smooth);
+}
+
+.bloque-ejercicio__boton {
+  color: var(--on-primary);
+  background: var(--primary);
+}
+
+.bloque-ejercicio__boton:hover {
+  background: var(--primary-container);
+}
+
+.bloque-ejercicio__boton-secundario {
+  color: var(--on-surface);
+  background: var(--surface-container);
+}
+
+.bloque-ejercicio__boton-secundario:hover {
+  background: var(--surface-container-high);
+}
+
+.bloque-ejercicio__boton:focus-visible,
+.bloque-ejercicio__boton-secundario:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.bloque-ejercicio__marcador {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--on-surface-variant);
+}
+
+.bloque-ejercicio__boton-secundario.bloque-ejercicio__boton--activo {
+  background: var(--surface-container-high);
+}
+
+.bloque-ejercicio__boton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.bloque-ejercicio__bloqueo {
+  align-self: center;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-variant);
+}
+
+.bloque-ejercicio__panel {
+  margin-bottom: 0.85rem;
+}
+
+.bloque-ejercicio__solucion {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--outline-variant);
+}

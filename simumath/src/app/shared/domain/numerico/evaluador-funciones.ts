@@ -43,7 +43,7 @@ export type Operador = '+' | '-' | '*' | '/' | '^';
 /** Un nodo del árbol de expresiones. */
 export type Nodo =
   | { tipo: 'numero'; valor: number }
-  | { tipo: 'variable' }
+  | { tipo: 'variable'; nombre?: 'x' | 't' | 'y' }
   | { tipo: 'constante'; nombre: 'pi' | 'e' }
   | { tipo: 'unario'; operador: '-' | '+'; operando: Nodo }
   | { tipo: 'binario'; operador: Operador; izquierda: Nodo; derecha: Nodo }
@@ -199,7 +199,11 @@ class Parser {
 
     if (token.tipo === 'variable') {
       this.avanzar();
-      return { tipo: 'variable' };
+      const nombre = token.texto.toLowerCase();
+      return {
+        tipo: 'variable',
+        nombre: nombre === 't' ? 't' : nombre === 'y' ? 'y' : 'x',
+      };
     }
 
     if (token.tipo === 'constante') {
@@ -254,26 +258,40 @@ class Parser {
 /* Evaluador: árbol -> número                                           */
 /* ------------------------------------------------------------------ */
 
-/** Calcula el valor de un nodo para una x dada. */
-export function calcular(nodo: Nodo, x: number): number {
+/**
+ * Calcula el valor de un nodo.
+ *
+ * `x` es el valor de la variable clásica. Para expresiones con `t` e `y`
+ * (ecuaciones diferenciales) se pasan los dos valores en el tercer
+ * argumento; si faltan, la variable correspondiente toma el valor de x.
+ * Así la misma función sirve para los dos usos sin romper a los módulos
+ * anteriores, que siguen llamando `calcular(arbol, x)`.
+ */
+export function calcular(
+  nodo: Nodo,
+  x: number,
+  variables?: { t?: number; y?: number },
+): number {
   switch (nodo.tipo) {
     case 'numero':
       return nodo.valor;
 
     case 'variable':
+      if (nodo.nombre === 't') return variables?.t ?? x;
+      if (nodo.nombre === 'y') return variables?.y ?? x;
       return x;
 
     case 'constante':
       return nodo.nombre === 'pi' ? Math.PI : Math.E;
 
     case 'unario': {
-      const valor = calcular(nodo.operando, x);
+      const valor = calcular(nodo.operando, x, variables);
       return nodo.operador === '-' ? -valor : valor;
     }
 
     case 'binario': {
-      const a = calcular(nodo.izquierda, x);
-      const b = calcular(nodo.derecha, x);
+      const a = calcular(nodo.izquierda, x, variables);
+      const b = calcular(nodo.derecha, x, variables);
       switch (nodo.operador) {
         case '+': return a + b;
         case '-': return a - b;
@@ -285,7 +303,7 @@ export function calcular(nodo: Nodo, x: number): number {
     }
 
     case 'llamada':
-      return FUNCIONES[nodo.nombre](calcular(nodo.argumento, x));
+      return FUNCIONES[nodo.nombre](calcular(nodo.argumento, x, variables));
   }
 }
 
@@ -327,9 +345,17 @@ export class FuncionEvaluable {
     return funcion;
   }
 
-  /** Evalúa la función en x. */
+  /** Evalúa la función en x. Las variables t e y toman ese mismo valor. */
   evaluar(x: number): number {
     return calcular(this.arbol, x);
+  }
+
+  /**
+   * Evalúa una función de dos variables, como f(t, y) de una EDO.
+   * Las apariciones de `x` se resuelven con el valor de `t`.
+   */
+  evaluarEn(t: number, y: number): number {
+    return calcular(this.arbol, t, { t, y });
   }
 
   /**

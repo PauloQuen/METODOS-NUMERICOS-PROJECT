@@ -9,6 +9,8 @@ import { Integrantes } from "./components/modulo1/integrantes/integrantes";
 import { Graficos } from "./components/modulo1/graficos/graficos";
 import { Modulo2 } from "./components/modulo2/modulo2";
 import { Modulo3 } from "./components/modulo3/modulo3";
+import { Modulo4 } from "./components/modulo4/modulo4";
+import { Modulo5 } from "./components/modulo5/modulo5";
 import { MODULO0_ROUTES } from "./components/modulo0/modulo0.routes";
 
 /**
@@ -219,6 +221,98 @@ export const routes: Routes = [
         loadComponent: () =>
           import("./components/modulo3/tipos/tipo-metodos/tipo-metodos").then(
             (m) => m.TipoMetodosModulo3,
+          ),
+      },
+    ],
+  },
+
+  // Módulo 4 — Integración numérica
+  //
+  // Misma estructura que el Módulo 3: Pantalla A (elegir familia),
+  // Pantalla B (métodos de la familia) y páginas de método con sus cuatro
+  // pestañas. Los métodos concretos van ANTES de `tipos/:familia`, o el
+  // router leería 'trapecio' como una familia y nunca llegaría a la página.
+  {
+    path: "modulo4",
+    component: Modulo4,
+    children: [
+      { path: "", redirectTo: "inicio", pathMatch: "full" },
+
+      // Pantalla A: elige el TIPO de aproximación (Newton-Cotes).
+      {
+        path: "inicio",
+        loadComponent: () =>
+          import("./components/modulo4/inicio/inicio").then((m) => m.InicioModulo4),
+      },
+
+      // Métodos concretos: carga diferida de sus cuatro pestañas.
+      {
+        path: "tipos/newton-cotes/trapecio",
+        loadChildren: () =>
+          import(
+            "./components/modulo4/tipos/newton-cotes/trapecio/trapecio.routes"
+          ).then((m) => m.TRAPECIO_ROUTES),
+      },
+      {
+        path: "tipos/newton-cotes/simpson",
+        loadChildren: () =>
+          import(
+            "./components/modulo4/tipos/newton-cotes/simpson/simpson.routes"
+          ).then((m) => m.SIMPSON_ROUTES),
+      },
+
+      // Pantalla B: lista de métodos de una familia (newton-cotes).
+      {
+        path: "tipos/:familia",
+        loadComponent: () =>
+          import("./components/modulo4/tipos/tipo-metodos/tipo-metodos").then(
+            (m) => m.TipoMetodosModulo4,
+          ),
+      },
+    ],
+  },
+
+  // Módulo 5 — Ecuaciones diferenciales ordinarias
+  //
+  // Misma jerarquía que el Módulo 3 y el 4: Pantalla A (elegir familia),
+  // Pantalla B (lista de métodos) y página de método con sus cuatro
+  // pestañas en rutas hijas. Los métodos concretos van ANTES de
+  // `tipos/:familia` para que el router no trague `euler` como familia.
+  {
+    path: "modulo5",
+    component: Modulo5,
+    children: [
+      { path: "", redirectTo: "inicio", pathMatch: "full" },
+
+      // Pantalla A: elige el tipo de problema (PVI de un paso).
+      {
+        path: "inicio",
+        loadComponent: () =>
+          import("./components/modulo5/inicio/inicio").then((m) => m.InicioModulo5),
+      },
+
+      // Métodos concretos: carga diferida de sus cuatro pestañas.
+      {
+        path: "tipos/edo-clasicos/euler",
+        loadChildren: () =>
+          import("./components/modulo5/tipos/edo-clasicos/euler/euler.routes").then(
+            (m) => m.EULER_ROUTES,
+          ),
+      },
+      {
+        path: "tipos/edo-clasicos/rk4",
+        loadChildren: () =>
+          import("./components/modulo5/tipos/edo-clasicos/rk4/rk4.routes").then(
+            (m) => m.RK4_ROUTES,
+          ),
+      },
+
+      // Pantalla B: lista de métodos de la familia (edo-clasicos).
+      {
+        path: "tipos/:familia",
+        loadComponent: () =>
+          import("./components/modulo5/tipos/tipo-metodos/tipo-metodos").then(
+            (m) => m.TipoMetodosModulo5,
           ),
       },
     ],

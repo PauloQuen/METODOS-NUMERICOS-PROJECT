@@ -1,0 +1,133 @@
+/* ==========================================================================
+   Estilos compartidos de la pestaña Calculadora del Módulo 4.
+   ========================================================================== */
+
+.calc-m4 {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calc-m4__encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.calc-m4__titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--on-surface);
+}
+
+.calc-m4__intro {
+  margin: 0;
+  max-width: 75ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+}
+
+.calc-m4__intro code {
+  padding: 0.1rem 0.3rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+  background: var(--surface-container-high);
+  border-radius: var(--radius-sm);
+}
+
+.calc-m4__grilla {
+  display: grid;
+  grid-template-columns: minmax(280px, 400px) 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.calc-m4__columna-derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calc-m4__titulo-seccion {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--on-surface);
+}
+
+@media (max-width: 900px) {
+  .calc-m4__grilla {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calc-m4__tabla-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.calc-m4__acciones {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.calc-m4__boton {
+  min-height: 40px;
+  padding: 0.5rem 0.9rem;
+  font-size: var(--text-label-sm);
+  font-weight: 600;
+  color: var(--on-surface);
+  background: var(--surface-container);
+  border-radius: var(--radius-md);
+}
+
+.calc-m4__boton:hover {
+  background: var(--surface-container-high);
+}
+
+.calc-m4__boton:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.calc-m4__tabla-scroll {
+  overflow-x: auto;
+}
+
+.calc-m4__tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-body-sm);
+}
+
+.calc-m4__tabla th,
+.calc-m4__tabla td {
+  padding: 0.5rem 0.7rem;
+  text-align: right;
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.calc-m4__tabla th:first-child,
+.calc-m4__tabla td:first-child {
+  text-align: left;
+}
+
+.calc-m4__tabla thead th {
+  font-weight: 700;
+  color: var(--on-surface-variant);
+  background: var(--surface-container-low);
+}
+
+.calc-m4__nota {
+  margin: 0.75rem 0 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--on-surface-variant);
+}

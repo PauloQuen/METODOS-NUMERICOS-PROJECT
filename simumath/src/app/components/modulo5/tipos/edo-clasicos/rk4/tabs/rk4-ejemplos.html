@@ -1,0 +1,25 @@
+<div class="lista-m4-tab">
+  <header class="lista-m4-tab__encabezado">
+    <h2 class="lista-m4-tab__titulo">Ejemplos resueltos</h2>
+    <p class="lista-m4-tab__intro">
+      Cuatro ejemplos de RK4: dos numéricos y dos de casuística. La tabla muestra las cuatro
+      pendientes de cada paso (k₁…k₄) y la comparación con la solución exacta.
+    </p>
+  </header>
+
+  @for (ejemplo of ejemplos; track ejemplo.id) {
+    <section class="lista-m4-tab__bloque">
+      <app-bloque-ejemplo-edo
+        [ejemplo]="ejemplo"
+        [estado]="estadoDe($index)"
+        [columnas]="columnas"
+        [exacta]="exactaDe($index)"
+        [rango]="rangoDe($index)"
+        [rangoY]="rangoYDe($index)"
+        [dibujo]="dibujoDe($index).despues"
+        leyenda="la poligonal de RK4 frente a la solución exacta"
+        tituloTabla="Tabla de pasos de RK4"
+      />
+    </section>
+  }
+</div>

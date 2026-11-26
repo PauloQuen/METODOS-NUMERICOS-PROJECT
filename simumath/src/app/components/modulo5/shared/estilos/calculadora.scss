@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Estilos compartidos de la pestaña Calculadora del Módulo 4.
+   ========================================================================== */
+
+.calc-m4 {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calc-m4__encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.calc-m4__titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--on-surface);
+}
+
+.calc-m4__intro {
+  margin: 0;
+  max-width: 75ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+}
+
+.calc-m4__intro code {
+  padding: 0.1rem 0.3rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+  background: var(--surface-container-high);
+  border-radius: var(--radius-sm);
+}
+
+.calc-m4__grilla {
+  display: grid;
+  grid-template-columns: minmax(280px, 400px) 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.calc-m4__columna-derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calc-m4__titulo-seccion {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--on-surface);
+}
+
+@media (max-width: 900px) {
+  .calc-m4__grilla {
+    grid-template-columns: 1fr;
+  }
+}

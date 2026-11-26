@@ -25,6 +25,17 @@ export class GraficoMetodo implements OnDestroy {
   readonly rango = input({ min: -5, max: 5 });
   readonly rangoY = input<{ min: number; max: number } | undefined>(undefined);
   readonly dibujarMetodo = input<DibujarMetodo | undefined>(undefined);
+  /**
+   * Capa que se dibuja ANTES de la curva.
+   *
+   * Existe por un motivo concreto: los métodos de integración rellenan
+   * el área bajo f(x). Si ese relleno se dibujara en `dibujarMetodo`
+   * (que corre después de la curva), taparía la curva y se perdería lo
+   * que el alumno tiene que ver. Con esta capa el orden queda: relleno →
+   * curva → marcas del método. Es opcional: los métodos que no la pasan
+   * se dibujan exactamente igual que antes.
+   */
+  readonly dibujarAntes = input<DibujarMetodo | undefined>(undefined);
   readonly leyenda = input('');
   readonly raiz = input<number | undefined>(undefined);
   readonly columnaA = input<string | undefined>(undefined);
@@ -80,6 +91,7 @@ export class GraficoMetodo implements OnDestroy {
       this.rango();
       this.rangoY();
       this.dibujarMetodo();
+      this.dibujarAntes();
       this.raiz();
       this.version();
       this.ancho();
@@ -237,23 +249,43 @@ export class GraficoMetodo implements OnDestroy {
     this.dibujarFondo(ctx, rect);
     this.dibujarCuadricula(ctx, rect, aX, aY, rango, rangoY);
     this.dibujarEjes(ctx, rect, aX, aY, rango, rangoY);
+
+    // Capa previa: relleno de áreas, sombras, bandas. Va antes de la
+    // curva para no taparla.
+    const contexto = this.crearContexto(aX, aY, rango);
+    const antes = this.dibujarAntes();
+    if (antes) {
+      try {
+        antes(ctx, rect, contexto);
+      } catch {}
+    }
+
     this.dibujarCurva(ctx, rect, aX, aY);
     this.dibujarRaiz(ctx, aX, aY);
+
     const dibujar = this.dibujarMetodo();
     if (dibujar) {
-      const contexto: ContextoGrafico = {
-        aX,
-        aY,
-        funcion: this.funcion(),
-        iteraciones: this.iteraciones(),
-        pasoActual: this.pasoActual(),
-        rango,
-        raiz: this.raiz(),
-      };
       try {
         dibujar(ctx, rect, contexto);
       } catch {}
     }
+  }
+
+  /** Lo que reciben las dos capas de dibujo del método. */
+  private crearContexto(
+    aX: (x: number) => number,
+    aY: (y: number) => number,
+    rango: { min: number; max: number },
+  ): ContextoGrafico {
+    return {
+      aX,
+      aY,
+      funcion: this.funcion(),
+      iteraciones: this.iteraciones(),
+      pasoActual: this.pasoActual(),
+      rango,
+      raiz: this.raiz(),
+    };
   }
 
   private calcularRangoY(rangoX: { min: number; max: number }): { min: number; max: number } {

@@ -133,7 +133,7 @@ export function tokenizar(entrada: string): Token[] {
       const palabra = texto.slice(i, j);
       const minuscula = palabra.toLowerCase();
 
-      if (minuscula === 'x') {
+      if (minuscula === 'x' || minuscula === 't' || minuscula === 'y') {
         tokens.push({ tipo: 'variable', texto: palabra });
       } else if (minuscula === 'pi') {
         tokens.push({ tipo: 'constante', texto: palabra });
@@ -165,7 +165,7 @@ export function tokenizar(entrada: string): Token[] {
     // Cualquier otra cosa: error claro, no ejecución.
     throw new ErrorExpresion(
       `El carácter "${c}" no es válido. Escribí la función con números, ` +
-        `x, operadores (+ - * / ^) y paréntesis.`,
+        `x, t, y, operadores (+ - * / ^) y paréntesis.`,
     );
   }
 

@@ -1,0 +1,26 @@
+<div class="lista-m4-tab">
+  <header class="lista-m4-tab__encabezado">
+    <h2 class="lista-m4-tab__titulo">Ejemplos resueltos</h2>
+    <p class="lista-m4-tab__intro">
+      Cuatro ejemplos de trapecio compuesto: dos numéricos y dos de casuística. La tabla de nodos
+      (con sus coeficientes 1-2-…-1) y el área sombreada se calculan corriendo el algoritmo, así que
+      podés reproducir todo en la pestaña de la calculadora.
+    </p>
+  </header>
+
+  @for (ejemplo of ejemplos; track ejemplo.id) {
+    <section class="lista-m4-tab__bloque">
+      <app-bloque-ejemplo-integracion
+        [ejemplo]="ejemplo"
+        [estado]="calculoDe($index)"
+        [columnas]="columnas"
+        [funcion]="funcionDe($index)"
+        [rango]="rangoDe($index)"
+        [dibujarAntes]="dibujoDe($index).antes"
+        [dibujarMetodo]="dibujoDe($index).despues"
+        leyenda="f(x) y los trapecios de la aproximación"
+        tituloTabla="Tabla de nodos, coeficientes y suma"
+      />
+    </section>
+  }
+</div>

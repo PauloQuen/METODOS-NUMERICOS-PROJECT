@@ -1,0 +1,155 @@
+<div class="bloque-integracion">
+  <ui-card>
+    <div class="bloque-integracion__grilla">
+      <!-- Columna 1: texto, datos y pasos -->
+      <div class="bloque-integracion__texto">
+        <h3 class="bloque-integracion__titulo">{{ ejemplo().titulo }}</h3>
+
+        <!-- Enunciado (solo casuísticas) -->
+        @if (esCasuistica() && ejemplo().enunciado) {
+          <section class="bloque-integracion__seccion">
+            <h4 class="bloque-integracion__subtitulo">Enunciado</h4>
+            <p class="bloque-integracion__parrafo">{{ ejemplo().enunciado }}</p>
+          </section>
+        }
+
+        <!-- Extracción de datos (solo casuísticas) -->
+        @if (esCasuistica() && ejemplo().extraccion; as extraccion) {
+          <section class="bloque-integracion__seccion">
+            <h4 class="bloque-integracion__subtitulo">Extracción de datos</h4>
+            <p class="bloque-integracion__parrafo">{{ extraccion.busqueda }}</p>
+            <div class="bloque-integracion__tabla-scroll">
+              <table class="bloque-integracion__tabla-datos">
+                <thead>
+                  <tr>
+                    <th>Símbolo</th>
+                    <th>Valor</th>
+                    <th>¿Qué es?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (d of extraccion.datos; track d.simbolo) {
+                    <tr>
+                      <td>{{ d.simbolo }}</td>
+                      <td>{{ d.valor }}</td>
+                      <td>{{ d.queEs }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            <p class="bloque-integracion__parrafo">{{ extraccion.formulacion }}</p>
+          </section>
+        }
+
+        <!-- Planteamiento y parámetros -->
+        <section class="bloque-integracion__seccion">
+          <h4 class="bloque-integracion__subtitulo">Planteamiento</h4>
+          <p class="bloque-integracion__parrafo">{{ ejemplo().planteamiento }}</p>
+
+          @if (ejemplo().formulaTex) {
+            <app-math [tex]="ejemplo().formulaTex!" [display]="true" />
+          } @else if (ejemplo().formula) {
+            <app-formula-matematica [texto]="ejemplo().formula!" />
+          }
+
+          @if (ejemplo().parametros.length > 0) {
+            <ul class="bloque-integracion__lista">
+              @for (p of ejemplo().parametros; track p.etiqueta) {
+                <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
+              }
+            </ul>
+          }
+        </section>
+
+        <!-- Interpretación -->
+        <section class="bloque-integracion__seccion">
+          <h4 class="bloque-integracion__subtitulo">Interpretación</h4>
+          <p class="bloque-integracion__parrafo">{{ ejemplo().interpretacion }}</p>
+        </section>
+
+        <!-- Pasos -->
+        <section class="bloque-integracion__seccion">
+          <h4 class="bloque-integracion__subtitulo">Pasos (cuentas a mano)</h4>
+          @for (p of ejemplo().pasos; track $index; let i = $index) {
+            <p class="bloque-integracion__paso"><strong>Paso {{ i + 1 }}</strong></p>
+            <p class="bloque-integracion__parrafo">{{ p }}</p>
+          }
+        </section>
+
+        <section class="bloque-integracion__seccion">
+          <h4 class="bloque-integracion__subtitulo">Algoritmo aplicado</h4>
+          <p class="bloque-integracion__parrafo">{{ ejemplo().algoritmo }}</p>
+        </section>
+
+        <section class="bloque-integracion__seccion">
+          <h4 class="bloque-integracion__subtitulo">Criterio</h4>
+          <p class="bloque-integracion__parrafo">{{ ejemplo().criterio }}</p>
+        </section>
+      </div>
+
+      <!-- Columna 2: gráfico + pasos -->
+      <div class="bloque-integracion__grafico">
+        <ui-card padding="md">
+          <app-grafico-metodo
+            [funcion]="funcion()"
+            [iteraciones]="estado().filas"
+            [pasoActual]="pasoActual()"
+            [rango]="rango()"
+            [dibujarAntes]="dibujarAntes()"
+            [dibujarMetodo]="dibujarMetodo()"
+            [leyenda]="leyenda()"
+          />
+          <div class="bloque-integracion__pasos">
+            <app-pasos-control
+              [total]="estado().filas.length"
+              [paso]="pasoActual()"
+              [texto]="textoPaso(pasoActual())"
+              (pasoCambiado)="alCambiarPaso($event)"
+            />
+          </div>
+        </ui-card>
+
+        <!-- Resumen del cálculo -->
+        <div class="bloque-integracion__resumen" aria-label="Resumen del cálculo">
+          <div class="bloque-integracion__dato">
+            <span class="bloque-integracion__dato-label">Subintervalos</span>
+            <span class="bloque-integracion__dato-valor">{{ estado().n }}</span>
+          </div>
+          <div class="bloque-integracion__dato">
+            <span class="bloque-integracion__dato-label">Ancho h</span>
+            <span class="bloque-integracion__dato-valor">{{ hTexto() }}</span>
+          </div>
+          <div class="bloque-integracion__dato">
+            <span class="bloque-integracion__dato-label">Integral I</span>
+            <span class="bloque-integracion__dato-valor bloque-integracion__dato-valor--destacado">
+              {{ integralTexto() }}
+            </span>
+          </div>
+          @if (errorTexto()) {
+            <div class="bloque-integracion__dato">
+              <span class="bloque-integracion__dato-label">Error absoluto</span>
+              <span class="bloque-integracion__dato-valor">{{ errorTexto() }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Conclusión -->
+    @if (ejemplo().conclusion) {
+      <section class="bloque-integracion__seccion">
+        <h4 class="bloque-integracion__subtitulo">Conclusión y respuesta</h4>
+        <p class="bloque-integracion__parrafo bloque-integracion__parrafo--destacado">
+          {{ ejemplo().conclusion }}
+        </p>
+      </section>
+    }
+
+    <!-- Tabla de trabajo -->
+    <section class="bloque-integracion__tabla">
+      <h4 class="bloque-integracion__subtitulo">{{ tituloTabla() }}</h4>
+      <app-iteration-table [columns]="columnas()" [rows]="estado().filas" />
+    </section>
+  </ui-card>
+</div>

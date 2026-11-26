@@ -1,0 +1,172 @@
+<div class="bloque-ejercicio">
+  <ui-card>
+    <h3 class="bloque-ejercicio__titulo">{{ ejercicio().titulo }}</h3>
+
+    @if (ejercicio().tipo === 'casuistica' && ejercicio().enunciado) {
+      <section class="bloque-ejercicio__seccion">
+        <h4 class="bloque-ejercicio__subtitulo">Enunciado</h4>
+        <p class="bloque-ejercicio__parrafo">{{ ejercicio().enunciado }}</p>
+      </section>
+    }
+
+    <section class="bloque-ejercicio__seccion">
+      <h4 class="bloque-ejercicio__subtitulo">Planteamiento</h4>
+      <p class="bloque-ejercicio__parrafo">{{ ejercicio().planteamiento }}</p>
+
+      @if (ejercicio().parametros.length > 0) {
+        <ul class="bloque-ejercicio__lista">
+          @for (p of ejercicio().parametros; track p.etiqueta) {
+            <li><strong>{{ p.etiqueta }}:</strong> {{ p.valor }}</li>
+          }
+        </ul>
+      }
+
+      @if (ejercicio().pista) {
+        <p class="bloque-ejercicio__pista">
+          <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
+          <span><strong>Pista:</strong> {{ ejercicio().pista }}</span>
+        </p>
+      }
+    </section>
+
+    <!-- Fila de acciones, con el mismo patrón desplegable del Módulo 3 -->
+    <div class="bloque-ejercicio__acciones">
+      <button
+        type="button"
+        class="bloque-ejercicio__boton"
+        [id]="idBoton('solucion')"
+        [disabled]="!puedeVerSolucion()"
+        [attr.aria-disabled]="!puedeVerSolucion()"
+        [attr.aria-expanded]="solucionVisible()"
+        [attr.aria-controls]="idPanel('solucion')"
+        (click)="alternarSolucion()"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">
+          {{ solucionVisible() ? 'expand_less' : 'expand_more' }}
+        </span>
+        {{ solucionVisible() ? 'Ocultar solución' : 'Ver solución' }}
+      </button>
+
+      @if (cuestionario().length > 0) {
+        <button
+          type="button"
+          class="bloque-ejercicio__boton-secundario"
+          [class.bloque-ejercicio__boton--activo]="cuestionarioAbierto()"
+          [id]="idBoton('cuestionario')"
+          [attr.aria-expanded]="cuestionarioAbierto()"
+          [attr.aria-controls]="idPanel('cuestionario')"
+          (click)="alternarCuestionario()"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">
+            {{ cuestionarioAbierto() ? 'expand_less' : 'expand_more' }}
+          </span>
+          Cuestionario
+        </button>
+      }
+
+      <button
+        type="button"
+        class="bloque-ejercicio__boton-secundario"
+        [class.bloque-ejercicio__boton--activo]="resultadoAbierto()"
+        [id]="idBoton('resultado')"
+        [attr.aria-expanded]="resultadoAbierto()"
+        [attr.aria-controls]="idPanel('resultado')"
+        (click)="alternarResultado()"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">
+          {{ resultadoAbierto() ? 'expand_less' : 'expand_more' }}
+        </span>
+        Tu resultado
+      </button>
+
+      @if (!puedeVerSolucion()) {
+        <span class="bloque-ejercicio__bloqueo" role="status">{{ textoBloqueo }}</span>
+      }
+    </div>
+
+    <!-- Cuestionario de comprensión -->
+    @if (cuestionario().length > 0 && cuestionarioAbierto()) {
+      <section
+        class="bloque-ejercicio__seccion"
+        role="region"
+        [id]="idPanel('cuestionario')"
+        [attr.aria-labelledby]="idBoton('cuestionario')"
+      >
+        <h4 [id]="'quiz-' + ejercicio().id" class="bloque-ejercicio__subtitulo">
+          Antes de ver la solución
+        </h4>
+
+        @for (pregunta of cuestionario(); track pregunta.id) {
+          <fieldset class="bloque-ejercicio__pregunta">
+            <legend>{{ pregunta.enunciado }}</legend>
+            @for (opcion of pregunta.opciones; track opcion.id) {
+              <label class="bloque-ejercicio__opcion">
+                <input
+                  type="radio"
+                  [name]="nombreDe(pregunta.id)"
+                  [value]="opcion.id"
+                  [checked]="respuestas()[pregunta.id] === opcion.id"
+                  (change)="responder(pregunta.id, opcion.id)"
+                />
+                <span>{{ opcion.texto }}</span>
+              </label>
+            }
+
+            @if (comprobado()) {
+              @if (respuestas()[pregunta.id] === pregunta.correcta) {
+                <p class="bloque-ejercicio__correcto">Correcto: {{ pregunta.explicacion }}</p>
+              } @else {
+                <p class="bloque-ejercicio__incorrecto">
+                  Todavía no: {{ pregunta.explicacion }}
+                </p>
+              }
+            }
+          </fieldset>
+        }
+
+        <div class="bloque-ejercicio__acciones">
+          <button type="button" class="bloque-ejercicio__boton-secundario" (click)="comprobar()">
+            Comprobar respuesta
+          </button>
+          @if (comprobado()) {
+            <span class="bloque-ejercicio__marcador">
+              {{ aciertos() }} de {{ cuestionario().length }} correctas
+            </span>
+          }
+        </div>
+      </section>
+    }
+
+    @if (resultadoAbierto()) {
+      <div
+        class="bloque-ejercicio__panel"
+        role="region"
+        [id]="idPanel('resultado')"
+        [attr.aria-labelledby]="idBoton('resultado')"
+      >
+        <app-panel-resultado [clave]="clave()" />
+      </div>
+    }
+
+    @if (solucionVisible()) {
+      <div
+        class="bloque-ejercicio__solucion"
+        role="region"
+        [id]="idPanel('solucion')"
+        [attr.aria-labelledby]="idBoton('solucion')"
+      >
+        <app-bloque-ejemplo-integracion
+          [ejemplo]="ejercicio()"
+          [estado]="estado()"
+          [columnas]="columnas()"
+          [funcion]="funcion()"
+          [rango]="rango()"
+          [dibujarAntes]="dibujarAntes()"
+          [dibujarMetodo]="dibujarMetodo()"
+          [leyenda]="leyenda()"
+          [tituloTabla]="tituloTabla()"
+        />
+      </div>
+    }
+  </ui-card>
+</div>

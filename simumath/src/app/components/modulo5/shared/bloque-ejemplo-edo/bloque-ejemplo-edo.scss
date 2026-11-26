@@ -1,0 +1,163 @@
+.bloque-integracion {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bloque-integracion__grilla {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 920px) {
+  .bloque-integracion__grilla {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bloque-integracion__texto,
+.bloque-integracion__grafico {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  /* Sin esto, el texto largo fija el ancho mínimo de la columna del grid
+     y desborda la página en móvil. */
+  min-width: 0;
+}
+
+.bloque-integracion__titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--on-surface);
+}
+
+.bloque-integracion__seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  background: var(--surface-container-lowest);
+}
+
+.bloque-integracion__subtitulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--on-surface);
+}
+
+.bloque-integracion__parrafo {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--on-surface);
+  white-space: normal;
+}
+
+.bloque-integracion__parrafo--destacado {
+  font-weight: 500;
+  background: var(--surface-container);
+  padding: 0.5rem 0.6rem;
+  border-left: 3px solid var(--secondary);
+  border-radius: var(--radius-sm);
+}
+
+.bloque-integracion__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--on-surface);
+}
+
+.bloque-integracion__paso {
+  margin: 0.25rem 0 0 0;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+/* Tabla de extracción de datos */
+.bloque-integracion__tabla-scroll {
+  overflow-x: auto;
+}
+
+.bloque-integracion__tabla-datos {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.25rem 0;
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  font-size: var(--text-body-sm);
+}
+
+.bloque-integracion__tabla-datos th,
+.bloque-integracion__tabla-datos td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--outline-variant);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.bloque-integracion__tabla-datos th {
+  background: var(--surface-container);
+  color: var(--on-surface);
+}
+
+.bloque-integracion__pasos {
+  margin-top: 0.75rem;
+}
+
+/* Resumen del cálculo */
+.bloque-integracion__resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.6rem;
+}
+
+.bloque-integracion__dato {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.6rem 0.7rem;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+}
+
+.bloque-integracion__dato-label {
+  font-size: var(--text-label-sm);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+.bloque-integracion__dato-valor {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--on-surface);
+}
+
+.bloque-integracion__dato-valor--destacado {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.bloque-integracion__tabla {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.bloque-integracion__nota {
+  margin: 0.75rem 0 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--on-surface-variant);
+}

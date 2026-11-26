@@ -1,0 +1,134 @@
+<div class="calc-m4">
+  <header class="calc-m4__encabezado">
+    <h2 class="calc-m4__titulo">{{ titulo() }}</h2>
+    <p class="calc-m4__intro">{{ intro() }}</p>
+  </header>
+
+  <div class="calc-m4__grilla">
+    <app-panel-calculadora-edo
+      [campos]="campos()"
+      [valores]="valores()"
+      [respuesta]="estado()?.respuesta ?? null"
+      (valoresChange)="alCambiarValores($event)"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (estado(); as e) {
+      @if (e.filas.length > 0) {
+        <div class="calc-m4__columna-derecha">
+          <ui-card padding="lg">
+            <h3 class="calc-m4__titulo-seccion">Aproximación y solución exacta</h3>
+            <app-grafico-metodo
+              [funcion]="exacta() ?? sinCurva"
+              [iteraciones]="e.filas"
+              [pasoActual]="paso()"
+              [rango]="rango()"
+              [rangoY]="rangoY()"
+              [dibujarMetodo]="dibujo.despues"
+              leyenda="la poligonal de la aproximación frente a la solución exacta"
+            />
+          </ui-card>
+
+          <ui-card padding="lg">
+            <h3 class="calc-m4__titulo-seccion">Paso a paso</h3>
+            <app-pasos-control
+              [total]="total()"
+              [paso]="paso()"
+              [texto]="textoDelPaso()"
+              (pasoCambiado)="alCambiarPaso($event)"
+            />
+          </ui-card>
+        </div>
+      }
+    }
+  </div>
+
+  @if (estado(); as e) {
+    @if (e.filas.length > 0) {
+      <ui-card padding="lg">
+        <div class="calc-m4__tabla-cabecera">
+          <h3 class="calc-m4__titulo-seccion">Tabla de pasos</h3>
+          <div class="calc-m4__acciones">
+            <button type="button" class="calc-m4__boton" (click)="copiarCsv()">
+              {{ copiado() ? 'Copiado' : 'Copiar tabla' }}
+            </button>
+            <button type="button" class="calc-m4__boton" (click)="descargarCsv()">
+              Descargar CSV
+            </button>
+          </div>
+        </div>
+        <app-iteration-table [columns]="columnas()" [rows]="e.filas" />
+        @if (e.filasOcultas > 0) {
+          <p class="calc-m4__nota">
+            La tabla muestra los primeros 1 000 pasos; se omitieron {{ e.filasOcultas }}. El
+            resultado final corresponde al cálculo completo.
+          </p>
+        }
+      </ui-card>
+
+      @if (comparacion(); as comparacion) {
+        <ui-card padding="lg">
+          <h3 class="calc-m4__titulo-seccion">Comparación Euler vs RK4 con el mismo h</h3>
+          <div class="calc-m4__tabla-scroll">
+            <table class="calc-m4__tabla">
+              <thead>
+                <tr>
+                  <th>Método</th>
+                  <th>y(t final)</th>
+                  <th>Error absoluto</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (fila of comparacion; track fila.metodo) {
+                  <tr>
+                    <td>{{ fila.metodo }}</td>
+                    <td>{{ fila.valor }}</td>
+                    <td>{{ fila.error ?? '—' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <p class="calc-m4__nota">
+            Con el mismo esfuerzo de paso, RK4 suele quedar varios órdenes de magnitud más cerca
+            del valor exacto. Si no hay solución exacta, la columna de error queda vacía.
+          </p>
+        </ui-card>
+      }
+
+      @if (convergencia().length > 0) {
+        <ui-card padding="lg">
+          <h3 class="calc-m4__titulo-seccion">Convergencia: error al reducir h</h3>
+          <div class="calc-m4__tabla-scroll">
+            <table class="calc-m4__tabla">
+              <thead>
+                <tr>
+                  <th>h</th>
+                  <th>Pasos</th>
+                  <th>y(t final)</th>
+                  <th>Error absoluto</th>
+                  <th>Error anterior / actual</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (fila of convergencia(); track fila.h) {
+                  <tr>
+                    <td>{{ fila.h }}</td>
+                    <td>{{ fila.pasos }}</td>
+                    <td>{{ fila.yFinal }}</td>
+                    <td>{{ fila.error }}</td>
+                    <td>{{ fila.razon }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <p class="calc-m4__nota">
+            En Euler la razón se acerca a 2; en RK4, a 16. Es la firma del orden del método.
+          </p>
+        </ui-card>
+      }
+    }
+  }
+</div>

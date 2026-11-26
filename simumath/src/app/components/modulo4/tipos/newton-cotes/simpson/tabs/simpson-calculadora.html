@@ -1,0 +1,58 @@
+<div class="calc-m4">
+  <header class="calc-m4__encabezado">
+    <h2 class="calc-m4__titulo">Calculadora de Simpson 1/3 compuesta</h2>
+    <p class="calc-m4__intro">
+      Escribí la función, el intervalo y un número PAR de subintervalos. La tabla muestra los
+      coeficientes 1-4-2-4-…-1 y el gráfico sombrea el área bajo cada parábola, resaltando el bloque
+      que estás mirando. Si ingresás el valor exacto, se calcula el error absoluto y relativo.
+    </p>
+  </header>
+
+  <div class="calc-m4__grilla">
+    <app-panel-calculadora-integracion
+      [campos]="campos"
+      [(valores)]="valores"
+      [respuesta]="estado()?.respuesta ?? null"
+      (calcular)="alCalcular($event)"
+      (limpiar)="alLimpiar()"
+    />
+
+    @if (estado(); as e) {
+      @if (e.filas.length > 0) {
+        <div class="calc-m4__columna-derecha">
+          <ui-card padding="lg">
+            <h3 class="calc-m4__titulo-seccion">Área y parábolas</h3>
+            <app-grafico-metodo
+              [funcion]="funcion()"
+              [iteraciones]="e.filas"
+              [pasoActual]="paso()"
+              [rango]="rango()"
+              [dibujarAntes]="dibujo()?.antes"
+              [dibujarMetodo]="dibujo()?.despues"
+              leyenda="f(x) y las parábolas de Simpson"
+            />
+          </ui-card>
+
+          <ui-card padding="lg">
+            <h3 class="calc-m4__titulo-seccion">Paso a paso</h3>
+            <app-pasos-control
+              [total]="total()"
+              [paso]="paso()"
+              [texto]="textoDelPaso()"
+              (pasoCambiado)="alCambiarPaso($event)"
+            />
+          </ui-card>
+        </div>
+      }
+    }
+  </div>
+
+  @if (estado(); as e) {
+    @if (e.filas.length > 0) {
+      <ui-card padding="lg">
+        <h3 class="calc-m4__titulo-seccion">Tabla de nodos, coeficientes y suma</h3>
+        <app-iteration-table [columns]="columnas" [rows]="e.filas" />
+      </ui-card>
+    }
+  }
+</div>
