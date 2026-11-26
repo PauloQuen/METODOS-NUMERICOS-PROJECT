@@ -1,245 +1,80 @@
-.teoria {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-/* ── Secciones ─────────────────────────────────────────────────────── */
-
-.teoria__seccion {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.teoria__titulo {
-  margin: 0;
-  font-family: var(--font-serif, Georgia, serif);
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--on-surface);
-}
-
-.teoria__parrafo {
-  margin: 0;
-  max-width: 70ch;
-  font-size: 1.02rem;
-  line-height: 1.75;
-  color: var(--on-surface);
-}
-
-.teoria__parrafo--intro {
-  color: var(--on-surface-variant);
-  font-style: italic;
-}
-
-/* ── Acordeón de las tres ideas ────────────────────────────────────── */
-
-.teoria__acordeon {
-  border: 1px solid var(--outline-variant);
-  border-radius: 0.7rem;
-  overflow: hidden;
-  background: var(--surface-container-lowest);
-}
-
-.teoria__acordeon-boton {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  width: 100%;
-  padding: 0.85rem 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: left;
-  color: var(--on-surface);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.teoria__acordeon-boton:hover {
-  background: var(--surface-container-low);
-}
-
-.teoria__acordeon-boton:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: -2px;
-}
-
-.teoria__acordeon-boton--abierto {
-  background: var(--surface-container);
-}
-
-.teoria__acordeon-titulo {
-  flex: 1;
-}
-
-.teoria__acordeon-flecha {
-  font-size: 1.2rem;
-  color: var(--on-surface-variant);
-}
-
-.teoria__acordeon-cuerpo {
-  padding: 0 1rem 1rem 1rem;
-  border-top: 1px solid var(--outline-variant);
-}
-
-.teoria__acordeon-cuerpo p {
-  margin: 0.85rem 0 0;
-  max-width: 70ch;
-  font-size: 0.98rem;
-  line-height: 1.75;
-  color: var(--on-surface);
-}
-
-/* ── La fórmula grande ─────────────────────────────────────────────── */
-
-.formula {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 1.5rem;
-  background: var(--surface-container);
-  border: 1px solid var(--outline-variant);
-  border-radius: 0.8rem;
-  font-family: var(--font-serif, Georgia, serif);
-}
-
-.formula__variable {
-  font-size: 2rem;
-  font-style: italic;
-  color: var(--on-surface);
-}
-
-.formula__igual {
-  font-size: 1.75rem;
-  color: var(--on-surface-variant);
-}
-
-.formula__fraccion {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 1.6rem;
-}
-
-.formula__numerador {
-  padding: 0 0.6rem 0.15rem;
-  border-bottom: 2px solid var(--on-surface);
-}
-
-.formula__denominador {
-  padding: 0.15rem 0.6rem 0;
-}
-
-/* ── Grilla de tarjetas ─────────────────────────────────────────────── */
-
-.teoria__grilla {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
-}
-
-.tarjeta__titulo {
-  margin: 0 0 0.85rem;
-  font-family: var(--font-serif, Georgia, serif);
-  font-size: 1.1rem;
-  color: var(--on-surface);
-}
-
-.tarjeta__titulo--bueno {
-  color: var(--c-ok-texto);
-}
-
-.tarjeta__titulo--malo {
-  color: var(--c-error-texto);
-}
-
-/* ── Pasos numerados ───────────────────────────────────────────────── */
-
-.pasos {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: paso;
-}
-
-.pasos__paso {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
-  font-size: 0.95rem;
-  line-height: 1.65;
-  color: var(--on-surface);
-}
-
-.pasos__numero {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 1.5rem;
-  height: 1.5rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--on-primary);
-  background: var(--primary);
-  border-radius: 50%;
-}
-
-/* ── Criterios ─────────────────────────────────────────────────────── */
-
-.criterios {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.criterios__item {
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--primary);
-}
-
-.criterios__nombre {
-  margin: 0 0 0.25rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--on-surface);
-}
-
-.criterios__texto {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.65;
-  color: var(--on-surface-variant);
-}
-
-/* ── Listas de ventajas y limitaciones ─────────────────────────────── */
-
-.lista {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin: 0;
-  padding-left: 1.2rem;
-  font-size: 0.95rem;
-  line-height: 1.65;
-  color: var(--on-surface);
-}
-
-.lista li::marker {
-  color: var(--on-surface-variant);
-}
-
-.lista--bueno li::marker {
-  color: var(--c-ok-texto);
-}
-
-.lista--malo li::marker {
-  color: var(--c-error-texto);
+:host { display: block; min-width: 0; }
+.teoria { display: grid; gap: var(--e-7); color: var(--c-texto); line-height: var(--t-linea-libre); }
+h2, h3, p { margin: 0; }
+h2 { font-size: clamp(1.3rem, 3vw, 1.75rem); line-height: var(--t-linea-titulo); margin-bottom: var(--e-3); }
+h3 { font-size: var(--t-base); line-height: 1.5; }
+p, li { color: var(--c-texto-suave); }
+.introduccion { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--e-6); align-items: center; }
+.etiqueta { color: var(--c-acento); font-size: var(--t-xs); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: var(--e-2); }
+.formula { padding: var(--e-5); border: 2px solid var(--c-primario); border-radius: var(--r-lg); background: var(--c-superficie); text-align: center; display: grid; gap: var(--e-2); }
+.formula strong { color: var(--c-primario); font-size: clamp(1.4rem, 3vw, 2rem); }
+.formula span { color: var(--c-texto-suave); font-size: var(--t-xs); }
+.formula small { color: var(--c-acento-oscuro); font-size: var(--t-xs); font-style: italic; }
+.fundamento { padding: var(--e-5); border-left: 4px solid var(--c-acento); background: var(--c-acento-suave); border-radius: var(--r-md); }
+.fundamento h3 { margin-bottom: var(--e-2); }
+.subtitulo { margin-bottom: var(--e-5); max-width: 75ch; }
+.tarjeta { background: var(--c-superficie); padding: var(--e-5); border: 1px solid var(--c-borde-suave); border-radius: var(--r-lg); }
+.demo { display: grid; gap: var(--e-4); min-width: 0; }
+.controles, .acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); align-items: center; }
+.controles { justify-content: space-between; }
+.acciones label { font-size: var(--t-xs); color: var(--c-texto-suave); }
+.insignia { display: inline-block; padding: var(--e-1) var(--e-3); color: var(--c-acento-oscuro); background: var(--c-acento-suave); border-radius: var(--r-full); font-size: var(--t-xs); font-weight: 600; }
+button, select { font: inherit; min-height: 44px; border: 1px solid var(--c-primario); border-radius: var(--r-sm); padding: var(--e-2) var(--e-3); }
+button { background: var(--c-primario); color: var(--c-sobre-primario); cursor: pointer; font-weight: 600; }
+button:hover:not(:disabled) { background: var(--c-primario-hover); color: var(--c-sobre-primario); }
+button:disabled { opacity: .5; cursor: default; }
+button.secundario, select { background: var(--c-superficie); color: var(--c-primario); }
+button:focus-visible, select:focus-visible, summary:focus-visible, .tabla-scroll:focus-visible { outline: 3px solid var(--c-acento); outline-offset: 3px; }
+.grafica { width: 100%; height: auto; display: block; border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); background: var(--c-fondo); }
+.grafica text { fill: var(--c-texto-suave); font-size: 13px; font-family: var(--c-fuente); }
+.rejilla { stroke: var(--c-borde-suave); stroke-dasharray: 3 4; }
+.eje { stroke: var(--c-borde); }
+.banda { fill: var(--c-primario-suave); }
+.curva { fill: none; stroke: var(--c-texto); stroke-width: 2.5; }
+.extremo { stroke: var(--c-primario); stroke-width: 2; }
+.grafica .rotulo { fill: var(--c-primario); font-weight: 700; }
+.punto-linea { stroke: var(--c-error-texto); stroke-width: 2; stroke-dasharray: 4 3; }
+.punto, .grafica .rotulo-c { fill: var(--c-error-texto); }
+.indicadores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--e-3); margin: 0; }
+.indicadores div { border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); padding: var(--e-3); min-width: 0; }
+dt { color: var(--c-texto-suave); font-size: var(--t-xs); }
+dd { margin: var(--e-1) 0 0; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.mensaje { padding: var(--e-3); border-radius: var(--r-sm); background: var(--c-primario-suave); color: var(--c-primario-hover); }
+.completado { color: var(--c-ok-texto); background: var(--c-ok-fondo); }
+.ayuda-tabla { font-size: var(--t-xs); }
+.tabla-scroll { overflow-x: auto; border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: var(--t-xs); }
+caption { padding: var(--e-3); text-align: left; color: var(--c-texto-suave); }
+th, td { text-align: right; padding: var(--e-2) var(--e-3); white-space: nowrap; border-bottom: 1px solid var(--c-borde-suave); }
+thead, tbody th { background: var(--c-fondo); }
+tbody th { position: sticky; left: 0; }
+.ultima { background: var(--c-acento-suave); }
+.pasos { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-3); }
+.pasos li { display: flex; align-items: flex-start; gap: var(--e-3); padding: var(--e-4); border: 1px solid var(--c-borde-suave); border-left: 4px solid var(--c-primario); border-radius: var(--r-md); background: var(--c-superficie); }
+.pasos li:nth-child(4) { border-left-color: var(--c-ok-texto); }
+.pasos li:last-child { grid-column: 1 / -1; }
+.pasos h3 { color: var(--c-texto); margin-bottom: var(--e-1); }
+.numero { display: grid; place-items: center; flex: 0 0 28px; height: 28px; border-radius: 50%; background: var(--c-primario); color: var(--c-sobre-primario); font-weight: 700; }
+details { border: 1px solid var(--c-borde-suave); border-radius: var(--r-md); background: var(--c-superficie); margin-bottom: var(--e-3); }
+summary { cursor: pointer; padding: var(--e-4); font-weight: 600; }
+summary .insignia { margin-left: var(--e-2); }
+details p { padding: 0 var(--e-4) var(--e-4); }
+.criterio-principal { border: 2px solid var(--c-ok-texto); }
+.convergencia { margin-top: var(--e-5); }
+.balance { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-4); }
+.ventajas { border-top: 4px solid var(--c-ok-texto); }
+.limitaciones { border-top: 4px solid var(--c-error-texto); }
+.ventajas h3 { color: var(--c-ok-texto); }
+.limitaciones h3 { color: var(--c-error-texto); }
+ul, .consejos ol { padding-left: var(--e-5); margin-bottom: 0; }
+li + li { margin-top: var(--e-2); }
+.pasos li + li { margin-top: 0; }
+.consejos { border-top: 4px solid var(--c-primario); }
+@media (max-width: 720px) {
+  .introduccion, .pasos, .balance { grid-template-columns: minmax(0, 1fr); }
+  .indicadores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tarjeta, .fundamento { padding: var(--e-4); }
+  .teoria { gap: var(--e-6); }
+  .acciones { width: 100%; }
+  .acciones button { flex: 1 1 auto; }
 }

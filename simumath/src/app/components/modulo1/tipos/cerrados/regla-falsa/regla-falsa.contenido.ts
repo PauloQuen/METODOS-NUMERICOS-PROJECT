@@ -374,56 +374,51 @@ export const EJEMPLOS_REGLA_FALSA: Ejemplo[] = [
     titulo: 'CASUÍSTICA: área de un terreno',
     tipo: 'casuistica',
     enunciado:
-      'El mismo terreno del material de bisección: la superficie S(x) = x² − 3x + 0.5 ' +
-      'tiene un mínimo donde S′(x) = 0, es decir, 2x − 3 = 0, con x entre 0 y 5 metros. ' +
-      'La diferencia: esta vez se resuelve con la regla falsa.',
-    ecuacion: '2x − 3 = 0 en [0, 5]',
+      'Un terreno rectangular debe tener un área de 6 m². Su largo supera al ancho ' +
+      'en 1 metro. Si el ancho x está entre 1 y 3 metros, determina sus dimensiones ' +
+      'mediante regla falsa resolviendo x(x + 1) = 6.',
+    ecuacion: 'x² + x − 6 = 0 en [1, 3]',
     parametros: [
-      { etiqueta: 'Función', valor: 'f(x) = 2x − 3 (derivada de S)' },
-      { etiqueta: 'Intervalo', valor: '[0, 5]' },
+      { etiqueta: 'Función', valor: 'f(x) = x² + x − 6' },
+      { etiqueta: 'Intervalo', valor: '[1, 3]' },
       { etiqueta: 'Tolerancia', valor: '10⁻⁵' },
     ],
     extraccion: {
       busqueda:
-        'El largo del lado menor donde la superficie es mínima. Es el punto donde ' +
-        'la derivada se anula, o sea una raíz de f(x) = 2x − 3.',
+        'El ancho x del terreno, en metros, que permite alcanzar un área de 6 m².',
       datos: [
-        { simbolo: 'a = 0', valor: '0', queEs: 'Largo mínimo físico del terreno.' },
-        { simbolo: 'b = 5', valor: '5', queEs: 'Ancho del terreno.' },
+        { simbolo: 'A', valor: '6 m²', queEs: 'Área requerida del terreno.' },
+        { simbolo: 'L', valor: 'x + 1 m', queEs: 'Largo: un metro más que el ancho x.' },
+        { simbolo: 'a', valor: '1 m', queEs: 'Límite inferior del ancho.' },
+        { simbolo: 'b', valor: '3 m', queEs: 'Límite superior del ancho.' },
       ],
       formulacion:
-        'Se derivó S(x) = x² − 3x + 0.5 para obtener S′(x) = 2x − 3, y se busca ' +
-        'el cero de esa derivada. Se verifica Bolzano: f(0) = −3 y f(5) = 7, con ' +
-        'producto −21 < 0.',
+        'Área = ancho × largo: x(x + 1) = 6. Al pasar todo al primer miembro ' +
+        'resulta f(x) = x² + x − 6. Es continua y f(1) = −4, f(3) = 6: hay cambio de signo.',
     },
     interpretacion:
-      'Este es el caso más lindo de la regla falsa: como f es una RECTA, la cuerda ' +
-      'ES la función, y el cruce con el eje es la raíz exacta al primer intento: ' +
-      'c = 1.5 con f(1.5) = 0. La bisección necesitaba 19 iteraciones para ' +
-      'acercarse a 1.5; la regla falsa lo clava en una. La moraleja sigue siendo la ' +
-      'misma: para un problema exacto, ningún método iterativo le gana a despejar.',
+      'La función es una parábola: la cuerda no coincide con la curva y se necesitan ' +
+      'varias aproximaciones. El extremo b = 3 permanece fijo mientras a se acerca ' +
+      'a la raíz positiva. La solución exacta x = 2 sirve para comprobar el resultado numérico.',
     pasos: [
-      'Paso 0 — Condición de arranque: f(0) = −3 y f(5) = 7. Producto −21 < 0: ' +
-        'hay cambio de signo en [0, 5].',
-      'Paso 1 — La cuerda: c = 0 − (−3)·(5 − 0) / (7 − (−3)) = 15/10 = 1.5. ' +
-        'f(1.5) = 2·1.5 − 3 = 0.',
-      'Paso 2 — f(c) = 0 exacto: se terminó. No hace falta tolerancia: el corte de ' +
-        'la cuerda es la raíz exacta.',
-      'Paso 3 — Por qué acertó: cuando f es una recta, la cuerda entre dos puntos ' +
-        'de f ES la recta, así que su cruce con el eje x es exactamente el cero ' +
-        'de la función. La regla falsa no itera: despeja.',
+      'Paso 0 — f(1) = −4 y f(3) = 6. Su producto es −24: hay cambio de signo.',
+      'Paso 1 — c = 1 − (−4)·(3 − 1)/(6 − (−4)) = 1.8; f(c) = −0.96.',
+      'Paso 2 — f(1) y f(1.8) tienen el mismo signo: se conserva [1.8, 3].',
+      'Paso 3 — La siguiente cuerda corta en c ≈ 1.965517, con f(c) ≈ −0.171225 ' +
+        'y cambio absoluto ≈ 0.165517. Se conserva [c, 3] y se repite.',
     ],
     algoritmo:
-      'Se traza la cuerda entre (0, −3) y (5, 7). Como la función es lineal, la ' +
-      'cuerda coincide con ella y el cruce con el eje cae en la raíz exacta: ' +
-      '1 iteración y error cero.',
+      'Se comienza con la cuerda entre (1, −4) y (3, 6). Cada corte reemplaza ' +
+      'el extremo izquierdo; b = 3 permanece fijo. La aproximación avanza desde ' +
+      '1.8 hacia 2 y cumple la tolerancia en 8 iteraciones.',
     criterio:
-      'La parada es por raíz exacta: f(1.5) = 0. No se llegó a usar la tolerancia.',
+      'Se detiene en la iteración 8 porque el cambio absoluto entre aproximaciones ' +
+      'es aproximadamente 0.000004, menor que la tolerancia 0.00001. Este cambio no es una cota del error real.',
     conclusion:
-      'La raíz es x ≈ 1.5, y esta vez sin error: f(1.5) = 0 exacto. Cuando la ' +
-      'función es una recta, la regla falsa resuelve en una sola iteración; la ' +
-      'bisección necesitaba 19 pasos para aproximarse.',
-    calculo: { funcion: '2*x - 3', a: 0, b: 5, tol: 0.00001, maxIter: 100 },
+      'Tras 8 iteraciones, el ancho es x ≈ 1.999999 m y el largo x + 1 ≈ 2.999999 m. ' +
+      'Las dimensiones exactas son 2 m y 3 m, cuyo producto es 6 m². La función ' +
+      'no lineal permite observar cómo las cuerdas se acercan progresivamente a la raíz.',
+    calculo: { funcion: 'x^2 + x - 6', a: 1, b: 3, tol: 0.00001, maxIter: 100 },
   },
 
   {

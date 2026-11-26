@@ -1,0 +1,19 @@
+/* Misma paleta semántica de los métodos abiertos: condiciones en rojo,
+   cálculo en primario, parada en verde y repetición en neutro. */
+.pasos li { --color-paso: var(--c-primario); border-left-color: var(--color-paso); }
+.pasos li:first-child { --color-paso: var(--c-error-texto); }
+.pasos li:nth-child(4) { --color-paso: var(--c-ok-texto); border-left-color: var(--color-paso); }
+.pasos li:last-child { --color-paso: var(--c-texto); }
+.pasos .numero { background: var(--color-paso); color: var(--c-sobre-primario); }
+
+.chip {
+  display: inline-block;
+  padding: var(--e-1) var(--e-3);
+  border-radius: var(--r-full);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  margin-left: var(--e-2);
+}
+.chip-ok { background: var(--c-ok-fondo); color: var(--c-ok-texto); }
+.chip-error { background: var(--c-error-fondo); color: var(--c-error-texto); }
+.chip-primario { background: var(--c-primario-suave); color: var(--c-primario-hover); }

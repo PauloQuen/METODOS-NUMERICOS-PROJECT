@@ -1,0 +1,114 @@
+<article class="teoria">
+  <header><p class="etiqueta">Ejemplo resuelto · Punto fijo</p><h2>{{ ejemplo().titulo }}</h2></header>
+  @if (ejemplo().tipo === 'casuistica') {
+    @if (ejemplo().enunciado) {
+      <section><h3>Enunciado</h3><p>{{ ejemplo().enunciado }}</p></section>
+    }
+    @if (ejemplo().extraccion; as extraccion) {
+      <section class="extraccion">
+        <h3>Extracción de datos</h3><p>{{ extraccion.busqueda }}</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Datos del enunciado">
+          <table>
+            <thead><tr><th scope="col">Símbolo</th><th scope="col">Valor</th><th scope="col">¿Qué es?</th></tr></thead>
+            <tbody>@for (dato of extraccion.datos; track dato.simbolo) {
+              <tr><th scope="row">{{ dato.simbolo }}</th><td>{{ dato.valor }}</td><td>{{ dato.queEs }}</td></tr>
+            }</tbody>
+          </table>
+        </div>
+        <p>{{ extraccion.formulacion }}</p>
+      </section>
+    }
+  }
+  <div class="contexto">
+    <section class="tarjeta"><h3>Planteamiento</h3><p>{{ ejemplo().ecuacion }}</p>
+      <ul>@for (parametro of ejemplo().parametros; track parametro.etiqueta) {
+        <li><strong>{{ parametro.etiqueta === 'Reescritura' ? 'g(x)' : parametro.etiqueta }}:</strong> {{ parametro.valor }}</li>
+      }</ul>
+    </section>
+    <section class="tarjeta"><h3>Interpretación</h3><p>{{ ejemplo().interpretacion }}</p></section>
+  </div>
+  <section class="tarjeta obtencion">
+    <h2>¿Cómo se obtiene g(x)?</h2>
+    <ol>@for (explicacion of ejemplo().obtencionG.pasos; track $index) { <li>{{ explicacion }}</li> }</ol>
+    <p>{{ ejemplo().obtencionG.dominio }}</p>
+  </section>
+  <section>
+    <h2>Pruébalo paso a paso</h2>
+    <p class="subtitulo">Sube hasta la curva g(x) y cruza horizontalmente hasta y = x. La telaraña, el panel y la tabla avanzan juntos.</p>
+    <div class="tarjeta demo">
+      <div class="controles">
+        <span class="insignia">Punto fijo · ejemplo</span>
+        <div class="acciones">
+          <span>Semilla x₀ = {{ formato(semilla()) }}</span>
+          <span>Tolerancia |Δx|: {{ formato(tolerancia()) }}</span>
+          <button type="button" (click)="siguiente()" [disabled]="terminado()">Siguiente paso</button>
+          <button type="button" class="secundario" (click)="reiniciar()">Reiniciar</button>
+        </div>
+      </div>
+      <svg class="grafica" viewBox="0 0 600 300" role="img" [attr.aria-label]="'Telaraña de punto fijo: ' + ejemplo().ecuacion">
+        <title>Iteraciones de g(x)</title>
+        <defs>
+          <marker [id]="flechaId()" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0 0L10 5L0 10z" fill="var(--color-metodo)" />
+          </marker>
+          <clipPath [id]="clipId()"><rect x="48" y="20" width="502" height="230" /></clipPath>
+        </defs>
+        @for (v of marcas(); track v) {
+          <line class="rejilla" [attr.x1]="px(v)" [attr.x2]="px(v)" y1="20" y2="250" />
+          <line class="rejilla" x1="48" x2="550" [attr.y1]="py(v)" [attr.y2]="py(v)" />
+          <text [attr.x]="px(v)" y="274" text-anchor="middle">{{ formato(v) }}</text>
+          <text x="40" [attr.y]="py(v) + 4" text-anchor="end">{{ formato(v) }}</text>
+        }
+        <line class="eje" x1="48" x2="550" [attr.y1]="py(0)" [attr.y2]="py(0)" />
+        <line class="eje" [attr.x1]="px(0)" [attr.x2]="px(0)" y1="20" y2="250" />
+        <text x="566" [attr.y]="py(0) + 4">x</text><text [attr.x]="px(0) + 8" y="14">y</text>
+        <g [attr.clip-path]="'url(#' + clipId() + ')'">
+          <line class="diagonal" x1="48" y1="250" x2="550" y2="20" />
+          <path class="curva" [attr.d]="curva()" />
+          <line class="proyeccion" [attr.x1]="px(semilla())" [attr.x2]="px(semilla())" [attr.y1]="py(semilla())" [attr.y2]="py(0)" />
+          @for (fila of filas(); track fila.n) {
+            <line class="proyeccion" [attr.x1]="px(fila.gx)" [attr.x2]="px(fila.gx)" [attr.y1]="py(fila.gx)" [attr.y2]="py(0)" />
+          }
+          @for (s of segmentos(); track $index) {
+            <line class="telarana" [attr.x1]="s.x1" [attr.y1]="s.y1" [attr.x2]="s.x2" [attr.y2]="s.y2"
+              [attr.stroke-width]="s.actual ? 4 : 2.4" [attr.opacity]="s.actual ? 1 : 0.8"
+              [attr.marker-end]="s.flecha ? 'url(#' + flechaId() + ')' : null" />
+          }
+          <circle class="semilla-punto" [attr.cx]="px(semilla())" [attr.cy]="py(0)" r="5" />
+          @if (actual(); as fila) {
+            <circle class="punto-actual" [attr.cx]="px(fila.gx)" [attr.cy]="py(fila.gx)" r="6" />
+          }
+        </g>
+        @for (etiqueta of etiquetasX(); track etiqueta.n) {
+          <text class="mano" [class.semilla-texto]="etiqueta.n === 0" [attr.x]="px(etiqueta.x)" [attr.y]="py(0) + 18" text-anchor="middle">x<tspan baseline-shift="sub" font-size="10">{{ etiqueta.n }}</tspan></text>
+        }
+        <text class="mano tenue" x="490" y="32">y = x</text>
+        @if (etiquetaG(); as etiqueta) {
+          <text class="mano etiqueta-g" [attr.x]="etiqueta.x" [attr.y]="etiqueta.y">g(x)</text>
+        }
+      </svg>
+      <app-demo-iteracion [datos]="resumen()" />
+      @if (filas().length) {
+        <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de punto fijo">
+          <table><caption>Iteraciones de la telaraña</caption>
+            <thead><tr><th scope="col">n</th><th scope="col">x<sub>n</sub></th><th scope="col">g(x<sub>n</sub>) = x<sub>n+1</sub></th><th scope="col">|Δx|</th></tr></thead>
+            <tbody>@for (fila of filas(); track fila.n; let ultima = $last) {
+              <tr [class.ultima]="ultima"><th scope="row">{{ fila.n }}</th><td>{{ formato(fila.x) }}</td><td>{{ formato(fila.gx) }}</td><td>{{ formato(fila.dx) }}</td></tr>
+            }</tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </section>
+  <section><h2>Los pasos del algoritmo</h2>
+    <p class="subtitulo">Evalúa g(x) sobre el último valor y repite hasta cumplir el criterio o alcanzar el máximo.</p>
+    <ol class="pasos">@for (item of pasos; track $index) {
+      <li [class]="'paso-' + item[0]"><span class="numero" aria-hidden="true">{{ $index + 1 }}</span>
+        <div><h3>{{ item[1] }}</h3><p>{{ item[2] }}</p></div>
+      </li>
+    }</ol>
+    <aside class="tarjeta aplicado"><h3>Aplicado a este ejemplo</h3><p>{{ ejemplo().algoritmo }}</p></aside>
+  </section>
+  <section class="tarjeta"><h2>Conclusión y respuesta</h2><p>{{ ejemplo().conclusion }}</p></section>
+</article>

@@ -1,0 +1,71 @@
+<div class="grafico">
+  @if (mostrarControles()) {
+  <div class="controles" aria-label="Controles de zoom y vista del gráfico">
+    <button type="button" title="Alejar (zoom -)" aria-label="Alejar" (click)="alejar()">
+      <span class="material-symbols-outlined">zoom_out</span>
+    </button>
+    <button type="button" title="Acercar (zoom +)" aria-label="Acercar" (click)="acercar()">
+      <span class="material-symbols-outlined">zoom_in</span>
+    </button>
+    <button type="button" title="Ajustar al intervalo del ejemplo" aria-label="Ajustar vista" (click)="ajustarVista()">
+      <span class="material-symbols-outlined">fit_screen</span>
+    </button>
+    <button type="button" title="Restablecer zoom y posición" aria-label="Restablecer vista" (click)="reiniciarVista()">
+      <span class="material-symbols-outlined">refresh</span>
+    </button>
+  </div>
+  }
+
+  <svg
+    [attr.viewBox]="'0 0 ' + vista.ancho + ' ' + vista.alto"
+    preserveAspectRatio="xMidYMid meet"
+    role="img"
+    [attr.aria-label]="descripcion()"
+    (wheel)="alRueda($event)"
+    (dblclick)="reiniciarVista()"
+  >
+    <title>Gráfico de bisección: {{ leyenda() || 'función del ejemplo' }}</title>
+    <desc>{{ descripcion() }}</desc>
+
+    @for (v of escala().marcasY; track v) {
+      <line class="rejilla" [attr.x1]="vista.izq" [attr.x2]="vista.der" [attr.y1]="escala().py(v)" [attr.y2]="escala().py(v)" />
+    }
+    @for (v of escala().marcasX; track v) {
+      <line class="rejilla" [attr.x1]="escala().px(v)" [attr.x2]="escala().px(v)" [attr.y1]="vista.arriba" [attr.y2]="vista.abajo" />
+    }
+
+    @if (intervalo(); as puntos) {
+      <rect class="banda" [attr.x]="escala().px(puntos.a)" [attr.y]="vista.arriba"
+        [attr.width]="escala().px(puntos.b) - escala().px(puntos.a)" [attr.height]="vista.abajo - vista.arriba" />
+    }
+
+    <line class="eje" [attr.x1]="vista.izq" [attr.x2]="vista.der" [attr.y1]="escala().py(0)" [attr.y2]="escala().py(0)" />
+    <line class="eje" [attr.x1]="escala().px(0)" [attr.x2]="escala().px(0)" [attr.y1]="vista.arriba" [attr.y2]="vista.abajo" />
+    <text class="etiqueta-eje" [attr.x]="vista.der + 16" [attr.y]="escala().py(0) + 4">x</text>
+    <text class="etiqueta-eje" [attr.x]="escala().px(0) + 8" y="14">y</text>
+
+    @for (v of escala().marcasY; track v) {
+      <text class="numeros" [attr.x]="vista.izq - 8" [attr.y]="escala().py(v) + 4" text-anchor="end">{{ formato(v) }}</text>
+    }
+    @for (v of escala().marcasX; track v) {
+      <text class="numeros" [attr.x]="escala().px(v)" [attr.y]="vista.abajo + 24" text-anchor="middle">{{ formato(v) }}</text>
+    }
+
+    <path class="curva" [attr.d]="escala().curva" />
+
+    @if (intervalo(); as puntos) {
+      <line class="extremo" [attr.x1]="escala().px(puntos.a)" [attr.x2]="escala().px(puntos.a)" [attr.y1]="vista.arriba" [attr.y2]="vista.abajo" />
+      <line class="extremo" [attr.x1]="escala().px(puntos.b)" [attr.x2]="escala().px(puntos.b)" [attr.y1]="vista.arriba" [attr.y2]="vista.abajo" />
+      <text class="rotulo" [attr.x]="escala().px(puntos.a) - 8" y="36" text-anchor="end">a ({{ rotuloExtremo(puntos.a) }})</text>
+      <text class="rotulo" [attr.x]="escala().px(puntos.b) + 8" y="36">b ({{ rotuloExtremo(puntos.b) }})</text>
+    }
+    @if (actual(); as puntos) {
+      <line class="punto-linea" [attr.x1]="escala().px(puntos.c)" [attr.x2]="escala().px(puntos.c)"
+        [attr.y1]="escala().py(0)" [attr.y2]="escala().py(puntos.fc)" />
+      <circle class="punto" [attr.cx]="escala().px(puntos.c)" [attr.cy]="escala().py(puntos.fc)" r="5" />
+      <circle class="punto" [attr.cx]="escala().px(puntos.c)" [attr.cy]="escala().py(0)" r="5" />
+      <text class="rotulo-c" [attr.x]="escala().px(puntos.c) + 10" [attr.y]="escala().py(0) + 20">c</text>
+    }
+
+  </svg>
+</div>

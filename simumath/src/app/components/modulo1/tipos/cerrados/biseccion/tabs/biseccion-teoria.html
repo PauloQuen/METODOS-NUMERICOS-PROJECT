@@ -1,41 +1,146 @@
-<app-teoria-contenido
-  [teoria]="teoria"
-  [terceraTexto]="teoria.ordenConvergencia"
-  terceraTitulo="¿Qué tan rápido converge?"
-  terceraIcono="speed"
-  tituloMetodo="El algoritmo"
-  tituloCriterios="¿Cuándo se detiene?"
-  tituloRecomendaciones="Consejos de uso"
->
-  <section class="teoria-m3__seccion">
-    <h2 class="teoria-m3__titulo">Ejemplo numérico resuelto</h2>
-    <app-bloque-ejemplo
-      [ejemplo]="teoria.ejemploNormal"
-      [funcion]="funcionNumerico"
-      [filas]="ejemploNumerico().filas"
-      [columnas]="columnas"
-      [filaFinal]="ejemploNumerico().filaFinal"
-      [rango]="rangoNumerico()"
-      [dibujarMetodo]="dibujar"
-      [raiz]="ejemploNumerico().raiz"
-    />
+<article class="teoria">
+  <header class="introduccion">
+    <div>
+      <p class="etiqueta">La idea del método</p>
+      <h2>Una raíz, cada vez más cerca</h2>
+      <p>Divide un intervalo por la mitad y conserva la parte donde la función cambia de signo.
+        Repite: cada intervalo encierra una raíz con mayor precisión.</p>
+    </div>
+    <div class="formula">
+      <strong>c = (a + b) / 2</strong>
+      <span>El punto medio del intervalo [a, b]</span>
+      <small>La mitad del intervalo, en cada paso.</small>
+    </div>
+  </header>
+
+  <aside class="fundamento">
+    <h3>¿Por qué funciona? El teorema de Bolzano</h3>
+    <p>Si f es continua en [a, b] y f(a) · f(b) &lt; 0, existe al menos una raíz en el intervalo.
+      El cambio de signo por sí solo no basta si hay discontinuidades.</p>
+  </aside>
+
+  <section aria-labelledby="demo-titulo">
+    <h2 id="demo-titulo">Pruébalo paso a paso</h2>
+    <p class="subtitulo">Explora f(x) = x³ − x − 2 en [1, 2]. Observa el intervalo de cada iteración y decide qué mitad conservar.</p>
+    <div class="tarjeta demo">
+      <div class="controles">
+        <span class="insignia">Bisección · demostración</span>
+        <div class="acciones">
+          <label for="biseccion-teoria-tolerancia">Tolerancia</label>
+          <select id="biseccion-teoria-tolerancia" [value]="tolerancia()" (change)="cambiarTolerancia($event)">
+            <option value="0.01">0,01</option>
+            <option value="0.001">0,001</option>
+            <option value="0.000001">0,000001</option>
+          </select>
+          <button type="button" (click)="siguiente()" [disabled]="terminado()">Siguiente paso</button>
+          <button type="button" class="secundario" (click)="reiniciar()">Reiniciar</button>
+        </div>
+      </div>
+      <svg class="grafica" viewBox="0 0 600 300" role="img" aria-labelledby="grafica-titulo grafica-descripcion">
+        <title id="grafica-titulo">Bisección de x³ − x − 2</title>
+        <desc id="grafica-descripcion">Intervalo evaluado: de {{ formato(intervalo().a) }} a {{ formato(intervalo().b) }}.
+          @if (actual(); as fila) { Punto medio {{ formato(fila.c) }}; f(c) = {{ formato(fila.fc) }}. }
+        </desc>
+        @for (x of [1, 1.5, 2]; track x) {
+          <line class="rejilla" [attr.x1]="px(x)" [attr.x2]="px(x)" y1="20" y2="270" />
+          <text [attr.x]="px(x)" y="290" text-anchor="middle">{{ formato(x) }}</text>
+        }
+        <rect class="banda" [attr.x]="px(intervalo().a)" y="20"
+          [attr.width]="px(intervalo().b) - px(intervalo().a)" height="250" />
+        <line class="eje" x1="40" x2="580" [attr.y1]="py(0)" [attr.y2]="py(0)" />
+        <text x="22" [attr.y]="py(0) + 4">0</text>
+        <text x="580" y="290">x</text>
+        <path class="curva" [attr.d]="curva" />
+        <line class="extremo" [attr.x1]="px(intervalo().a)" [attr.x2]="px(intervalo().a)" y1="20" y2="270" />
+        <line class="extremo" [attr.x1]="px(intervalo().b)" [attr.x2]="px(intervalo().b)" y1="20" y2="270" />
+        <text class="rotulo" [attr.x]="px(intervalo().a) - 8" y="36" text-anchor="end">a (−)</text>
+        <text class="rotulo" [attr.x]="px(intervalo().b) + 8" y="36">b (+)</text>
+        @if (actual(); as fila) {
+          <line class="punto-linea" [attr.x1]="px(fila.c)" [attr.x2]="px(fila.c)"
+            [attr.y1]="py(0)" [attr.y2]="py(fila.fc)" />
+          <circle class="punto" [attr.cx]="px(fila.c)" [attr.cy]="py(fila.fc)" r="5" />
+          <circle class="punto" [attr.cx]="px(fila.c)" [attr.cy]="py(0)" r="5" />
+          <text class="rotulo-c" [attr.x]="px(fila.c) + 10" [attr.y]="py(0) + 24">c</text>
+        }
+      </svg>
+      <dl class="indicadores">
+        <div><dt>Iteración</dt><dd>{{ paso() }}</dd></div>
+        <div><dt>Ancho evaluado</dt><dd>{{ formato(intervalo().b - intervalo().a) }}</dd></div>
+        <div><dt>Aproximación c</dt><dd>{{ actual() ? formato(actual()!.c) : '—' }}</dd></div>
+        <div><dt>Cota (b − a)/2</dt><dd>{{ actual() ? formato(actual()!.error) : '—' }}</dd></div>
+      </dl>
+      <p class="mensaje" [class.completado]="terminado()" role="status">{{ mensaje() }}</p>
+      @if (filas().length) {
+        <p class="ayuda-tabla">Historial de pasos. En pantallas pequeñas, desliza la tabla horizontalmente.</p>
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Historial de iteraciones de bisección">
+          <table>
+            <caption>Intervalo y cota de error de cada punto medio</caption>
+            <thead><tr><th scope="col">n</th><th scope="col">a</th><th scope="col">b</th><th scope="col">c</th><th scope="col">f(c)</th><th scope="col">(b − a)/2</th></tr></thead>
+            <tbody>
+              @for (fila of filas(); track fila.n) {
+                <tr [class.ultima]="fila.n === paso()"><th scope="row">{{ fila.n }}</th><td>{{ formato(fila.a) }}</td><td>{{ formato(fila.b) }}</td><td>{{ formato(fila.c) }}</td><td>{{ formato(fila.fc) }}</td><td>{{ formato(fila.error) }}</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
   </section>
 
-  <section class="teoria-m3__seccion">
-    <h2 class="teoria-m3__titulo">Ejemplo desde una casuística real</h2>
-    <p class="teoria-m3__parrafo">
-      Un problema como llega en la práctica: con los datos de donde salen, el planteamiento y los
-      pasos escritos uno por uno.
-    </p>
-    <app-bloque-ejemplo
-      [ejemplo]="teoria.ejemploCasuistica"
-      [funcion]="funcionCasuistica"
-      [filas]="ejemploCasuistica().filas"
-      [columnas]="columnas"
-      [filaFinal]="ejemploCasuistica().filaFinal"
-      [rango]="rangoCasuistica()"
-      [dibujarMetodo]="dibujar"
-      [raiz]="ejemploCasuistica().raiz"
-    />
+  <section aria-labelledby="pasos-titulo">
+    <h2 id="pasos-titulo">Los pasos del algoritmo</h2>
+    <p class="subtitulo">Verifica las condiciones una vez; después repite desde el punto medio hasta cumplir la tolerancia.</p>
+    <ol class="pasos">
+      @for (paso of pasos; track $index) {
+        <li><span class="numero" aria-hidden="true">{{ $index + 1 }}</span><div><h3>{{ paso[0] }}</h3><p>{{ paso[1] }}</p></div></li>
+      }
+    </ol>
   </section>
-</app-teoria-contenido>
+
+  <section aria-labelledby="parada-titulo">
+    <h2 id="parada-titulo">¿Cuándo se detiene?</h2>
+    <p class="subtitulo">Distingue una cota garantizada del error de un indicador de cercanía.</p>
+    @for (criterio of criterios; track criterio.titulo; let i = $index) {
+      <details [class.criterio-principal]="criterio.principal" [open]="criterio.principal">
+        <summary>{{ criterio.titulo }}
+          <span class="chip" [class.chip-ok]="criterio.principal"
+            [class.chip-error]="i === 1" [class.chip-primario]="i > 1">
+            {{ criterio.principal ? 'El que usa por defecto' : i === 1 ? 'Sensible a la escala' : i === 2 ? 'Complementario' : 'A posteriori' }}
+          </span>
+        </summary>
+        <p>{{ criterio.texto }}</p>
+      </details>
+    }
+    <aside class="fundamento convergencia">
+      <h3>¿Qué tan rápido converge?</h3>
+      <p>{{ convergencia }}</p>
+    </aside>
+  </section>
+
+  <section aria-labelledby="balance-titulo">
+    <h2 id="balance-titulo">Ventajas y limitaciones</h2>
+    <div class="balance">
+      <div class="tarjeta ventajas"><h3>✓ Ventajas</h3><ul>
+        <li>Converge si la función es continua y existe cambio de signo.</li>
+        <li>Ofrece una cota del error en cada iteración.</li>
+        <li>No necesita derivadas: basta evaluar la función.</li>
+        <li>Puede servir como paso de seguridad en métodos híbridos.</li>
+      </ul></div>
+      <div class="tarjeta limitaciones"><h3>! Limitaciones</h3><ul>
+        <li>Reduce la cota a la mitad por paso; puede ser más lento que otros métodos.</li>
+        <li>Necesita encontrar primero un intervalo adecuado.</li>
+        <li>Una raíz de multiplicidad par puede no producir cambio de signo.</li>
+        <li>Una discontinuidad invalida la garantía; la precisión de máquina limita las reducciones.</li>
+      </ul></div>
+    </div>
+  </section>
+  <section class="tarjeta consejos" aria-labelledby="consejos-titulo">
+    <h2 id="consejos-titulo">Recomendaciones</h2>
+    <ol>
+      <li>Busca un intervalo pequeño y comprueba la continuidad y los signos de los extremos.</li>
+      <li>Elige la tolerancia según las unidades y la precisión que requiere el problema.</li>
+      <li>Prefiere la cota del intervalo y establece un máximo de iteraciones.</li>
+      <li>Si el punto medio coincide con un extremo por redondeo, no sigas reduciendo indefinidamente.</li>
+    </ol>
+  </section>
+</article>
